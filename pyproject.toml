@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "shipmmg"
+version = "0.0.1"
+description = ""
+authors = ["Taiga MITSUYUKI <mitsuyuki-taiga-my@ynu.ac.jp>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+numpy = "^1.19.5"
+scipy = "^1.6.0"
+pytest-cov = "^2.10.1"
+matplotlib = "^3.3.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
