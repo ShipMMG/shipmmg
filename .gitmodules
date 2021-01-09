@@ -1,0 +1,4 @@
+[submodule "docs/_build/html"]
+	path = docs/_build/html
+	url = git@github.com:ShipMMG/shipmmg.git
+	branch = gh-pages
