@@ -1,8 +1,11 @@
 [tool.poetry]
 name = "shipmmg"
-version = "0.0.1"
-description = ""
+version = "0.0.2"
+description = "A Python package of ship maneuvering simulation"
+readme = "README.md"
 authors = ["Taiga MITSUYUKI <mitsuyuki-taiga-my@ynu.ac.jp>"]
+repository="https://github.com/ShipMMG/shipmmg"
+license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.8"
