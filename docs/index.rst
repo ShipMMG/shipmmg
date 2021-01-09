@@ -3,14 +3,28 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to shipmmg's documentation!
-===================================
+shipmmg: A Python package of ship maneuvering simulation
+===========================================================
+
+ShipMMG is a unofficial Python package of ship maneuvering simulation with respect to the research committee on “standardization of mathematical model for ship maneuvering predictions” was organized by the JASNAOE.
+
+
+Install
+--------
+
+.. code-block:: bash
+
+   pip install shipmmg
+   # pip install git+https://git@github.com/ShipMMG/shipmmg.git # INSTALL FROM GITHUB
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+How to use shipmmg?
+------------------
 
+Comming soon.
 
 
 Indices and tables
