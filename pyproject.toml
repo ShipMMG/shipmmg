@@ -5,6 +5,7 @@ description = "A Python package of ship maneuvering simulation"
 readme = "README.md"
 authors = ["Taiga MITSUYUKI <mitsuyuki-taiga-my@ynu.ac.jp>"]
 repository="https://github.com/ShipMMG/shipmmg"
+documentation = "https://shipmmg.github.io/shipmmg/"
 license = "MIT"
 
 [tool.poetry.dependencies]
