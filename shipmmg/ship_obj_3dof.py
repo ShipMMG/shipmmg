@@ -5,15 +5,19 @@ from typing import List
 import dataclasses
 import numpy as np
 import matplotlib.pyplot as plt
-
-# import traceback
+from matplotlib.animation import FuncAnimation
+from .draw_obj import DrawObj
 
 
 @dataclasses.dataclass
-class Ship3DOF:
-    """Ship 3DOF class just for visualizing.
+class ShipObj3dof:
+    """Ship 3DOF class just for drawing.
 
     Attributes:
+        L (float):
+            ship length [m]
+        B (float)
+            ship breath [m]
         time (list[float]):
             Time list of simulation result.
         u (list[float]):
@@ -30,6 +34,9 @@ class Ship3DOF:
             List of azimuth [rad] in simulation result.
     """
 
+    # Ship overview
+    L: float
+    B: float
     # Simulation result
     time: List[float] = dataclasses.field(default_factory=list)
     u: List[float] = dataclasses.field(default_factory=list)
@@ -78,7 +85,7 @@ class Ship3DOF:
             >>> u_list = np.full(len(time_list), 20 * (1852.0 / 3600))
             >>> v_list = np.zeros(len(time_list))
             >>> r_list = result.T[0]
-            >>> ship = Ship3DOF()
+            >>> ship = ShipObj3dof(L = 180, B = 20)
             >>> ship.load_simulation_result(time_list, u_list, v_list, r_list)
             >>> print(ship.x, ship.y, ship.psi)
         """
@@ -102,12 +109,20 @@ class Ship3DOF:
         self.psi = psi
 
     def draw_xy_trajectory(
-        self, aspect_equal=True, figsize=[6.4, 4.8], dpi=100.0, save_fig_path=None
+        self,
+        dimensionless: bool = False,
+        aspect_equal: bool = True,
+        figsize: List[float] = [6.4, 4.8],
+        dpi: float = 100.0,
+        save_fig_path: str = None,
     ) -> plt.Figure:
         """
         Draw trajectry(x,y).
 
         Args:
+            dimensionless (bool, optional):
+                drawing with dimensionless by using L or not.
+                Defaults to False
             aspect_equal (bool, optional):
                 Set equal of figure aspect or not.
                 Defaults to True.
@@ -124,13 +139,18 @@ class Ship3DOF:
             matplotlib.pyplot.Figure: Figure
 
         Examples:
-            >>> save_fig_path = "test.png"
-            >>> ship.draw_xy_trajectory(save_fig_path=save_fig_path)
+            >>> ship.draw_xy_trajectory(save_fig_path="test.png")
         """
         fig = plt.figure(figsize=figsize, dpi=dpi)
-        plt.xlabel(r"$x$")
-        plt.ylabel(r"$y$")
-        plt.plot(self.x, self.y)
+
+        if dimensionless:
+            plt.plot(np.array(self.x) / self.L, np.array(self.y) / self.L)
+            plt.xlabel(r"$x/L$")
+            plt.ylabel(r"$y/L$")
+        else:
+            plt.plot(self.x, self.y)
+            plt.xlabel(r"$x$")
+            plt.ylabel(r"$y$")
         if aspect_equal:
             plt.gca().set_aspect("equal")
         if save_fig_path is not None:
@@ -140,22 +160,28 @@ class Ship3DOF:
 
     def draw_chart(
         self,
-        x_index,
-        y_index,
-        xlabel=None,
-        ylabel=None,
-        figsize=[6.4, 4.8],
-        dpi=100.0,
-        save_fig_path=None,
+        x_index: str,
+        y_index: str,
+        xlabel: str = None,
+        ylabel: str = None,
+        figsize: List[float] = [6.4, 4.8],
+        dpi: float = 100.0,
+        save_fig_path: str = None,
     ) -> plt.Figure:
         """
         Draw chart.
 
         Args:
             x_index (string):
+                Index value of X axis.
             y_index (string):
+                Index value of Y axis.
             xlabel (string, optional):
+                Label of X axis.
+                Defaults to None.
             ylabel (string, optional):
+                Label of Y axis.
+                Defaults to None.
             figsize ((float, float), optional):
                 Width, height in inches.
                 Default to [6.4, 4.8]
@@ -167,6 +193,10 @@ class Ship3DOF:
                 Defaults to None.
         Returns:
             matplotlib.pyplot.Figure: Figure
+
+        Examples:
+            >>> ship_kt.draw_chart("time", "r", xlabel="time [sec]", \
+            >>> ylabel=r"$u$" + " [rad/s]",save_fig_path='test.png')
         """
         target_x = None
         if x_index == "time":
@@ -246,3 +276,99 @@ class Ship3DOF:
         plt.close()
 
         return fig
+
+    def draw_gif(
+        self,
+        dimensionless: bool = False,
+        aspect_equal: bool = True,
+        frate: int = 10,
+        interval: int = 100,
+        figsize: List[float] = [6.4, 4.8],
+        dpi: float = 100.0,
+        save_fig_path: str = None,
+    ) -> plt.Figure:
+        """Draw GIF of ship trajectory
+        Args:
+            dimensionless (bool, optional):
+                drawing with dimensionless by using L or not.
+                Defaults to False
+            aspect_equal (bool, optional):
+                Set equal of figure aspect or not.
+                Defaults to True.
+            frate (int, optional):
+                One of the parameter of `frames` in matplotlib.FuncAnimation().
+                `frames` expresses source of data to pass func and each frame of the animation.
+                `frames = int (len(time) / frate)`
+                Defaults to 10.
+            interval (int, optional):
+                Delay between frames in milliseconds.
+                Defaults to 100.
+            figsize ((float, float), optional):
+                Width, height in inches.
+                Default to [6.4, 4.8]
+            dpi (float, optional):
+                The resolution of the figure in dots-per-inch.
+                Default to 100.0
+            save_fig_path (str, optional):
+                Path of saving figure.
+                Defaults to None.
+        """
+
+        fig = plt.figure(figsize=figsize, dpi=dpi)
+        ax = fig.add_subplot(111)
+        if dimensionless:
+            draw_x = np.array(self.x) / self.L
+            draw_y = np.array(self.y) / self.L
+            ax.set_xlabel(r"$x/L$")
+            ax.set_ylabel(r"$y/L$")
+            shape = (1 / 2, self.B / (2 * self.L))
+        else:
+            draw_x = np.array(self.x)
+            draw_y = np.array(self.y)
+            ax.set_xlabel(r"$x$")
+            ax.set_ylabel(r"$y$")
+            shape = (self.L / 2, self.B / 2)
+
+        plt.plot(
+            draw_x,
+            draw_y,
+            label="trajectory",
+            ls="--",
+            color="k",
+        )
+        if aspect_equal:
+            ax.set_aspect("equal")
+
+        drawer = DrawObj(ax)
+
+        def update_obj(i, x_list, y_list, shape_list, ψ_list, frate):
+            j = int(frate * i)
+            plt.title(r"$t$ = " + "{:.1f}".format(self.time[j]))
+
+            xT = np.array(x_list).T
+            _x_list_j = list(xT[j].T)
+            yT = np.array(y_list).T
+            _y_list_j = list(yT[j].T)
+            ψT = np.array(ψ_list).T
+            _ψ_list_j = list(ψT[j].T)
+
+            return drawer.draw_square_with_angle(
+                _x_list_j, _y_list_j, shape_list, _ψ_list_j
+            )
+
+        ani = FuncAnimation(
+            fig,
+            update_obj,
+            fargs=(
+                [draw_x],
+                [draw_y],
+                [shape],
+                [self.psi],
+                frate,
+            ),
+            interval=interval,
+            frames=int(len(self.time) / frate),
+        )
+        gif = ani.save(save_fig_path, writer="pillow")
+        plt.close()
+        return gif

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from shipmmg.kt import simulate
-from shipmmg.ship_3dof import Ship3DOF
+from shipmmg.ship_obj_3dof import ShipObj3dof
 import numpy as np
 import pytest
 import os
@@ -13,8 +13,8 @@ def simulate_kt():
     """Just check shimmg.kt.simulate()."""
     K = 0.155
     T = 80.5
-    duration = 500
-    num_of_sampling = 10000
+    duration = 50
+    num_of_sampling = 1000
     time_list = np.linspace(0.00, duration, num_of_sampling)
     Ts = 50.0
     delta_list = 10 * np.pi / 180 * np.sin(2.0 * np.pi / Ts * time_list)
@@ -31,7 +31,7 @@ def ship_kt(simulate_kt):
     u_list = np.full(len(time_list), 20 * (1852.0 / 3600))
     v_list = np.zeros(len(time_list))
     r_list = simulation_result.T[0]
-    ship = Ship3DOF()
+    ship = ShipObj3dof(L=100, B=10)
     ship.load_simulation_result(time_list, u_list, v_list, r_list)
     return ship
 
@@ -41,6 +41,7 @@ def test_Ship3DOF_drawing_function(ship_kt):
 
     # Ship3DOF.draw_xy_trajectory()
     save_fig_path = "test.png"
+    ship_kt.draw_xy_trajectory(dimensionless=True)
     ship_kt.draw_xy_trajectory(save_fig_path=save_fig_path)
     if os.path.exists(save_fig_path):
         os.remove(save_fig_path)
@@ -67,3 +68,11 @@ def test_Ship3DOF_drawing_function(ship_kt):
         ship_kt.draw_chart("time", "hogehoge")
     with pytest.raises(Exception):
         ship_kt.draw_chart("hogehoge", "y")
+
+    # Ship3DOF.draw_gif()
+    ship_kt.draw_gif(save_fig_path=save_fig_path)
+    if os.path.exists(save_fig_path):
+        os.remove(save_fig_path)
+    ship_kt.draw_gif(dimensionless=True, save_fig_path=save_fig_path)
+    if os.path.exists(save_fig_path):
+        os.remove(save_fig_path)
