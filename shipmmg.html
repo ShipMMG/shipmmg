@@ -1,0 +1,580 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>shipmmg package &mdash; shipmmg 0.0.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> shipmmg
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">shipmmg package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-shipmmg.draw_obj">shipmmg.draw_obj module</a></li>
+<li><a class="reference internal" href="#module-shipmmg.kt">shipmmg.kt module</a></li>
+<li><a class="reference internal" href="#module-shipmmg.ship_obj_3dof">shipmmg.ship_obj_3dof module</a></li>
+<li><a class="reference internal" href="#module-shipmmg">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">shipmmg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>shipmmg package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/shipmmg.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="shipmmg-package">
+<h1>shipmmg package<a class="headerlink" href="#shipmmg-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-shipmmg.draw_obj">
+<span id="shipmmg-draw-obj-module"></span><h2>shipmmg.draw_obj module<a class="headerlink" href="#module-shipmmg.draw_obj" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="shipmmg.draw_obj.DrawObj">
+<em class="property">class </em><code class="sig-prename descclassname">shipmmg.draw_obj.</code><code class="sig-name descname">DrawObj</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ax</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shipmmg/draw_obj.html#DrawObj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.draw_obj.DrawObj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>General class for drawing object by using matplotlib.animation.
+Multiple ships can be drawn by using this class.</p>
+<dl class="py method">
+<dt id="shipmmg.draw_obj.DrawObj.draw_square_with_angle">
+<code class="sig-name descname">draw_square_with_angle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">center_x_list</span></em>, <em class="sig-param"><span class="n">center_y_list</span></em>, <em class="sig-param"><span class="n">shape_list</span></em>, <em class="sig-param"><span class="n">angle_list</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shipmmg/draw_obj.html#DrawObj.draw_square_with_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.draw_obj.DrawObj.draw_square_with_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw square image with angle
+:param center_x_list: list of the center x position of the square
+:type center_x_list: List[float]
+:param center_y_list: list of the center y position of the square
+:type center_y_list: List[float]
+:param shape_list: list of the square’s shape(length/2, width/2)
+:type shape_list: List[float]
+:param angle_list: list of in radians
+:type angle_list: List[float]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of Image</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Image</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-shipmmg.kt">
+<span id="shipmmg-kt-module"></span><h2>shipmmg.kt module<a class="headerlink" href="#module-shipmmg.kt" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="shipmmg.kt.simulate">
+<code class="sig-prename descclassname">shipmmg.kt.</code><code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">K</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">T</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">time_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">delta_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">r0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>float<span class="p">]</span><a class="reference internal" href="_modules/shipmmg/kt.html#simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.kt.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>KT simulation
+KT simulation by following equation of motion.</p>
+<p><span class="math notranslate nohighlight">\(T dr =  -r + K \delta\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>K</strong> (<em>float</em>) – parameter K of KT model.</p></li>
+<li><p><strong>T</strong> (<em>float</em>) – parameter T of KT model.</p></li>
+<li><p><strong>time_list</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – time list of simulation.</p></li>
+<li><p><strong>delta_list</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – rudder angle list of simulation.</p></li>
+<li><p><strong>r0</strong> (<em>float</em><em>, </em><em>optional</em>) – rate of turn [rad/s] in initial condition (<cite>time_list[0]</cite>).
+Defaults to 0.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The result of KT simulation.
+shape = (time, num_of_results)
+num_of_results = 2 including <span class="math notranslate nohighlight">\(r\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="mf">0.15</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span> <span class="o">=</span> <span class="mf">60.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">duration</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">num_of_sampling</span> <span class="o">=</span> <span class="mi">3000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">time_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">num_of_sampling</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">delta_list</span> <span class="o">=</span> <span class="mi">35</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">Ts</span> <span class="o">*</span> <span class="n">time_list</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r0</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">simulate</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">time_list</span><span class="p">,</span> <span class="n">delta_list</span><span class="p">,</span> <span class="n">r0</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-shipmmg.ship_obj_3dof">
+<span id="shipmmg-ship-obj-3dof-module"></span><h2>shipmmg.ship_obj_3dof module<a class="headerlink" href="#module-shipmmg.ship_obj_3dof" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof">
+<em class="property">class </em><code class="sig-prename descclassname">shipmmg.ship_obj_3dof.</code><code class="sig-name descname">ShipObj3dof</code><span class="sig-paren">(</span><em class="sig-param">L: float</em>, <em class="sig-param">B: float</em>, <em class="sig-param">time: List[float] = &lt;factory&gt;</em>, <em class="sig-param">u: List[float] = &lt;factory&gt;</em>, <em class="sig-param">v: List[float] = &lt;factory&gt;</em>, <em class="sig-param">r: List[float] = &lt;factory&gt;</em>, <em class="sig-param">x: List[float] = &lt;factory&gt;</em>, <em class="sig-param">y: List[float] = &lt;factory&gt;</em>, <em class="sig-param">psi: List[float] = &lt;factory&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shipmmg/ship_obj_3dof.html#ShipObj3dof"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Ship 3DOF class just for drawing.</p>
+<dl class="py attribute">
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof.L">
+<code class="sig-name descname">L</code><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof.L" title="Permalink to this definition">¶</a></dt>
+<dd><p>ship length [m]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof.B">
+<code class="sig-name descname">B</code><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof.B" title="Permalink to this definition">¶</a></dt>
+<dd><p>ship breath [m]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof.time">
+<code class="sig-name descname">time</code><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof.time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time list of simulation result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof.u">
+<code class="sig-name descname">u</code><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof.u" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of axial velocity [m/s] in simulation result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof.v">
+<code class="sig-name descname">v</code><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof.v" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of lateral velocity [m/s] in simulation result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof.r">
+<code class="sig-name descname">r</code><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof.r" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of rate of turn [rad/s] in simulation result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof.x">
+<code class="sig-name descname">x</code><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof.x" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of position of X axis [m] in simulation result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof.y">
+<code class="sig-name descname">y</code><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof.y" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of position of Y axis [m/s] in simulation result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof.psi">
+<code class="sig-name descname">psi</code><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof.psi" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of azimuth [rad] in simulation result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="id0">
+<code class="sig-name descname">B</code><em class="property">: float</em><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id1">
+<code class="sig-name descname">L</code><em class="property">: float</em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof.draw_chart">
+<code class="sig-name descname">draw_chart</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x_index</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">y_index</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">xlabel</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ylabel</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">[6.4, 4.8]</span></em>, <em class="sig-param"><span class="n">dpi</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">100.0</span></em>, <em class="sig-param"><span class="n">save_fig_path</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; matplotlib.figure.Figure<a class="reference internal" href="_modules/shipmmg/ship_obj_3dof.html#ShipObj3dof.draw_chart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof.draw_chart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw chart.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_index</strong> (<em>string</em>) – Index value of X axis.</p></li>
+<li><p><strong>y_index</strong> (<em>string</em>) – Index value of Y axis.</p></li>
+<li><p><strong>xlabel</strong> (<em>string</em><em>, </em><em>optional</em>) – Label of X axis.
+Defaults to None.</p></li>
+<li><p><strong>ylabel</strong> (<em>string</em><em>, </em><em>optional</em>) – Label of Y axis.
+Defaults to None.</p></li>
+<li><p><strong>figsize</strong> (<em>(</em><em>float</em><em>, </em><em>float</em><em>)</em><em>, </em><em>optional</em>) – Width, height in inches.
+Default to [6.4, 4.8]</p></li>
+<li><p><strong>dpi</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution of the figure in dots-per-inch.
+Default to 100.0</p></li>
+<li><p><strong>save_fig_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path of saving figure.
+Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>matplotlib.pyplot.Figure</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ship_kt</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;time [sec]&quot;</span><span class="p">,</span>             <span class="o">&gt;&gt;&gt;</span> <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u$&quot;</span> <span class="o">+</span> <span class="s2">&quot; [rad/s]&quot;</span><span class="p">,</span><span class="n">save_fig_path</span><span class="o">=</span><span class="s1">&#39;test.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof.draw_gif">
+<code class="sig-name descname">draw_gif</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dimensionless</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">aspect_equal</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">frate</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">10</span></em>, <em class="sig-param"><span class="n">interval</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">100</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">[6.4, 4.8]</span></em>, <em class="sig-param"><span class="n">dpi</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">100.0</span></em>, <em class="sig-param"><span class="n">save_fig_path</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; matplotlib.figure.Figure<a class="reference internal" href="_modules/shipmmg/ship_obj_3dof.html#ShipObj3dof.draw_gif"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof.draw_gif" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw GIF of ship trajectory
+:param dimensionless: drawing with dimensionless by using L or not.</p>
+<blockquote>
+<div><p>Defaults to False</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>aspect_equal</strong> (<em>bool</em><em>, </em><em>optional</em>) – Set equal of figure aspect or not.
+Defaults to True.</p></li>
+<li><p><strong>frate</strong> (<em>int</em><em>, </em><em>optional</em>) – One of the parameter of <cite>frames</cite> in matplotlib.FuncAnimation().
+<cite>frames</cite> expresses source of data to pass func and each frame of the animation.
+<cite>frames = int (len(time) / frate)</cite>
+Defaults to 10.</p></li>
+<li><p><strong>interval</strong> (<em>int</em><em>, </em><em>optional</em>) – Delay between frames in milliseconds.
+Defaults to 100.</p></li>
+<li><p><strong>figsize</strong> (<em>(</em><em>float</em><em>, </em><em>float</em><em>)</em><em>, </em><em>optional</em>) – Width, height in inches.
+Default to [6.4, 4.8]</p></li>
+<li><p><strong>dpi</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution of the figure in dots-per-inch.
+Default to 100.0</p></li>
+<li><p><strong>save_fig_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path of saving figure.
+Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof.draw_xy_trajectory">
+<code class="sig-name descname">draw_xy_trajectory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dimensionless</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">aspect_equal</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">[6.4, 4.8]</span></em>, <em class="sig-param"><span class="n">dpi</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">100.0</span></em>, <em class="sig-param"><span class="n">save_fig_path</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; matplotlib.figure.Figure<a class="reference internal" href="_modules/shipmmg/ship_obj_3dof.html#ShipObj3dof.draw_xy_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof.draw_xy_trajectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw trajectry(x,y).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dimensionless</strong> (<em>bool</em><em>, </em><em>optional</em>) – drawing with dimensionless by using L or not.
+Defaults to False</p></li>
+<li><p><strong>aspect_equal</strong> (<em>bool</em><em>, </em><em>optional</em>) – Set equal of figure aspect or not.
+Defaults to True.</p></li>
+<li><p><strong>figsize</strong> (<em>(</em><em>float</em><em>, </em><em>float</em><em>)</em><em>, </em><em>optional</em>) – Width, height in inches.
+Default to [6.4, 4.8]</p></li>
+<li><p><strong>dpi</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution of the figure in dots-per-inch.
+Default to 100.0</p></li>
+<li><p><strong>save_fig_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path of saving figure.
+Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>matplotlib.pyplot.Figure</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ship</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="s2">&quot;test.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof.load_simulation_result">
+<code class="sig-name descname">load_simulation_result</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">u</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">v</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">r</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">x0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">y0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">psi0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shipmmg/ship_obj_3dof.html#ShipObj3dof.load_simulation_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof.load_simulation_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load simulation result (time, u, v, r).
+By running this, <cite>x</cite>, <cite>y</cite> and <cite>psi</cite> of this class are registered automatically.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – Time list of simulation result.</p></li>
+<li><p><strong>u</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – List of axial velocity [m/s] in simulation result.</p></li>
+<li><p><strong>v</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – List of lateral velocity [m/s] in simulation result.</p></li>
+<li><p><strong>r</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – List of rate of turn [rad/s] in simulation result.</p></li>
+<li><p><strong>x0</strong> (<em>float</em><em>, </em><em>optional</em>) – Inital position of X axis [m].
+Defaults to 0.0.</p></li>
+<li><p><strong>y</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – Inital position of Y axis [m/s].
+Defaults to 0.0.</p></li>
+<li><p><strong>psi</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – Inital azimuth [rad].
+Defaults to 0.0.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">time_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">num_of_sampling</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">delta_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_list</span><span class="p">),</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">simulate</span><span class="p">(</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">60.0</span><span class="p">,</span> <span class="n">time_list</span><span class="p">,</span> <span class="n">delta_list</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_list</span><span class="p">),</span> <span class="mi">20</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1852.0</span> <span class="o">/</span> <span class="mi">3600</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_list</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r_list</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ship</span> <span class="o">=</span> <span class="n">ShipObj3dof</span><span class="p">(</span><span class="n">L</span> <span class="o">=</span> <span class="mi">180</span><span class="p">,</span> <span class="n">B</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ship</span><span class="o">.</span><span class="n">load_simulation_result</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">u_list</span><span class="p">,</span> <span class="n">v_list</span><span class="p">,</span> <span class="n">r_list</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ship</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">ship</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">ship</span><span class="o">.</span><span class="n">psi</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="id2">
+<code class="sig-name descname">psi</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id3">
+<code class="sig-name descname">r</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id4">
+<code class="sig-name descname">time</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id5">
+<code class="sig-name descname">u</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id6">
+<code class="sig-name descname">v</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id7">
+<code class="sig-name descname">x</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id8">
+<code class="sig-name descname">y</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-shipmmg">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-shipmmg" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, Taiga MITSUYUKI
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

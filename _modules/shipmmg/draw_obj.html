@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>shipmmg.draw_obj &mdash; shipmmg 0.0.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> shipmmg
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">shipmmg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>shipmmg.draw_obj</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for shipmmg.draw_obj</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="DrawObj"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.draw_obj.DrawObj">[docs]</a><span class="k">class</span> <span class="nc">DrawObj</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    General class for drawing object by using matplotlib.animation.</span>
+<span class="sd">    Multiple ships can be drawn by using this class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">img</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">))</span>
+
+<div class="viewcode-block" id="DrawObj.draw_square_with_angle"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.draw_obj.DrawObj.draw_square_with_angle">[docs]</a>    <span class="k">def</span> <span class="nf">draw_square_with_angle</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">center_x_list</span><span class="p">,</span> <span class="n">center_y_list</span><span class="p">,</span> <span class="n">shape_list</span><span class="p">,</span> <span class="n">angle_list</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Draw square image with angle</span>
+<span class="sd">        Args:</span>
+<span class="sd">            center_x_list (List[float]): list of the center x position of the square</span>
+<span class="sd">            center_y_list (List[float]): list of the center y position of the square</span>
+<span class="sd">            shape_list (List[float]): list of the square&#39;s shape(length/2, width/2)</span>
+<span class="sd">            angle_list (List[float]): list of in radians</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Image: List of Image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">shape_list</span><span class="p">)):</span>
+            <span class="n">square_x</span><span class="p">,</span> <span class="n">square_y</span><span class="p">,</span> <span class="n">angle_x</span><span class="p">,</span> <span class="n">angle_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__square_with_angle</span><span class="p">(</span>
+                <span class="n">center_x_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">center_y_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">shape_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">angle_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xdata</span><span class="p">(</span><span class="n">square_x</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">square_y</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">img</span></div>
+
+    <span class="k">def</span> <span class="nf">__rotate_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Transformation the coordinate in the angle</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            pos (numpy.ndarray): local state, shape(data_size, 2)</span>
+<span class="sd">            angle (float): rotate angle, in radians</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            rotated_pos (numpy.ndarray): shape(data_size, 2)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rot_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)],</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)]]</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">rot_mat</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__square</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center_x</span><span class="p">,</span> <span class="n">center_y</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create square</span>
+<span class="sd">        Args:</span>
+<span class="sd">            center_x (float): the center x position of the square</span>
+<span class="sd">            center_y (float): the center y position of the square</span>
+<span class="sd">            shape (tuple): the square&#39;s shape(width/2, height/2)</span>
+<span class="sd">            angle (float): in radians</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            square_x (numpy.ndarray): shape(5, ), counterclockwise from right-up</span>
+<span class="sd">            square_y (numpy.ndarray): shape(5, ), counterclockwise from right-up</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># start with the up right points</span>
+        <span class="c1"># create point in counterclockwise, local</span>
+        <span class="n">square_xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">[</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                <span class="p">[</span><span class="o">-</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                <span class="p">[</span><span class="o">-</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                <span class="p">[</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                <span class="p">[</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="c1"># translate position to world</span>
+        <span class="c1"># rotation</span>
+        <span class="n">trans_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rotate_pos</span><span class="p">(</span><span class="n">square_xy</span><span class="p">,</span> <span class="n">angle</span><span class="p">)</span>
+        <span class="c1"># translation</span>
+        <span class="n">trans_points</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">center_x</span><span class="p">,</span> <span class="n">center_y</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">trans_points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">trans_points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__square_with_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center_x</span><span class="p">,</span> <span class="n">center_y</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create square with angle line</span>
+<span class="sd">        Args:</span>
+<span class="sd">            center_x (float): the center x position of the square</span>
+<span class="sd">            center_y (float): the center y position of the square</span>
+<span class="sd">            shape (tuple): the square&#39;s shape(width/2, height/2)</span>
+<span class="sd">            angle (float): in radians</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            square_x (numpy.ndarray): shape(5, ), counterclockwise from right-up</span>
+<span class="sd">            square_y (numpy.ndarray): shape(5, ), counterclockwise from right-up</span>
+<span class="sd">            angle_x (numpy.ndarray): x data of square angle</span>
+<span class="sd">            angle_y (numpy.ndarray): y data of square angle</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">square_x</span><span class="p">,</span> <span class="n">square_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__square</span><span class="p">(</span><span class="n">center_x</span><span class="p">,</span> <span class="n">center_y</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">angle</span><span class="p">)</span>
+
+        <span class="n">angle_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">center_x</span><span class="p">,</span> <span class="n">center_x</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="n">angle_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">center_y</span><span class="p">,</span> <span class="n">center_y</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+
+        <span class="k">return</span> <span class="n">square_x</span><span class="p">,</span> <span class="n">square_y</span><span class="p">,</span> <span class="n">angle_x</span><span class="p">,</span> <span class="n">angle_y</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, Taiga MITSUYUKI
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
