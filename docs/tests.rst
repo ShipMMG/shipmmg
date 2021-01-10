@@ -12,6 +12,14 @@ tests.test\_kt module
    :undoc-members:
    :show-inheritance:
 
+tests.test\_mmg\_3dof module
+----------------------------
+
+.. automodule:: tests.test_mmg_3dof
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 tests.test\_shipmmg module
 --------------------------
 
