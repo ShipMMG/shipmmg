@@ -81,7 +81,8 @@ class ShipObj3dof:
         Examples:
             >>> time_list = np.linspace(0.00, duration, num_of_sampling)
             >>> delta_list = np.full(len(time_list), 10 * np.pi / 180)
-            >>> result = simulate(0.15, 60.0, time_list, delta_list)
+            >>> kt_params = KTParams(K=0.15, T=60.0)
+            >>> result = kt.simulate_kt(kt_params, time_list, delta_list)
             >>> u_list = np.full(len(time_list), 20 * (1852.0 / 3600))
             >>> v_list = np.zeros(len(time_list))
             >>> r_list = result.T[0]
@@ -116,8 +117,7 @@ class ShipObj3dof:
         dpi: float = 100.0,
         save_fig_path: str = None,
     ) -> plt.Figure:
-        """
-        Draw trajectry(x,y).
+        """Draw trajectry(x,y).
 
         Args:
             dimensionless (bool, optional):
@@ -168,8 +168,7 @@ class ShipObj3dof:
         dpi: float = 100.0,
         save_fig_path: str = None,
     ) -> plt.Figure:
-        """
-        Draw chart.
+        """Draw chart.
 
         Args:
             x_index (string):
@@ -195,7 +194,7 @@ class ShipObj3dof:
             matplotlib.pyplot.Figure: Figure
 
         Examples:
-            >>> ship_kt.draw_chart("time", "r", xlabel="time [sec]", \
+            >>> ship.draw_chart("time", "r", xlabel="time [sec]", \
             >>> ylabel=r"$u$" + " [rad/s]",save_fig_path='test.png')
         """
         target_x = None
@@ -312,6 +311,9 @@ class ShipObj3dof:
             save_fig_path (str, optional):
                 Path of saving figure.
                 Defaults to None.
+
+        Examples:
+            >>> ship.draw_gif(save_fig_path='test.gif')
         """
 
         fig = plt.figure(figsize=figsize, dpi=dpi)
