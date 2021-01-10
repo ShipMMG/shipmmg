@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "shipmmg"
-version = "0.0.2"
+version = "0.0.3"
 description = "A Python package of ship maneuvering simulation"
 readme = "README.md"
 authors = ["Taiga MITSUYUKI <mitsuyuki-taiga-my@ynu.ac.jp>"]
