@@ -232,7 +232,8 @@
 <span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; time_list = np.linspace(0.00, duration, num_of_sampling)</span>
 <span class="sd">            &gt;&gt;&gt; delta_list = np.full(len(time_list), 10 * np.pi / 180)</span>
-<span class="sd">            &gt;&gt;&gt; result = simulate(0.15, 60.0, time_list, delta_list)</span>
+<span class="sd">            &gt;&gt;&gt; kt_params = KTParams(K=0.15, T=60.0)</span>
+<span class="sd">            &gt;&gt;&gt; result = kt.simulate_kt(kt_params, time_list, delta_list)</span>
 <span class="sd">            &gt;&gt;&gt; u_list = np.full(len(time_list), 20 * (1852.0 / 3600))</span>
 <span class="sd">            &gt;&gt;&gt; v_list = np.zeros(len(time_list))</span>
 <span class="sd">            &gt;&gt;&gt; r_list = result.T[0]</span>
@@ -267,8 +268,7 @@
         <span class="n">dpi</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span>
         <span class="n">save_fig_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Draw trajectry(x,y).</span>
+        <span class="sd">&quot;&quot;&quot;Draw trajectry(x,y).</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            dimensionless (bool, optional):</span>
@@ -319,8 +319,7 @@
         <span class="n">dpi</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span>
         <span class="n">save_fig_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Draw chart.</span>
+        <span class="sd">&quot;&quot;&quot;Draw chart.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x_index (string):</span>
@@ -346,7 +345,7 @@
 <span class="sd">            matplotlib.pyplot.Figure: Figure</span>
 
 <span class="sd">        Examples:</span>
-<span class="sd">            &gt;&gt;&gt; ship_kt.draw_chart(&quot;time&quot;, &quot;r&quot;, xlabel=&quot;time [sec]&quot;, \</span>
+<span class="sd">            &gt;&gt;&gt; ship.draw_chart(&quot;time&quot;, &quot;r&quot;, xlabel=&quot;time [sec]&quot;, \</span>
 <span class="sd">            &gt;&gt;&gt; ylabel=r&quot;$u$&quot; + &quot; [rad/s]&quot;,save_fig_path=&#39;test.png&#39;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">target_x</span> <span class="o">=</span> <span class="kc">None</span>
@@ -463,6 +462,9 @@
 <span class="sd">            save_fig_path (str, optional):</span>
 <span class="sd">                Path of saving figure.</span>
 <span class="sd">                Defaults to None.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; ship.draw_gif(save_fig_path=&#39;test.gif&#39;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>

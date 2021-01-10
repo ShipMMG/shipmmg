@@ -1,0 +1,745 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>shipmmg.mmg_3dof &mdash; shipmmg 0.0.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> shipmmg
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">shipmmg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>shipmmg.mmg_3dof</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for shipmmg.mmg_3dof</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">dataclasses</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.misc</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">odeint</span>
+
+
+<div class="viewcode-block" id="Mmg3DofBasicParams"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.mmg_3dof.Mmg3DofBasicParams">[docs]</a><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">Mmg3DofBasicParams</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Dataclass for setting basic parameters of MMG 3ODF.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        L_pp (float):</span>
+<span class="sd">            Ship length between perpendiculars [m]</span>
+<span class="sd">        B (float):</span>
+<span class="sd">            Ship breadth [m]</span>
+<span class="sd">        d (float):</span>
+<span class="sd">            Ship draft [m]</span>
+<span class="sd">        nabla (float):</span>
+<span class="sd">            Displacement volume of ship [m^3]</span>
+<span class="sd">        x_G (float):</span>
+<span class="sd">            Longitudinal coordinate of center of gravity of ship [-]</span>
+<span class="sd">        D_p (float):</span>
+<span class="sd">            Propeller diameter [m]</span>
+<span class="sd">        m_ (float):</span>
+<span class="sd">            Ship mass (non-dimensionalized) [-]</span>
+<span class="sd">        I_zG (float):</span>
+<span class="sd">            Moment of inertia of ship around center of gravity [-]</span>
+<span class="sd">        Λ (float):</span>
+<span class="sd">            Rudder aspect ratio [-]</span>
+<span class="sd">        A_R_Ld (float):</span>
+<span class="sd">            Profile area of movable part of mariner rudder[-]</span>
+<span class="sd">        η (float):</span>
+<span class="sd">            Ratio of propeller diameter to rudder span (=D_p/HR)</span>
+<span class="sd">        m_x_ (float):</span>
+<span class="sd">            Added masses of x axis direction (non-dimensionalized)</span>
+<span class="sd">        m_y_ (float):</span>
+<span class="sd">            Added masses of y axis direction (non-dimensionalized)</span>
+<span class="sd">        J_z (float):</span>
+<span class="sd">            Added moment of inertia (non-dimensionalized)</span>
+<span class="sd">        f_α (float):</span>
+<span class="sd">            Rudder lift gradient coefficient</span>
+<span class="sd">        ϵ (float):</span>
+<span class="sd">            Ratio of wake fraction at propeller and rudder positions</span>
+<span class="sd">        t_R (float):</span>
+<span class="sd">            Steering resistance deduction factor</span>
+<span class="sd">        a_H (float):</span>
+<span class="sd">            Rudder force increase factor</span>
+<span class="sd">        x_H (float):</span>
+<span class="sd">            Longitudinal coordinate of acting point of the additional lateral force component induced by steering</span>
+<span class="sd">        γ_R (float):</span>
+<span class="sd">            Flow straightening coefficient</span>
+<span class="sd">        l_R (float):</span>
+<span class="sd">            Effective longitudinal coordinate of rudder position in formula of βR</span>
+<span class="sd">        κ (float):</span>
+<span class="sd">            An experimental constant for　expressing uR</span>
+<span class="sd">        t_P (float):</span>
+<span class="sd">            Thrust deduction factor</span>
+<span class="sd">        w_P0 (float):</span>
+<span class="sd">            Wake coefficient at propeller position in straight moving</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        For more information, please see the following articles.</span>
+
+<span class="sd">        - Yasukawa, H., Yoshimura, Y. (2015) Introduction of MMG standard method for ship maneuvering predictions.</span>
+<span class="sd">          J Mar Sci Technol 20, 37–52 https://doi.org/10.1007/s00773-014-0293-y</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">L_pp</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">B</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">d</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">nabla</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">x_G</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">D_p</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">m_</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">I_zG</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">Λ</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">A_R_Ld</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">η</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">m_x_</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">m_y_</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">J_z</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">f_α</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">ϵ</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">t_R</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">a_H</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">x_H</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">γ_R</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">l_R</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">κ</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">t_P</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">w_P0</span><span class="p">:</span> <span class="nb">float</span></div>
+
+
+<div class="viewcode-block" id="Mmg3DofManeuveringParams"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.mmg_3dof.Mmg3DofManeuveringParams">[docs]</a><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">Mmg3DofManeuveringParams</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Dataclass for setting maneuvering parameters of MMG 3ODF.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        C_1 (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        C_2 (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        C_3 (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        X_0 (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        X_ββ (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        X_βγ (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        X_γγ (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        X_ββββ (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        Y_β (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        Y_γ (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        Y_βββ (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        Y_ββγ (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        Y_βγγ (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        Y_γγγ (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        N_β (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        N_γ (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        N_βββ (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        N_ββγ (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        N_βγγ (float): One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        N_γγγ (float): One of manuevering parameters of MMG 3DOF</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        For more information, please see the following articles.</span>
+
+<span class="sd">        - Yasukawa, H., Yoshimura, Y. (2015) Introduction of MMG standard method for ship maneuvering predictions.</span>
+<span class="sd">          J Mar Sci Technol 20, 37–52 https://doi.org/10.1007/s00773-014-0293-y</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">C_1</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">C_2</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">C_3</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">X_0</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">X_ββ</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">X_βγ</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">X_γγ</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">X_ββββ</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">Y_β</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">Y_γ</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">Y_βββ</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">Y_ββγ</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">Y_βγγ</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">Y_γγγ</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">N_β</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">N_γ</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">N_βββ</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">N_ββγ</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">N_βγγ</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">N_γγγ</span><span class="p">:</span> <span class="nb">float</span></div>
+
+
+<div class="viewcode-block" id="simulate_mmg_3dof"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.mmg_3dof.simulate_mmg_3dof">[docs]</a><span class="k">def</span> <span class="nf">simulate_mmg_3dof</span><span class="p">(</span>
+    <span class="n">basic_params</span><span class="p">:</span> <span class="n">Mmg3DofBasicParams</span><span class="p">,</span>
+    <span class="n">maneuvering_params</span><span class="p">:</span> <span class="n">Mmg3DofManeuveringParams</span><span class="p">,</span>
+    <span class="n">R_0_func</span><span class="p">:</span> <span class="n">interp1d</span><span class="p">,</span>
+    <span class="n">time_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">delta_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">npm_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">u0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">v0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">r0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ρ</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.025</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;MMG 3DOF simulation</span>
+<span class="sd">    MMG 3DOF simulation by follwoing equation of motion.</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        m (\dot{u}-vr)&amp;=-m_x\dot{u}+m_yvr+X_H+R_0+X_P+X_R</span>
+
+<span class="sd">        m (\dot{v}+ur)&amp;=-m_y\dot{v}+m_xur+Y_H+Y_R</span>
+
+<span class="sd">        I_{zG}\dot{r}&amp;=-J_Z\dot{r}+N_H+N_R</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        basic_params (Mmg3DofBasicParams):</span>
+<span class="sd">            Basic paramters for MMG 3DOF simulation.</span>
+<span class="sd">        maneuvering_params (Mmg3DofManeuveringParams):</span>
+<span class="sd">            Maneuvering parameters for MMG 3DOF simulation.</span>
+<span class="sd">        R_0_func (scipy.interpolate.interp1d):</span>
+<span class="sd">            R_0 function which input value is `u`.</span>
+<span class="sd">        time_list (list[float]):</span>
+<span class="sd">            time list of simulation.</span>
+<span class="sd">        delta_list (list[float]):</span>
+<span class="sd">            rudder angle list of simulation.</span>
+<span class="sd">        npm_list (List[float]):</span>
+<span class="sd">            npm list of simulation.</span>
+<span class="sd">        u0 (float, optional):</span>
+<span class="sd">            axial velocity [m/s] in initial condition (`time_list[0]`).</span>
+<span class="sd">            Defaults to 0.0.</span>
+<span class="sd">        v0 (float, optional):</span>
+<span class="sd">            lateral velocity [m/s] in initial condition (`time_list[0]`).</span>
+<span class="sd">            Defaults to 0.0.</span>
+<span class="sd">        r0 (float, optional):</span>
+<span class="sd">            rate of turn [rad/s] in initial condition (`time_list[0]`).</span>
+<span class="sd">            Defaults to 0.0.</span>
+<span class="sd">        ρ (float, optional):</span>
+<span class="sd">            seawater density [kg/m^3]</span>
+<span class="sd">            Defaults to 1.025.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        numpy.ndarray:</span>
+<span class="sd">            The result of MMG 3DOF simulation.</span>
+<span class="sd">            shape = (time, num_of_results)</span>
+<span class="sd">            num_of_results = 5 including :math:`u`, :math:`v`, :math:`r`, :math:`\\delta` and npm.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        For more information, please see the following articles.</span>
+
+<span class="sd">        - Yasukawa, H., Yoshimura, Y. (2015) Introduction of MMG standard method for ship maneuvering predictions.</span>
+<span class="sd">          J Mar Sci Technol 20, 37–52 https://doi.org/10.1007/s00773-014-0293-y</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">simulate</span><span class="p">(</span>
+        <span class="n">L_pp</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">L_pp</span><span class="p">,</span>
+        <span class="n">B</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">B</span><span class="p">,</span>
+        <span class="n">d</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">d</span><span class="p">,</span>
+        <span class="n">nabla</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">nabla</span><span class="p">,</span>
+        <span class="n">x_G</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">x_G</span><span class="p">,</span>
+        <span class="n">D_p</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">D_p</span><span class="p">,</span>
+        <span class="n">m_</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">m_</span><span class="p">,</span>
+        <span class="n">I_zG</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">I_zG</span><span class="p">,</span>
+        <span class="n">Λ</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">Λ</span><span class="p">,</span>
+        <span class="n">A_R_Ld</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">A_R_Ld</span><span class="p">,</span>
+        <span class="n">η</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">η</span><span class="p">,</span>
+        <span class="n">m_x_</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">m_x_</span><span class="p">,</span>
+        <span class="n">m_y_</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">m_y_</span><span class="p">,</span>
+        <span class="n">J_z</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">J_z</span><span class="p">,</span>
+        <span class="n">f_α</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">f_α</span><span class="p">,</span>
+        <span class="n">ϵ</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">ϵ</span><span class="p">,</span>
+        <span class="n">t_R</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">t_R</span><span class="p">,</span>
+        <span class="n">a_H</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">a_H</span><span class="p">,</span>
+        <span class="n">x_H</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">x_H</span><span class="p">,</span>
+        <span class="n">γ_R</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">γ_R</span><span class="p">,</span>
+        <span class="n">l_R</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">l_R</span><span class="p">,</span>
+        <span class="n">κ</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">κ</span><span class="p">,</span>
+        <span class="n">t_P</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">t_P</span><span class="p">,</span>
+        <span class="n">w_P0</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">w_P0</span><span class="p">,</span>
+        <span class="n">C_1</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">C_1</span><span class="p">,</span>
+        <span class="n">C_2</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">C_2</span><span class="p">,</span>
+        <span class="n">C_3</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">C_3</span><span class="p">,</span>
+        <span class="n">X_0</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">X_0</span><span class="p">,</span>
+        <span class="n">X_ββ</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">X_ββ</span><span class="p">,</span>
+        <span class="n">X_βγ</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">X_βγ</span><span class="p">,</span>
+        <span class="n">X_γγ</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">X_γγ</span><span class="p">,</span>
+        <span class="n">X_ββββ</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">X_ββββ</span><span class="p">,</span>
+        <span class="n">Y_β</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">Y_β</span><span class="p">,</span>
+        <span class="n">Y_γ</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">Y_γ</span><span class="p">,</span>
+        <span class="n">Y_βββ</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">Y_βββ</span><span class="p">,</span>
+        <span class="n">Y_ββγ</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">Y_ββγ</span><span class="p">,</span>
+        <span class="n">Y_βγγ</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">Y_βγγ</span><span class="p">,</span>
+        <span class="n">Y_γγγ</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">Y_γγγ</span><span class="p">,</span>
+        <span class="n">N_β</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">N_β</span><span class="p">,</span>
+        <span class="n">N_γ</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">N_γ</span><span class="p">,</span>
+        <span class="n">N_βββ</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">N_βββ</span><span class="p">,</span>
+        <span class="n">N_ββγ</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">N_ββγ</span><span class="p">,</span>
+        <span class="n">N_βγγ</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">N_βγγ</span><span class="p">,</span>
+        <span class="n">N_γγγ</span><span class="o">=</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">N_γγγ</span><span class="p">,</span>
+        <span class="n">R_0_func</span><span class="o">=</span><span class="n">R_0_func</span><span class="p">,</span>
+        <span class="n">time_list</span><span class="o">=</span><span class="n">time_list</span><span class="p">,</span>
+        <span class="n">delta_list</span><span class="o">=</span><span class="n">delta_list</span><span class="p">,</span>
+        <span class="n">npm_list</span><span class="o">=</span><span class="n">npm_list</span><span class="p">,</span>
+        <span class="n">u0</span><span class="o">=</span><span class="n">u0</span><span class="p">,</span>
+        <span class="n">v0</span><span class="o">=</span><span class="n">v0</span><span class="p">,</span>
+        <span class="n">r0</span><span class="o">=</span><span class="n">r0</span><span class="p">,</span>
+        <span class="n">ρ</span><span class="o">=</span><span class="n">ρ</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="simulate"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.mmg_3dof.simulate">[docs]</a><span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span>
+    <span class="n">L_pp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">B</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">d</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">nabla</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">x_G</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">D_p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">m_</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">I_zG</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">Λ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">A_R_Ld</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">η</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">m_x_</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">m_y_</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">J_z</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">f_α</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">ϵ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">t_R</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">a_H</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">x_H</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">γ_R</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">l_R</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">κ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">t_P</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">w_P0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">C_1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">C_2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">C_3</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">X_0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">X_ββ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">X_βγ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">X_γγ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">X_ββββ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">Y_β</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">Y_γ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">Y_βββ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">Y_ββγ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">Y_βγγ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">Y_γγγ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">N_β</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">N_γ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">N_βββ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">N_ββγ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">N_βγγ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">N_γγγ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">R_0_func</span><span class="p">:</span> <span class="n">interp1d</span><span class="p">,</span>
+    <span class="n">time_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">delta_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">npm_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">u0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">v0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">r0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ρ</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.025</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;MMG 3DOF simulation</span>
+<span class="sd">    MMG 3DOF simulation by follwoing equation of motion.</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        m (\dot{u}-vr)&amp;=-m_x\dot{u}+m_yvr+X_H+R_0+X_P+X_R</span>
+
+<span class="sd">        m (\dot{v}+ur)&amp;=-m_y\dot{v}+m_xur+Y_H+Y_R</span>
+
+<span class="sd">        I_{zG}\dot{r}&amp;=-J_Z\dot{r}+N_H+N_R</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        L_pp (float):</span>
+<span class="sd">            Ship length between perpendiculars [m]</span>
+<span class="sd">        B (float):</span>
+<span class="sd">            Ship breadth [m]</span>
+<span class="sd">        d (float):</span>
+<span class="sd">            Ship draft [m]</span>
+<span class="sd">        nabla (float):</span>
+<span class="sd">            Displacement volume of ship [m^3]</span>
+<span class="sd">        x_G (float):</span>
+<span class="sd">            Longitudinal coordinate of center of gravity of ship [-]</span>
+<span class="sd">        D_p (float):</span>
+<span class="sd">            Propeller diameter [m]</span>
+<span class="sd">        m_ (float):</span>
+<span class="sd">            Ship mass (non-dimensionalized) [-]</span>
+<span class="sd">        I_zG (float):</span>
+<span class="sd">            Moment of inertia of ship around center of gravity [-]</span>
+<span class="sd">        Λ (float):</span>
+<span class="sd">            Rudder aspect ratio [-]</span>
+<span class="sd">        A_R_Ld (float):</span>
+<span class="sd">            Profile area of movable part of mariner rudder[-]</span>
+<span class="sd">        η (float):</span>
+<span class="sd">            Ratio of propeller diameter to rudder span (=D_p/HR)</span>
+<span class="sd">        m_x_ (float):</span>
+<span class="sd">            Added masses of x axis direction (non-dimensionalized)</span>
+<span class="sd">        m_y_ (float):</span>
+<span class="sd">            Added masses of y axis direction (non-dimensionalized)</span>
+<span class="sd">        J_z (float):</span>
+<span class="sd">            Added moment of inertia (non-dimensionalized)</span>
+<span class="sd">        f_α (float):</span>
+<span class="sd">            Rudder lift gradient coefficient</span>
+<span class="sd">        ϵ (float):</span>
+<span class="sd">            Ratio of wake fraction at propeller and rudder positions</span>
+<span class="sd">        t_R (float):</span>
+<span class="sd">            Steering resistance deduction factor</span>
+<span class="sd">        a_H (float):</span>
+<span class="sd">            Rudder force increase factor</span>
+<span class="sd">        x_H (float):</span>
+<span class="sd">            Longitudinal coordinate of acting point of the additional lateral force component induced by steering</span>
+<span class="sd">        γ_R (float):</span>
+<span class="sd">            Flow straightening coefficient</span>
+<span class="sd">        l_R (float):</span>
+<span class="sd">            Effective longitudinal coordinate of rudder position in formula of βR</span>
+<span class="sd">        κ (float):</span>
+<span class="sd">            An experimental constant for　expressing uR</span>
+<span class="sd">        t_P (float):</span>
+<span class="sd">            Thrust deduction factor</span>
+<span class="sd">        w_P0 (float):</span>
+<span class="sd">            Wake coefficient at propeller position in straight moving</span>
+<span class="sd">        C_1 (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        C_2 (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        C_3 (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        X_0 (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        X_ββ (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        X_βγ (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        X_γγ (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        X_ββββ (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        Y_β (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        Y_γ (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        Y_βββ (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        Y_ββγ (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        Y_βγγ (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        Y_γγγ (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        N_β (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        N_γ (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        N_βββ (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        N_ββγ (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        N_βγγ (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        N_γγγ (float):</span>
+<span class="sd">            One of manuevering parameters of MMG 3DOF</span>
+<span class="sd">        R_0_func (scipy.interpolate.interp1d):</span>
+<span class="sd">            R_0 function which input value is `u`.</span>
+<span class="sd">        time_list (list[float]):</span>
+<span class="sd">            time list of simulation.</span>
+<span class="sd">        delta_list (list[float]):</span>
+<span class="sd">            rudder angle list of simulation.</span>
+<span class="sd">        npm_list (List[float]):</span>
+<span class="sd">            npm list of simulation.</span>
+<span class="sd">        u0 (float, optional):</span>
+<span class="sd">            axial velocity [m/s] in initial condition (`time_list[0]`).</span>
+<span class="sd">            Defaults to 0.0.</span>
+<span class="sd">        v0 (float, optional):</span>
+<span class="sd">            lateral velocity [m/s] in initial condition (`time_list[0]`).</span>
+<span class="sd">            Defaults to 0.0.</span>
+<span class="sd">        r0 (float, optional):</span>
+<span class="sd">            rate of turn [rad/s] in initial condition (`time_list[0]`).</span>
+<span class="sd">            Defaults to 0.0.</span>
+<span class="sd">        ρ (float, optional):</span>
+<span class="sd">            seawater density [kg/m^3]</span>
+<span class="sd">            Defaults to 1.025.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        numpy.ndarray:</span>
+<span class="sd">            The result of MMG 3DOF simulation.</span>
+<span class="sd">            shape = (time, num_of_params)</span>
+<span class="sd">            num_of_params = 5 including :math:`u`, :math:`v`, :math:`r`, :math:`\\delta` and npm.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        For more information, please see the following articles.</span>
+
+<span class="sd">        - Yasukawa, H., Yoshimura, Y. (2015) Introduction of MMG standard method for ship maneuvering predictions.</span>
+<span class="sd">          J Mar Sci Technol 20, 37–52 https://doi.org/10.1007/s00773-014-0293-y</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">spl_delta</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">delta_list</span><span class="p">,</span> <span class="s2">&quot;cubic&quot;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s2">&quot;extrapolate&quot;</span><span class="p">)</span>
+    <span class="n">spl_npm</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">npm_list</span><span class="p">,</span> <span class="s2">&quot;cubic&quot;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s2">&quot;extrapolate&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">mmg_3dof_eom</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+
+        <span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">x_G</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">β</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="n">U</span> <span class="o">==</span> <span class="mf">0.0</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">x_G</span><span class="p">)</span> <span class="o">/</span> <span class="n">U</span><span class="p">)</span>
+
+        <span class="n">γ_dash</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="n">U</span> <span class="o">==</span> <span class="mf">0.0</span> <span class="k">else</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">L_pp</span> <span class="o">/</span> <span class="n">U</span>
+        <span class="n">J</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="n">X</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span> <span class="k">else</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">w_P0</span><span class="p">)</span> <span class="o">*</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="n">D_p</span><span class="p">)</span>
+        <span class="n">K_T</span> <span class="o">=</span> <span class="n">C_1</span> <span class="o">+</span> <span class="n">C_2</span> <span class="o">*</span> <span class="n">J</span> <span class="o">+</span> <span class="n">C_3</span> <span class="o">*</span> <span class="n">J</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">v_R</span> <span class="o">=</span> <span class="n">U</span> <span class="o">*</span> <span class="n">γ_R</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">β</span><span class="p">)</span> <span class="o">-</span> <span class="n">l_R</span> <span class="o">*</span> <span class="n">γ_dash</span><span class="p">)</span>
+        <span class="n">u_R</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">η</span> <span class="o">*</span> <span class="p">(</span><span class="n">κ</span> <span class="o">*</span> <span class="n">ϵ</span> <span class="o">*</span> <span class="mf">8.0</span> <span class="o">*</span> <span class="n">C_1</span> <span class="o">*</span> <span class="n">X</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">D_p</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">J</span> <span class="o">==</span> <span class="mf">0.0</span>
+            <span class="k">else</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">w_P0</span><span class="p">)</span>
+            <span class="o">*</span> <span class="n">ϵ</span>
+            <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+                <span class="n">η</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">κ</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">8.0</span> <span class="o">*</span> <span class="n">K_T</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">J</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span>
+                <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">η</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">U_R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">u_R</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">v_R</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">α_R</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">v_R</span><span class="p">,</span> <span class="n">u_R</span><span class="p">)</span>
+        <span class="n">F_N</span> <span class="o">=</span> <span class="n">A_R_Ld</span> <span class="o">*</span> <span class="n">f_α</span> <span class="o">*</span> <span class="p">(</span><span class="n">U_R</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">α_R</span><span class="p">)</span>
+
+        <span class="n">X_H</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mf">0.5</span>
+            <span class="o">*</span> <span class="n">ρ</span>
+            <span class="o">*</span> <span class="n">L_pp</span>
+            <span class="o">*</span> <span class="n">d</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">U</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">*</span> <span class="p">(</span>
+                <span class="n">X_0</span>
+                <span class="o">+</span> <span class="n">X_ββ</span> <span class="o">*</span> <span class="n">β</span> <span class="o">**</span> <span class="mi">2</span>
+                <span class="o">+</span> <span class="n">X_βγ</span> <span class="o">*</span> <span class="n">β</span> <span class="o">*</span> <span class="n">γ_dash</span>
+                <span class="o">+</span> <span class="n">X_γγ</span> <span class="o">*</span> <span class="n">γ_dash</span> <span class="o">**</span> <span class="mi">2</span>
+                <span class="o">+</span> <span class="n">X_ββββ</span> <span class="o">*</span> <span class="n">β</span> <span class="o">**</span> <span class="mi">4</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">R_0</span> <span class="o">=</span> <span class="n">R_0_func</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">X_R</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">t_R</span><span class="p">)</span> <span class="o">*</span> <span class="n">F_N</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">/</span> <span class="n">L_pp</span>
+        <span class="n">X_P</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">t_P</span><span class="p">)</span> <span class="o">*</span> <span class="n">ρ</span> <span class="o">*</span> <span class="n">K_T</span> <span class="o">*</span> <span class="n">X</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">D_p</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">ρ</span> <span class="o">*</span> <span class="n">d</span> <span class="o">*</span> <span class="n">L_pp</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">Y_H</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mf">0.5</span>
+            <span class="o">*</span> <span class="n">ρ</span>
+            <span class="o">*</span> <span class="n">L_pp</span>
+            <span class="o">*</span> <span class="n">d</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">U</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">*</span> <span class="p">(</span>
+                <span class="n">Y_β</span> <span class="o">*</span> <span class="n">β</span>
+                <span class="o">+</span> <span class="n">Y_γ</span> <span class="o">*</span> <span class="n">γ_dash</span>
+                <span class="o">+</span> <span class="n">Y_ββγ</span> <span class="o">*</span> <span class="p">(</span><span class="n">β</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">γ_dash</span>
+                <span class="o">+</span> <span class="n">Y_βγγ</span> <span class="o">*</span> <span class="n">β</span> <span class="o">*</span> <span class="p">(</span><span class="n">γ_dash</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">Y_βββ</span> <span class="o">*</span> <span class="p">(</span><span class="n">β</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">Y_γγγ</span> <span class="o">*</span> <span class="p">(</span><span class="n">γ_dash</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">Y_R</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">a_H</span><span class="p">)</span> <span class="o">*</span> <span class="n">F_N</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">/</span> <span class="n">L_pp</span>
+        <span class="n">N_H</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mf">0.5</span>
+            <span class="o">*</span> <span class="n">ρ</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">L_pp</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">*</span> <span class="n">d</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">U</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">*</span> <span class="p">(</span>
+                <span class="n">N_β</span> <span class="o">*</span> <span class="n">β</span>
+                <span class="o">+</span> <span class="n">N_γ</span> <span class="o">*</span> <span class="n">γ_dash</span>
+                <span class="o">+</span> <span class="n">N_ββγ</span> <span class="o">*</span> <span class="p">(</span><span class="n">β</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">γ_dash</span>
+                <span class="o">+</span> <span class="n">N_βγγ</span> <span class="o">*</span> <span class="n">β</span> <span class="o">*</span> <span class="p">(</span><span class="n">γ_dash</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">N_βββ</span> <span class="o">*</span> <span class="p">(</span><span class="n">β</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">N_γγγ</span> <span class="o">*</span> <span class="p">(</span><span class="n">γ_dash</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">N_R</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">+</span> <span class="n">a_H</span> <span class="o">*</span> <span class="n">x_H</span><span class="p">)</span> <span class="o">*</span> <span class="n">F_N</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">/</span> <span class="n">L_pp</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">d_u</span> <span class="o">=</span> <span class="p">((</span><span class="n">X_H</span> <span class="o">-</span> <span class="n">R_0</span> <span class="o">+</span> <span class="n">X_R</span> <span class="o">+</span> <span class="n">X_P</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">m_</span> <span class="o">+</span> <span class="n">m_y_</span><span class="p">)</span> <span class="o">*</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">m_</span> <span class="o">+</span> <span class="n">m_x_</span><span class="p">)</span>
+        <span class="n">d_v</span> <span class="o">=</span> <span class="p">((</span><span class="n">Y_H</span> <span class="o">+</span> <span class="n">Y_R</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">m_</span> <span class="o">+</span> <span class="n">m_x_</span><span class="p">)</span> <span class="o">*</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">m_</span> <span class="o">+</span> <span class="n">m_y_</span><span class="p">)</span>
+        <span class="n">d_r</span> <span class="o">=</span> <span class="p">(</span><span class="n">N_H</span> <span class="o">+</span> <span class="n">N_R</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">I_zG</span> <span class="o">+</span> <span class="n">J_z</span><span class="p">)</span>
+        <span class="n">d_δ</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">spl_delta</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="n">d_npm</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">spl_npm</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">d_u</span><span class="p">,</span> <span class="n">d_v</span><span class="p">,</span> <span class="n">d_r</span><span class="p">,</span> <span class="n">d_δ</span><span class="p">,</span> <span class="n">d_npm</span><span class="p">]</span>
+
+    <span class="n">X_init</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">u0</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span> <span class="n">r0</span><span class="p">,</span> <span class="n">delta_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">npm_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="n">X_result</span> <span class="o">=</span> <span class="n">odeint</span><span class="p">(</span><span class="n">mmg_3dof_eom</span><span class="p">,</span> <span class="n">X_init</span><span class="p">,</span> <span class="n">time_list</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">X_result</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, Taiga MITSUYUKI
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -20,6 +20,14 @@ shipmmg.kt module
    :undoc-members:
    :show-inheritance:
 
+shipmmg.mmg\_3dof module
+------------------------
+
+.. automodule:: shipmmg.mmg_3dof
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 shipmmg.ship\_obj\_3dof module
 ------------------------------
 

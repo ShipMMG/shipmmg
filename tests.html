@@ -90,6 +90,7 @@
 <li><a class="reference internal" href="#">tests package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-tests.test_kt">tests.test_kt module</a></li>
+<li><a class="reference internal" href="#module-tests.test_mmg_3dof">tests.test_mmg_3dof module</a></li>
 <li><a class="reference internal" href="#module-tests.test_shipmmg">tests.test_shipmmg module</a></li>
 <li><a class="reference internal" href="#module-tests">Module contents</a></li>
 </ul>
@@ -168,13 +169,13 @@
 <span id="tests-test-kt-module"></span><h2>tests.test_kt module<a class="headerlink" href="#module-tests.test_kt" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="tests.test_kt.ship_kt">
-<code class="sig-prename descclassname">tests.test_kt.</code><code class="sig-name descname">ship_kt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">simulate_kt</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_kt.html#ship_kt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_kt.ship_kt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tests.test_kt.</code><code class="sig-name descname">ship_kt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sim_result</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_kt.html#ship_kt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_kt.ship_kt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fixture for testing in this file.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="tests.test_kt.simulate_kt">
-<code class="sig-prename descclassname">tests.test_kt.</code><code class="sig-name descname">simulate_kt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_kt.html#simulate_kt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_kt.simulate_kt" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_kt.sim_result">
+<code class="sig-prename descclassname">tests.test_kt.</code><code class="sig-name descname">sim_result</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_kt.html#sim_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_kt.sim_result" title="Permalink to this definition">¶</a></dt>
 <dd><p>Just check shimmg.kt.simulate().</p>
 </dd></dl>
 
@@ -182,6 +183,30 @@
 <dt id="tests.test_kt.test_Ship3DOF_drawing_function">
 <code class="sig-prename descclassname">tests.test_kt.</code><code class="sig-name descname">test_Ship3DOF_drawing_function</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ship_kt</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_kt.html#test_Ship3DOF_drawing_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_kt.test_Ship3DOF_drawing_function" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check drawing functions of Ship3DOF class by using KT simulation results</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-tests.test_mmg_3dof">
+<span id="tests-test-mmg-3dof-module"></span><h2>tests.test_mmg_3dof module<a class="headerlink" href="#module-tests.test_mmg_3dof" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="tests.test_mmg_3dof.basic_params">
+<code class="sig-prename descclassname">tests.test_mmg_3dof.</code><code class="sig-name descname">basic_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_mmg_3dof.html#basic_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_mmg_3dof.basic_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="tests.test_mmg_3dof.maneuvering_params">
+<code class="sig-prename descclassname">tests.test_mmg_3dof.</code><code class="sig-name descname">maneuvering_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_mmg_3dof.html#maneuvering_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_mmg_3dof.maneuvering_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="tests.test_mmg_3dof.ship_mmg_3dof">
+<code class="sig-prename descclassname">tests.test_mmg_3dof.</code><code class="sig-name descname">ship_mmg_3dof</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">basic_params</span></em>, <em class="sig-param"><span class="n">maneuvering_params</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_mmg_3dof.html#ship_mmg_3dof"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_mmg_3dof.ship_mmg_3dof" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="tests.test_mmg_3dof.test_Ship3DOF_drawing_function">
+<code class="sig-prename descclassname">tests.test_mmg_3dof.</code><code class="sig-name descname">test_Ship3DOF_drawing_function</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ship_mmg_3dof</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_mmg_3dof.html#test_Ship3DOF_drawing_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_mmg_3dof.test_Ship3DOF_drawing_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check drawing functions of Ship3DOF class by using MMG 3DOF simulation results</p>
 </dd></dl>
 
 </div>

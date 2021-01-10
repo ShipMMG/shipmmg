@@ -152,6 +152,7 @@
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
+<span class="kn">import</span> <span class="nn">dataclasses</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.misc</span> <span class="kn">import</span> <span class="n">derivative</span>
@@ -159,9 +160,64 @@
 <span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">odeint</span>
 
 
+<div class="viewcode-block" id="KTParams"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.kt.KTParams">[docs]</a><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">KTParams</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Dataclass for setting KT parameters of KT simulation.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        K (float): One of parameters in KT model. [1/s]</span>
+<span class="sd">        T (float): One of parameters in KT model. [s]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">K</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">T</span><span class="p">:</span> <span class="nb">float</span></div>
+
+
+<div class="viewcode-block" id="simulate_kt"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.kt.simulate_kt">[docs]</a><span class="k">def</span> <span class="nf">simulate_kt</span><span class="p">(</span>
+    <span class="n">kt_params</span><span class="p">:</span> <span class="n">KTParams</span><span class="p">,</span>
+    <span class="n">time_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">delta_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">r0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;KT simulation</span>
+<span class="sd">    KT simulation by following equation of motion.</span>
+
+<span class="sd">    :math:`T dr =  -r + K \\delta`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        kt_params (KTParams):</span>
+<span class="sd">            KT parameters.</span>
+<span class="sd">        time_list (list[float]):</span>
+<span class="sd">            time list of simulation.</span>
+<span class="sd">        delta_list (list[float]):</span>
+<span class="sd">            rudder angle list of simulation.</span>
+<span class="sd">        r0 (float, optional):</span>
+<span class="sd">            rate of turn [rad/s] in initial condition (`time_list[0]`).</span>
+<span class="sd">            Defaults to 0.0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        numpy.ndarray:</span>
+<span class="sd">            The result of KT simulation.</span>
+<span class="sd">            shape = (time, num_of_params)</span>
+<span class="sd">            num_of_params = 2 including :math:`r` and :math:`\\delta`.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; kt_params = KTParams(K=0.15, T=60.0)</span>
+<span class="sd">        &gt;&gt;&gt; duration = 300</span>
+<span class="sd">        &gt;&gt;&gt; num_of_sampling = 3000</span>
+<span class="sd">        &gt;&gt;&gt; time_list = np.linspace(0.00, duration, num_of_sampling)</span>
+<span class="sd">        &gt;&gt;&gt; delta_list = 35 * np.pi / 180 * np.sin(3.0 * np.pi / Ts * time_list)</span>
+<span class="sd">        &gt;&gt;&gt; r0 = 0.0</span>
+<span class="sd">        &gt;&gt;&gt; result = simulate_kt(kt_params, time_list, delta_list, r0)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">simulate</span><span class="p">(</span>
+        <span class="n">K</span><span class="o">=</span><span class="n">kt_params</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">kt_params</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">time_list</span><span class="o">=</span><span class="n">time_list</span><span class="p">,</span> <span class="n">delta_list</span><span class="o">=</span><span class="n">delta_list</span><span class="p">,</span> <span class="n">r0</span><span class="o">=</span><span class="n">r0</span>
+    <span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="simulate"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.kt.simulate">[docs]</a><span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span>
     <span class="n">K</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">time_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">delta_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">r0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;KT simulation</span>
 <span class="sd">    KT simulation by following equation of motion.</span>
 

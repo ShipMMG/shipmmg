@@ -152,33 +152,34 @@
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">from</span> <span class="nn">shipmmg.kt</span> <span class="kn">import</span> <span class="n">simulate</span>
+<span class="kn">from</span> <span class="nn">shipmmg.kt</span> <span class="kn">import</span> <span class="n">KTParams</span><span class="p">,</span> <span class="n">simulate_kt</span>
 <span class="kn">from</span> <span class="nn">shipmmg.ship_obj_3dof</span> <span class="kn">import</span> <span class="n">ShipObj3dof</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pytest</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
 
-<div class="viewcode-block" id="simulate_kt"><a class="viewcode-back" href="../../tests.html#tests.test_kt.simulate_kt">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span> <span class="nf">simulate_kt</span><span class="p">():</span>
+<div class="viewcode-block" id="sim_result"><a class="viewcode-back" href="../../tests.html#tests.test_kt.sim_result">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">sim_result</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Just check shimmg.kt.simulate().&quot;&quot;&quot;</span>
     <span class="n">K</span> <span class="o">=</span> <span class="mf">0.155</span>
     <span class="n">T</span> <span class="o">=</span> <span class="mf">80.5</span>
+    <span class="n">kt_params</span> <span class="o">=</span> <span class="n">KTParams</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
     <span class="n">duration</span> <span class="o">=</span> <span class="mi">50</span>
     <span class="n">num_of_sampling</span> <span class="o">=</span> <span class="mi">1000</span>
     <span class="n">time_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">num_of_sampling</span><span class="p">)</span>
     <span class="n">Ts</span> <span class="o">=</span> <span class="mf">50.0</span>
     <span class="n">delta_list</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">Ts</span> <span class="o">*</span> <span class="n">time_list</span><span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">simulate</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">time_list</span><span class="p">,</span> <span class="n">delta_list</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">simulate_kt</span><span class="p">(</span><span class="n">kt_params</span><span class="p">,</span> <span class="n">time_list</span><span class="p">,</span> <span class="n">delta_list</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">time_list</span><span class="p">,</span> <span class="n">result</span></div>
 
 
 <div class="viewcode-block" id="ship_kt"><a class="viewcode-back" href="../../tests.html#tests.test_kt.ship_kt">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span> <span class="nf">ship_kt</span><span class="p">(</span><span class="n">simulate_kt</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">ship_kt</span><span class="p">(</span><span class="n">sim_result</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fixture for testing in this file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">time_list</span><span class="p">,</span> <span class="n">simulation_result</span> <span class="o">=</span> <span class="n">simulate_kt</span>
+    <span class="n">time_list</span><span class="p">,</span> <span class="n">simulation_result</span> <span class="o">=</span> <span class="n">sim_result</span>
     <span class="n">u_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_list</span><span class="p">),</span> <span class="mi">20</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1852.0</span> <span class="o">/</span> <span class="mi">3600</span><span class="p">))</span>
     <span class="n">v_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_list</span><span class="p">))</span>
     <span class="n">r_list</span> <span class="o">=</span> <span class="n">simulation_result</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>

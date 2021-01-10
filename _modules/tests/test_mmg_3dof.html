@@ -1,0 +1,345 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tests.test_mmg_3dof &mdash; shipmmg 0.0.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> shipmmg
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">shipmmg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>tests.test_mmg_3dof</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for tests.test_mmg_3dof</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">shipmmg.mmg_3dof</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Mmg3DofBasicParams</span><span class="p">,</span>
+    <span class="n">Mmg3DofManeuveringParams</span><span class="p">,</span>
+    <span class="n">simulate_mmg_3dof</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">shipmmg.ship_obj_3dof</span> <span class="kn">import</span> <span class="n">ShipObj3dof</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="basic_params"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.basic_params">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">basic_params</span><span class="p">():</span>
+    <span class="n">basic_params</span> <span class="o">=</span> <span class="n">Mmg3DofBasicParams</span><span class="p">(</span>
+        <span class="n">L_pp</span><span class="o">=</span><span class="mf">2.19048</span><span class="p">,</span>  <span class="c1"># 船長Lpp[m]</span>
+        <span class="n">B</span><span class="o">=</span><span class="mf">0.3067</span><span class="p">,</span>  <span class="c1"># 船幅[m]</span>
+        <span class="n">d</span><span class="o">=</span><span class="mf">0.10286</span><span class="p">,</span>  <span class="c1"># 喫水[m]</span>
+        <span class="n">nabla</span><span class="o">=</span><span class="mf">0.04495</span><span class="p">,</span>  <span class="c1"># 排水量[m^3]</span>
+        <span class="n">x_G</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>  <span class="c1"># 重心位置[]</span>
+        <span class="n">D_p</span><span class="o">=</span><span class="mf">0.0756</span><span class="p">,</span>  <span class="c1"># プロペラ直径[m]</span>
+        <span class="n">m_</span><span class="o">=</span><span class="mf">0.1822</span><span class="p">,</span>  <span class="c1"># 質量(無次元化)[-]</span>
+        <span class="n">I_zG</span><span class="o">=</span><span class="mf">0.01138</span><span class="p">,</span>  <span class="c1"># 慣性モーメント[-]</span>
+        <span class="n">Λ</span><span class="o">=</span><span class="mf">2.1683</span><span class="p">,</span>  <span class="c1"># アスペクト比[-]</span>
+        <span class="n">A_R_Ld</span><span class="o">=</span><span class="mf">0.01867</span><span class="p">,</span>  <span class="c1"># 船の断面に対する舵面積比[-]</span>
+        <span class="n">η</span><span class="o">=</span><span class="mf">0.7916</span><span class="p">,</span>  <span class="c1"># プロペラ直径に対する舵高さ(Dp/H)</span>
+        <span class="n">m_x_</span><span class="o">=</span><span class="mf">0.00601</span><span class="p">,</span>  <span class="c1"># 付加質量x(無次元)</span>
+        <span class="n">m_y_</span><span class="o">=</span><span class="mf">0.1521</span><span class="p">,</span>  <span class="c1"># 付加質量y(無次元)</span>
+        <span class="n">J_z</span><span class="o">=</span><span class="mf">0.00729</span><span class="p">,</span>  <span class="c1"># 付加質量Izz(無次元)</span>
+        <span class="n">f_α</span><span class="o">=</span><span class="p">(</span><span class="mf">6.13</span> <span class="o">*</span> <span class="mf">2.1683</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.25</span> <span class="o">+</span> <span class="mf">2.1683</span><span class="p">),</span>  <span class="c1"># 直圧力勾配係数</span>
+        <span class="n">ϵ</span><span class="o">=</span><span class="mf">0.90</span><span class="p">,</span>  <span class="c1"># プロペラ・舵位置伴流係数比</span>
+        <span class="n">t_R</span><span class="o">=</span><span class="mf">0.441</span><span class="p">,</span>  <span class="c1"># 操縦抵抗減少率</span>
+        <span class="n">a_H</span><span class="o">=</span><span class="mf">0.232</span><span class="p">,</span>  <span class="c1"># 舵力増加係数</span>
+        <span class="n">x_H</span><span class="o">=-</span><span class="mf">0.711</span><span class="p">,</span>  <span class="c1"># 舵力増分作用位置</span>
+        <span class="n">γ_R</span><span class="o">=</span><span class="mf">0.4115</span><span class="p">,</span>  <span class="c1"># 整流係数</span>
+        <span class="n">l_R</span><span class="o">=-</span><span class="mf">0.774</span><span class="p">,</span>  <span class="c1"># 船長に対する舵位置</span>
+        <span class="n">κ</span><span class="o">=</span><span class="mf">0.713</span><span class="p">,</span>  <span class="c1"># 修正係数</span>
+        <span class="n">t_P</span><span class="o">=</span><span class="mf">0.20</span><span class="p">,</span>  <span class="c1"># 推力減少率</span>
+        <span class="n">w_P0</span><span class="o">=</span><span class="mf">0.326</span><span class="p">,</span>  <span class="c1"># 有効伴流率</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">basic_params</span></div>
+
+
+<div class="viewcode-block" id="maneuvering_params"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.maneuvering_params">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">maneuvering_params</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">Mmg3DofManeuveringParams</span><span class="p">(</span>
+        <span class="n">C_1</span><span class="o">=</span><span class="mf">0.48301</span><span class="p">,</span>
+        <span class="n">C_2</span><span class="o">=-</span><span class="mf">0.29765</span><span class="p">,</span>
+        <span class="n">C_3</span><span class="o">=-</span><span class="mf">0.16423</span><span class="p">,</span>
+        <span class="n">X_0</span><span class="o">=-</span><span class="mf">0.07234</span><span class="p">,</span>
+        <span class="n">X_ββ</span><span class="o">=-</span><span class="mf">0.23840</span><span class="p">,</span>
+        <span class="n">X_βγ</span><span class="o">=-</span><span class="mf">0.03231</span> <span class="o">+</span> <span class="mf">0.1521</span><span class="p">,</span>
+        <span class="n">X_γγ</span><span class="o">=-</span><span class="mf">0.06405</span><span class="p">,</span>
+        <span class="n">X_ββββ</span><span class="o">=-</span><span class="mf">0.30047</span><span class="p">,</span>
+        <span class="n">Y_β</span><span class="o">=</span><span class="mf">0.85475</span><span class="p">,</span>
+        <span class="n">Y_γ</span><span class="o">=</span><span class="mf">0.11461</span> <span class="o">+</span> <span class="mf">0.00601</span><span class="p">,</span>
+        <span class="n">Y_βββ</span><span class="o">=</span><span class="mf">6.73201</span><span class="p">,</span>
+        <span class="n">Y_ββγ</span><span class="o">=-</span><span class="mf">2.23689</span><span class="p">,</span>
+        <span class="n">Y_βγγ</span><span class="o">=</span><span class="mf">3.38577</span><span class="p">,</span>
+        <span class="n">Y_γγγ</span><span class="o">=-</span><span class="mf">0.04151</span><span class="p">,</span>
+        <span class="n">N_β</span><span class="o">=</span><span class="mf">0.096567</span><span class="p">,</span>
+        <span class="n">N_γ</span><span class="o">=-</span><span class="mf">0.036501</span><span class="p">,</span>
+        <span class="n">N_βββ</span><span class="o">=</span><span class="mf">0.14090</span><span class="p">,</span>
+        <span class="n">N_ββγ</span><span class="o">=-</span><span class="mf">0.46158</span><span class="p">,</span>
+        <span class="n">N_βγγ</span><span class="o">=</span><span class="mf">0.01648</span><span class="p">,</span>
+        <span class="n">N_γγγ</span><span class="o">=-</span><span class="mf">0.030404</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ship_mmg_3dof"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.ship_mmg_3dof">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">ship_mmg_3dof</span><span class="p">(</span><span class="n">basic_params</span><span class="p">,</span> <span class="n">maneuvering_params</span><span class="p">):</span>
+    <span class="n">duration</span> <span class="o">=</span> <span class="mi">50</span>  <span class="c1"># [s]</span>
+    <span class="n">sampling</span> <span class="o">=</span> <span class="mi">2000</span>
+    <span class="n">time_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">sampling</span><span class="p">)</span>
+    <span class="n">delta_rad_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">sampling</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sampling</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">400</span><span class="p">:</span>
+            <span class="n">delta_rad_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">30.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">delta_rad_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">n_const</span> <span class="o">=</span> <span class="mf">20.338</span>
+    <span class="n">npm_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n_const</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sampling</span><span class="p">)])</span>
+
+    <span class="c1"># R0 (R0(u) = 0.0)</span>
+    <span class="n">u_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.00</span><span class="p">,</span> <span class="mf">10.00</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">R0_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">R0_func</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">u_list</span><span class="p">,</span> <span class="n">R0_list</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">simulate_mmg_3dof</span><span class="p">(</span>
+        <span class="n">basic_params</span><span class="p">,</span>
+        <span class="n">maneuvering_params</span><span class="p">,</span>
+        <span class="n">R0_func</span><span class="p">,</span>
+        <span class="n">time_list</span><span class="p">,</span>
+        <span class="n">delta_rad_list</span><span class="p">,</span>
+        <span class="n">npm_list</span><span class="p">,</span>
+        <span class="n">u0</span><span class="o">=</span><span class="mf">1.21</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ship</span> <span class="o">=</span> <span class="n">ShipObj3dof</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">L_pp</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">B</span><span class="p">)</span>
+    <span class="n">ship</span><span class="o">.</span><span class="n">load_simulation_result</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">result</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">result</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">ship</span></div>
+
+
+<div class="viewcode-block" id="test_Ship3DOF_drawing_function"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_Ship3DOF_drawing_function">[docs]</a><span class="k">def</span> <span class="nf">test_Ship3DOF_drawing_function</span><span class="p">(</span><span class="n">ship_mmg_3dof</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check drawing functions of Ship3DOF class by using MMG 3DOF simulation results&quot;&quot;&quot;</span>
+
+    <span class="c1"># Ship3DOF.draw_xy_trajectory()</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;test.png&quot;</span>
+    <span class="n">ship_mmg_3dof</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">dimensionless</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ship_mmg_3dof</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+
+    <span class="c1"># Ship3DOF.draw_chart()</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;test.png&quot;</span>
+    <span class="n">ship_mmg_3dof</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span>
+        <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;u&quot;</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;time [sec]&quot;</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u$&quot;</span> <span class="o">+</span> <span class="s2">&quot; [m/s]&quot;</span><span class="p">,</span>
+        <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+
+    <span class="n">x_index_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;u&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;psi&quot;</span><span class="p">]</span>
+    <span class="n">y_index_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;u&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;psi&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">x_index</span> <span class="ow">in</span> <span class="n">x_index_list</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">y_index</span> <span class="ow">in</span> <span class="n">y_index_list</span><span class="p">:</span>
+            <span class="n">ship_mmg_3dof</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span><span class="n">x_index</span><span class="p">,</span> <span class="n">y_index</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+        <span class="n">ship_mmg_3dof</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;hogehoge&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+        <span class="n">ship_mmg_3dof</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span><span class="s2">&quot;hogehoge&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Ship3DOF.draw_gif()</span>
+    <span class="n">ship_mmg_3dof</span><span class="o">.</span><span class="n">draw_gif</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+    <span class="n">ship_mmg_3dof</span><span class="o">.</span><span class="n">draw_gif</span><span class="p">(</span><span class="n">dimensionless</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, Taiga MITSUYUKI
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
