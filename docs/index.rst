@@ -8,6 +8,12 @@ shipmmg: A Python package of ship maneuvering simulation
 
 ShipMMG is a unofficial Python package of ship maneuvering simulation with respect to the research committee on “standardization of mathematical model for ship maneuvering predictions” was organized by the JASNAOE.
 
+.. image:: https://github.com/ShipMMG/shipmmg/workflows/codecov/badge.svg
+
+
+.. image:: https://codecov.io/gh/ShipMMG/shipmmg/branch/main/graph/badge.svg?token=VQ1J2RTC7X
+   :target: https://codecov.io/gh/ShipMMG/shipmmg
+    
 
 Install
 --------
@@ -22,7 +28,7 @@ Install
    :caption: Contents:
 
 How to use shipmmg?
-------------------
+--------------------
 
 Comming soon.
 

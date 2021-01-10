@@ -1,4 +1,7 @@
-# ShipMMG
+# ShipMMG: Ship Maneuvering Simulation
+
+![codecov](https://github.com/ShipMMG/shipmmg/workflows/codecov/badge.svg)
+[![codecov](https://codecov.io/gh/ShipMMG/shipmmg/branch/main/graph/badge.svg?token=VQ1J2RTC7X)](https://codecov.io/gh/ShipMMG/shipmmg)
 
 ## What is it?
 
