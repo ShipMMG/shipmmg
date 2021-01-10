@@ -47,8 +47,8 @@ def simulate_kt(
     Returns:
         numpy.ndarray:
             The result of KT simulation.
-            shape = (time, num_of_results)
-            num_of_results = 2 including :math:`r` and :math:`\\delta`.
+            shape = (time, num_of_params)
+            num_of_params = 2 including :math:`r` and :math:`\\delta`.
 
     Examples:
         >>> kt_params = KTParams(K=0.15, T=60.0)
