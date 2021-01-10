@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from shipmmg.kt import simulate
+from shipmmg.kt import KTParams, simulate_kt
 from shipmmg.ship_obj_3dof import ShipObj3dof
 import numpy as np
 import pytest
@@ -9,25 +9,26 @@ import os
 
 
 @pytest.fixture
-def simulate_kt():
+def sim_result():
     """Just check shimmg.kt.simulate()."""
     K = 0.155
     T = 80.5
+    kt_params = KTParams(K=K, T=T)
     duration = 50
     num_of_sampling = 1000
     time_list = np.linspace(0.00, duration, num_of_sampling)
     Ts = 50.0
     delta_list = 10 * np.pi / 180 * np.sin(2.0 * np.pi / Ts * time_list)
-    result = simulate(K, T, time_list, delta_list, 0.0)
+    result = simulate_kt(kt_params, time_list, delta_list, 0.0)
     return time_list, result
 
 
 @pytest.fixture
-def ship_kt(simulate_kt):
+def ship_kt(sim_result):
     """
     Fixture for testing in this file.
     """
-    time_list, simulation_result = simulate_kt
+    time_list, simulation_result = sim_result
     u_list = np.full(len(time_list), 20 * (1852.0 / 3600))
     v_list = np.zeros(len(time_list))
     r_list = simulation_result.T[0]
