@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>tests.test_mmg_3dof &mdash; shipmmg 0.0.2 documentation</title>
   
@@ -16,7 +16,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -50,7 +53,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> shipmmg
+            <a href="../../index.html" class="icon icon-home"> shipmmg
           
 
           
@@ -110,6 +113,8 @@
         <div class="rst-content">
         
           
+
+
 
 
 
@@ -240,7 +245,7 @@
     <span class="n">R0_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
     <span class="n">R0_func</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">u_list</span><span class="p">,</span> <span class="n">R0_list</span><span class="p">)</span>
 
-    <span class="n">result</span> <span class="o">=</span> <span class="n">simulate_mmg_3dof</span><span class="p">(</span>
+    <span class="n">sol</span> <span class="o">=</span> <span class="n">simulate_mmg_3dof</span><span class="p">(</span>
         <span class="n">basic_params</span><span class="p">,</span>
         <span class="n">maneuvering_params</span><span class="p">,</span>
         <span class="n">R0_func</span><span class="p">,</span>
@@ -249,8 +254,9 @@
         <span class="n">npm_list</span><span class="p">,</span>
         <span class="n">u0</span><span class="o">=</span><span class="mf">1.21</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">sim_result</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">sol</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
     <span class="n">ship</span> <span class="o">=</span> <span class="n">ShipObj3dof</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">L_pp</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">B</span><span class="p">)</span>
-    <span class="n">ship</span><span class="o">.</span><span class="n">load_simulation_result</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">result</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">result</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">ship</span><span class="o">.</span><span class="n">load_simulation_result</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">sim_result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sim_result</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sim_result</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">ship</span></div>
 
 
@@ -300,28 +306,25 @@
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2021, Taiga MITSUYUKI
+        &#169; Copyright 2021, Taiga MITSUYUKI.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>shipmmg.kt &mdash; shipmmg 0.0.2 documentation</title>
   
@@ -16,7 +16,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -50,7 +53,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> shipmmg
+            <a href="../../index.html" class="icon icon-home"> shipmmg
           
 
           
@@ -125,6 +128,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -154,10 +159,9 @@
 
 <span class="kn">import</span> <span class="nn">dataclasses</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.misc</span> <span class="kn">import</span> <span class="n">derivative</span>
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
-<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">odeint</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">solve_ivp</span>
 
 
 <div class="viewcode-block" id="KTParams"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.kt.KTParams">[docs]</a><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
@@ -178,7 +182,12 @@
     <span class="n">time_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
     <span class="n">delta_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
     <span class="n">r0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;RK45&quot;</span><span class="p">,</span>
+    <span class="n">t_eval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">events</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">vectorized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">options</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;KT simulation</span>
 <span class="sd">    KT simulation by following equation of motion.</span>
 
@@ -194,12 +203,97 @@
 <span class="sd">        r0 (float, optional):</span>
 <span class="sd">            rate of turn [rad/s] in initial condition (`time_list[0]`).</span>
 <span class="sd">            Defaults to 0.0.</span>
+<span class="sd">        method (str, optional):</span>
+<span class="sd">            Integration method to use in</span>
+<span class="sd">            `scipy.integrate.solve_ivp()</span>
+<span class="sd">            &lt;https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html&gt;`_:</span>
+
+<span class="sd">                &quot;RK45&quot; (default):</span>
+<span class="sd">                    Explicit Runge-Kutta method of order 5(4).</span>
+<span class="sd">                    The error is controlled assuming accuracy of the fourth-order method,</span>
+<span class="sd">                    but steps are taken using the fifth-order accurate formula (local extrapolation is done).</span>
+<span class="sd">                    A quartic interpolation polynomial is used for the dense output.</span>
+<span class="sd">                    Can be applied in the complex domain.</span>
+<span class="sd">                &quot;RK23&quot;:</span>
+<span class="sd">                    Explicit Runge-Kutta method of order 3(2).</span>
+<span class="sd">                    The error is controlled assuming accuracy of the second-order method,</span>
+<span class="sd">                    but steps are taken using the third-order accurate formula (local extrapolation is done).</span>
+<span class="sd">                    A cubic Hermite polynomial is used for the dense output.</span>
+<span class="sd">                    Can be applied in the complex domain.</span>
+<span class="sd">                &quot;DOP853&quot;:</span>
+<span class="sd">                    Explicit Runge-Kutta method of order 8.</span>
+<span class="sd">                    Python implementation of the “DOP853” algorithm originally written in Fortran.</span>
+<span class="sd">                    A 7-th order interpolation polynomial accurate to 7-th order is used for the dense output.</span>
+<span class="sd">                    Can be applied in the complex domain.</span>
+<span class="sd">                &quot;Radau&quot;:</span>
+<span class="sd">                    Implicit Runge-Kutta method of the Radau IIA family of order 5.</span>
+<span class="sd">                    The error is controlled with a third-order accurate embedded formula.</span>
+<span class="sd">                    A cubic polynomial which satisfies the collocation conditions is used for the dense output.</span>
+<span class="sd">                &quot;BDF&quot;:</span>
+<span class="sd">                    Implicit multi-step variable-order (1 to 5) method</span>
+<span class="sd">                    based on a backward differentiation formula for the derivative approximation.</span>
+<span class="sd">                    A quasi-constant step scheme is used and accuracy is enhanced using the NDF modification.</span>
+<span class="sd">                    Can be applied in the complex domain.</span>
+<span class="sd">                &quot;LSODA&quot;:</span>
+<span class="sd">                    Adams/BDF method with automatic stiffness detection and switching.</span>
+<span class="sd">                    This is a wrapper of the Fortran solver from ODEPACK.</span>
+
+<span class="sd">        t_eval (array_like or None, optional):</span>
+<span class="sd">            Times at which to store the computed solution, must be sorted and lie within t_span.</span>
+<span class="sd">            If None (default), use points selected by the solver.</span>
+<span class="sd">        events (callable, or list of callables, optional):</span>
+<span class="sd">            Events to track. If None (default), no events will be tracked.</span>
+<span class="sd">            Each event occurs at the zeros of a continuous function of time and state.</span>
+<span class="sd">            Each function must have the signature event(t, y) and return a float.</span>
+<span class="sd">            The solver will find an accurate value of t at which event(t, y(t)) = 0 using a root-finding algorithm.</span>
+<span class="sd">            By default, all zeros will be found. The solver looks for a sign change over each step,</span>
+<span class="sd">            so if multiple zero crossings occur within one step, events may be missed.</span>
+<span class="sd">            Additionally each event function might have the following attributes:</span>
+<span class="sd">                terminal (bool, optional):</span>
+<span class="sd">                    Whether to terminate integration if this event occurs. Implicitly False if not assigned.</span>
+<span class="sd">                direction (float, optional):</span>
+<span class="sd">                    Direction of a zero crossing.</span>
+<span class="sd">                    If direction is positive, event will only trigger when going from negative to positive,</span>
+<span class="sd">                    and vice versa if direction is negative.</span>
+<span class="sd">                    If 0, then either direction will trigger event. Implicitly 0 if not assigned.</span>
+<span class="sd">            You can assign attributes like `event.terminal = True` to any function in Python.</span>
+<span class="sd">        vectorized (bool, optional):</span>
+<span class="sd">            Whether `fun` is implemented in a vectorized fashion. Default is False.</span>
+<span class="sd">        options:</span>
+<span class="sd">            Options passed to a chosen solver.</span>
+<span class="sd">            All options available for already implemented solvers are listed in</span>
+<span class="sd">            `scipy.integrate.solve_ivp()</span>
+<span class="sd">            &lt;https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html&gt;`_:</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        numpy.ndarray:</span>
-<span class="sd">            The result of KT simulation.</span>
-<span class="sd">            shape = (time, num_of_params)</span>
-<span class="sd">            num_of_params = 2 including :math:`r` and :math:`\\delta`.</span>
+<span class="sd">        Bunch object with the following fields defined:</span>
+<span class="sd">            t (ndarray, shape (`n_points`,)):</span>
+<span class="sd">                Time points.</span>
+<span class="sd">            y (ndarray, shape (`n_points`,)):</span>
+<span class="sd">                Values of the solution at t.</span>
+<span class="sd">            sol (OdeSolution):</span>
+<span class="sd">                Found solution as OdeSolution instance from KT simulation.</span>
+<span class="sd">            t_events (list of ndarray or None):</span>
+<span class="sd">                Contains for each event type a list of arrays at which an event of that type event was detected.</span>
+<span class="sd">                None if events was None.</span>
+<span class="sd">            y_events (list of ndarray or None):</span>
+<span class="sd">                For each value of t_events, the corresponding value of the solution.</span>
+<span class="sd">                None if events was None.</span>
+<span class="sd">            nfev (int):</span>
+<span class="sd">                Number of evaluations of the right-hand side.</span>
+<span class="sd">            njev (int):</span>
+<span class="sd">                Number of evaluations of the jacobian.</span>
+<span class="sd">            nlu (int):</span>
+<span class="sd">                Number of LU decomposition.</span>
+<span class="sd">            status (int):</span>
+<span class="sd">                Reason for algorithm termination:</span>
+<span class="sd">                    - -1: Integration step failed.</span>
+<span class="sd">                    - 0: The solver successfully reached the end of `tspan`.</span>
+<span class="sd">                    - 1: A termination event occurred.</span>
+<span class="sd">            message (string):</span>
+<span class="sd">                Human-readable description of the termination reason.</span>
+<span class="sd">            success (bool):</span>
+<span class="sd">                True if the solver reached the interval end or a termination event occurred (`status &gt;= 0`).</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; kt_params = KTParams(K=0.15, T=60.0)</span>
@@ -208,16 +302,35 @@
 <span class="sd">        &gt;&gt;&gt; time_list = np.linspace(0.00, duration, num_of_sampling)</span>
 <span class="sd">        &gt;&gt;&gt; delta_list = 35 * np.pi / 180 * np.sin(3.0 * np.pi / Ts * time_list)</span>
 <span class="sd">        &gt;&gt;&gt; r0 = 0.0</span>
-<span class="sd">        &gt;&gt;&gt; result = simulate_kt(kt_params, time_list, delta_list, r0)</span>
+<span class="sd">        &gt;&gt;&gt; sol = simulate_kt(kt_params, time_list, delta_list, r0)</span>
+<span class="sd">        &gt;&gt;&gt; result = sol.sol(time_list)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">simulate</span><span class="p">(</span>
-        <span class="n">K</span><span class="o">=</span><span class="n">kt_params</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">kt_params</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">time_list</span><span class="o">=</span><span class="n">time_list</span><span class="p">,</span> <span class="n">delta_list</span><span class="o">=</span><span class="n">delta_list</span><span class="p">,</span> <span class="n">r0</span><span class="o">=</span><span class="n">r0</span>
+        <span class="n">K</span><span class="o">=</span><span class="n">kt_params</span><span class="o">.</span><span class="n">K</span><span class="p">,</span>
+        <span class="n">T</span><span class="o">=</span><span class="n">kt_params</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+        <span class="n">time_list</span><span class="o">=</span><span class="n">time_list</span><span class="p">,</span>
+        <span class="n">delta_list</span><span class="o">=</span><span class="n">delta_list</span><span class="p">,</span>
+        <span class="n">r0</span><span class="o">=</span><span class="n">r0</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+        <span class="n">t_eval</span><span class="o">=</span><span class="n">t_eval</span><span class="p">,</span>
+        <span class="n">events</span><span class="o">=</span><span class="n">events</span><span class="p">,</span>
+        <span class="n">vectorized</span><span class="o">=</span><span class="n">vectorized</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">options</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="simulate"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.kt.simulate">[docs]</a><span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span>
-    <span class="n">K</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">time_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">delta_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">r0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">K</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">T</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">time_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">delta_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">r0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;RK45&quot;</span><span class="p">,</span>
+    <span class="n">t_eval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">events</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">vectorized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">options</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;KT simulation</span>
 <span class="sd">    KT simulation by following equation of motion.</span>
 
@@ -235,12 +348,98 @@
 <span class="sd">        r0 (float, optional):</span>
 <span class="sd">            rate of turn [rad/s] in initial condition (`time_list[0]`).</span>
 <span class="sd">            Defaults to 0.0.</span>
+<span class="sd">        method (str, optional):</span>
+<span class="sd">            Integration method to use in</span>
+<span class="sd">            `scipy.integrate.solve_ivp()</span>
+<span class="sd">            &lt;https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html&gt;`_:</span>
+
+<span class="sd">                &quot;RK45&quot; (default):</span>
+<span class="sd">                    Explicit Runge-Kutta method of order 5(4).</span>
+<span class="sd">                    The error is controlled assuming accuracy of the fourth-order method,</span>
+<span class="sd">                    but steps are taken using the fifth-order accurate formula (local extrapolation is done).</span>
+<span class="sd">                    A quartic interpolation polynomial is used for the dense output.</span>
+<span class="sd">                    Can be applied in the complex domain.</span>
+<span class="sd">                &quot;RK23&quot;:</span>
+<span class="sd">                    Explicit Runge-Kutta method of order 3(2).</span>
+<span class="sd">                    The error is controlled assuming accuracy of the second-order method,</span>
+<span class="sd">                    but steps are taken using the third-order accurate formula (local extrapolation is done).</span>
+<span class="sd">                    A cubic Hermite polynomial is used for the dense output.</span>
+<span class="sd">                    Can be applied in the complex domain.</span>
+<span class="sd">                &quot;DOP853&quot;:</span>
+<span class="sd">                    Explicit Runge-Kutta method of order 8.</span>
+<span class="sd">                    Python implementation of the “DOP853” algorithm originally written in Fortran.</span>
+<span class="sd">                    A 7-th order interpolation polynomial accurate to 7-th order is used for the dense output.</span>
+<span class="sd">                    Can be applied in the complex domain.</span>
+<span class="sd">                &quot;Radau&quot;:</span>
+<span class="sd">                    Implicit Runge-Kutta method of the Radau IIA family of order 5.</span>
+<span class="sd">                    The error is controlled with a third-order accurate embedded formula.</span>
+<span class="sd">                    A cubic polynomial which satisfies the collocation conditions is used for the dense output.</span>
+<span class="sd">                &quot;BDF&quot;:</span>
+<span class="sd">                    Implicit multi-step variable-order (1 to 5) method</span>
+<span class="sd">                    based on a backward differentiation formula for the derivative approximation.</span>
+<span class="sd">                    A quasi-constant step scheme is used and accuracy is enhanced using the NDF modification.</span>
+<span class="sd">                    Can be applied in the complex domain.</span>
+<span class="sd">                &quot;LSODA&quot;:</span>
+<span class="sd">                    Adams/BDF method with automatic stiffness detection and switching.</span>
+<span class="sd">                    This is a wrapper of the Fortran solver from ODEPACK.</span>
+
+<span class="sd">        t_eval (array_like or None, optional):</span>
+<span class="sd">            Times at which to store the computed solution, must be sorted and lie within t_span.</span>
+<span class="sd">            If None (default), use points selected by the solver.</span>
+<span class="sd">        events (callable, or list of callables, optional):</span>
+<span class="sd">            Events to track. If None (default), no events will be tracked.</span>
+<span class="sd">            Each event occurs at the zeros of a continuous function of time and state.</span>
+<span class="sd">            Each function must have the signature event(t, y) and return a float.</span>
+<span class="sd">            The solver will find an accurate value of t at which event(t, y(t)) = 0 using a root-finding algorithm.</span>
+<span class="sd">            By default, all zeros will be found. The solver looks for a sign change over each step,</span>
+<span class="sd">            so if multiple zero crossings occur within one step, events may be missed.</span>
+<span class="sd">            Additionally each event function might have the following attributes:</span>
+<span class="sd">                terminal (bool, optional):</span>
+<span class="sd">                    Whether to terminate integration if this event occurs. Implicitly False if not assigned.</span>
+<span class="sd">                direction (float, optional):</span>
+<span class="sd">                    Direction of a zero crossing.</span>
+<span class="sd">                    If direction is positive, event will only trigger when going from negative to positive,</span>
+<span class="sd">                    and vice versa if direction is negative.</span>
+<span class="sd">                    If 0, then either direction will trigger event. Implicitly 0 if not assigned.</span>
+<span class="sd">            You can assign attributes like `event.terminal = True` to any function in Python.</span>
+<span class="sd">        vectorized (bool, optional):</span>
+<span class="sd">            Whether `fun` is implemented in a vectorized fashion. Default is False.</span>
+<span class="sd">        options:</span>
+<span class="sd">            Options passed to a chosen solver.</span>
+<span class="sd">            All options available for already implemented solvers are listed in</span>
+<span class="sd">            `scipy.integrate.solve_ivp()</span>
+<span class="sd">            &lt;https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html&gt;`_:</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        numpy.ndarray:</span>
-<span class="sd">            The result of KT simulation.</span>
-<span class="sd">            shape = (time, num_of_results)</span>
-<span class="sd">            num_of_results = 2 including :math:`r` and :math:`\\delta`.</span>
+<span class="sd">        Bunch object with the following fields defined:</span>
+<span class="sd">            t (ndarray, shape (`n_points`,)):</span>
+<span class="sd">                Time points.</span>
+<span class="sd">            y (ndarray, shape (`n_points`,)):</span>
+<span class="sd">                Values of the solution at t.</span>
+<span class="sd">            sol (OdeSolution):</span>
+<span class="sd">                Found solution as OdeSolution instance from KT simulation.</span>
+<span class="sd">            t_events (list of ndarray or None):</span>
+<span class="sd">                Contains for each event type a list of arrays at which an event of that type event was detected.</span>
+<span class="sd">                None if events was None.</span>
+<span class="sd">            y_events (list of ndarray or None):</span>
+<span class="sd">                For each value of t_events, the corresponding value of the solution.</span>
+<span class="sd">                None if events was None.</span>
+<span class="sd">            nfev (int):</span>
+<span class="sd">                Number of evaluations of the right-hand side.</span>
+<span class="sd">            njev (int):</span>
+<span class="sd">                Number of evaluations of the jacobian.</span>
+<span class="sd">            nlu (int):</span>
+<span class="sd">                Number of LU decomposition.</span>
+<span class="sd">            status (int):</span>
+<span class="sd">                Reason for algorithm termination:</span>
+<span class="sd">                    - -1: Integration step failed.</span>
+<span class="sd">                    - 0: The solver successfully reached the end of `tspan`.</span>
+<span class="sd">                    - 1: A termination event occurred.</span>
+<span class="sd">            message (string):</span>
+<span class="sd">                Human-readable description of the termination reason.</span>
+<span class="sd">            success (bool):</span>
+<span class="sd">                True if the solver reached the interval end or a termination event occurred (`status &gt;= 0`).</span>
+
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; K = 0.15</span>
@@ -250,50 +449,50 @@
 <span class="sd">        &gt;&gt;&gt; time_list = np.linspace(0.00, duration, num_of_sampling)</span>
 <span class="sd">        &gt;&gt;&gt; delta_list = 35 * np.pi / 180 * np.sin(3.0 * np.pi / Ts * time_list)</span>
 <span class="sd">        &gt;&gt;&gt; r0 = 0.0</span>
-<span class="sd">        &gt;&gt;&gt; result = simulate(K, T, time_list, delta_list, r0)</span>
+<span class="sd">        &gt;&gt;&gt; sol = simulate_kt(K, T, time_list, delta_list, r0)</span>
+<span class="sd">        &gt;&gt;&gt; result = sol.sol(time_list)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">spl_delta</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">delta_list</span><span class="p">,</span> <span class="s2">&quot;cubic&quot;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s2">&quot;extrapolate&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">kt_eom</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Equation of Motion for KT simulation.</span>
-<span class="sd">        d_r = 1/T * ( -r + K * delta)</span>
-<span class="sd">        d_delta = derivative(spl_delta, t)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">d_r</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">T</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">K</span> <span class="o">*</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">kt_eom_solve_ivp</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">T</span><span class="p">):</span>
+        <span class="n">r</span><span class="p">,</span> <span class="n">delta</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="n">d_r</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">T</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">+</span> <span class="n">K</span> <span class="o">*</span> <span class="n">delta</span><span class="p">)</span>
         <span class="n">d_delta</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">spl_delta</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">d_r</span><span class="p">,</span> <span class="n">d_delta</span><span class="p">]</span>
 
-    <span class="n">X_init</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r0</span><span class="p">,</span> <span class="n">delta_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
-    <span class="n">X_result</span> <span class="o">=</span> <span class="n">odeint</span><span class="p">(</span><span class="n">kt_eom</span><span class="p">,</span> <span class="n">X_init</span><span class="p">,</span> <span class="n">time_list</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">X_result</span></div>
+    <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span>
+        <span class="n">kt_eom_solve_ivp</span><span class="p">,</span>
+        <span class="p">[</span><span class="n">time_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span>
+        <span class="p">[</span><span class="n">r0</span><span class="p">,</span> <span class="n">delta_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+        <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">T</span><span class="p">),</span>
+        <span class="n">dense_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">sol</span></div>
 </pre></div>
 
            </div>
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2021, Taiga MITSUYUKI
+        &#169; Copyright 2021, Taiga MITSUYUKI.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

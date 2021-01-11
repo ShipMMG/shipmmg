@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>shipmmg.ship_obj_3dof &mdash; shipmmg 0.0.2 documentation</title>
   
@@ -16,7 +16,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -50,7 +53,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> shipmmg
+            <a href="../../index.html" class="icon icon-home"> shipmmg
           
 
           
@@ -125,6 +128,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -156,6 +161,7 @@
 <span class="kn">import</span> <span class="nn">dataclasses</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">FuncAnimation</span>
 <span class="kn">from</span> <span class="nn">.draw_obj</span> <span class="kn">import</span> <span class="n">DrawObj</span>
 
@@ -236,7 +242,7 @@
 <span class="sd">            &gt;&gt;&gt; result = kt.simulate_kt(kt_params, time_list, delta_list)</span>
 <span class="sd">            &gt;&gt;&gt; u_list = np.full(len(time_list), 20 * (1852.0 / 3600))</span>
 <span class="sd">            &gt;&gt;&gt; v_list = np.zeros(len(time_list))</span>
-<span class="sd">            &gt;&gt;&gt; r_list = result.T[0]</span>
+<span class="sd">            &gt;&gt;&gt; r_list = result[0]</span>
 <span class="sd">            &gt;&gt;&gt; ship = ShipObj3dof(L = 180, B = 20)</span>
 <span class="sd">            &gt;&gt;&gt; ship.load_simulation_result(time_list, u_list, v_list, r_list)</span>
 <span class="sd">            &gt;&gt;&gt; print(ship.x, ship.y, ship.psi)</span>
@@ -264,9 +270,19 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">dimensionless</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">aspect_equal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">figsize</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">],</span>
         <span class="n">dpi</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span>
+        <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">facecolor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">edgecolor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">frameon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">FigureClass</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span>
+        <span class="n">clear</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">tight_layout</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">constrained_layout</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">save_fig_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Draw trajectry(x,y).</span>
 
@@ -277,25 +293,95 @@
 <span class="sd">            aspect_equal (bool, optional):</span>
 <span class="sd">                Set equal of figure aspect or not.</span>
 <span class="sd">                Defaults to True.</span>
+<span class="sd">            num (int or str, optional):</span>
+<span class="sd">                A unique identifier for the figure.</span>
+<span class="sd">                If a figure with that identifier already exists, this figure is made active and returned.</span>
+<span class="sd">                An integer refers to the Figure.number attribute, a string refers to the figure label.</span>
+<span class="sd">                If there is no figure with the identifier or num is not given,</span>
+<span class="sd">                a new figure is created, made active and returned.</span>
+<span class="sd">                If num is an int, it will be used for the Figure.number attribute.</span>
+<span class="sd">                Otherwise, an auto-generated integer value is used (starting at 1 and incremented for each new figure).</span>
+<span class="sd">                If num is a string, the figure label and the window title is set to this value.</span>
+<span class="sd">                Default to None.</span>
+<span class="sd">            figsize ((float, float), optional):</span>
+<span class="sd">                Width, height in inches.</span>
+<span class="sd">                Default to [6.4, 4.8]</span>
+<span class="sd">            dpi (float, optional):</span>
+<span class="sd">                The resolution of the figure in dots-per-inch.</span>
+<span class="sd">                Default to 100.0.</span>
 <span class="sd">            figsize ((float, float), optional):</span>
 <span class="sd">                Width, height in inches.</span>
 <span class="sd">                Default to [6.4, 4.8]</span>
 <span class="sd">            dpi (float, optional):</span>
 <span class="sd">                The resolution of the figure in dots-per-inch.</span>
 <span class="sd">                Default to 100.0</span>
+<span class="sd">            facecolor (str, optional):</span>
+<span class="sd">                The background color.</span>
+<span class="sd">            edgecolor (str, optional):</span>
+<span class="sd">                The border color.</span>
+<span class="sd">            frameon (bool, optional):</span>
+<span class="sd">                If False, suppress drawing the figure frame.</span>
+<span class="sd">                Defaults to True.</span>
+<span class="sd">            FigureClass (subclass of matplotlib.figure.Figure, optional):</span>
+<span class="sd">                Optionally use a custom Figure instance.</span>
+<span class="sd">                Defaults to matplotlib.figure.Figure.</span>
+<span class="sd">            clear (bool, optional):</span>
+<span class="sd">                If True and the figure already exists, then it is cleared.</span>
+<span class="sd">                Defaults to False.</span>
+<span class="sd">            tight_layout (bool, optional):</span>
+<span class="sd">                If False use subplotpars.</span>
+<span class="sd">                If True adjust subplot parameters using tight_layout with default padding.</span>
+<span class="sd">                When providing a dict containing the keys pad, w_pad, h_pad, and rect,</span>
+<span class="sd">                the default tight_layout paddings will be overridden.</span>
+<span class="sd">                Defaults to False.</span>
+<span class="sd">            constrained_layout (bool, optional):</span>
+<span class="sd">                If True use constrained layout to adjust positioning of plot elements.</span>
+<span class="sd">                Like tight_layout, but designed to be more flexible.</span>
+<span class="sd">                See Constrained Layout Guide for examples.</span>
+<span class="sd">                (Note: does not work with add_subplot or subplot2grid.)</span>
+<span class="sd">                Defaults to False.</span>
+<span class="sd">            fmt (str, optional):</span>
+<span class="sd">                A format string, e.g. &#39;ro&#39; for red circles.</span>
+<span class="sd">                See the Notes section for a full description of the format strings.</span>
+<span class="sd">                Format strings are just an abbreviation for quickly setting basic line properties.</span>
+<span class="sd">                All of these and more can also be controlled by keyword arguments.</span>
+<span class="sd">                This argument cannot be passed as keyword.</span>
+<span class="sd">                Defaults to None.</span>
 <span class="sd">            save_fig_path (str, optional):</span>
 <span class="sd">                Path of saving figure.</span>
 <span class="sd">                Defaults to None.</span>
+<span class="sd">            **kwargs (matplotlib.lines.Line2D properties, optional):</span>
+<span class="sd">                kwargs are used to specify properties</span>
+<span class="sd">                like a line label (for auto legends), linewidth, antialiasing, marker face color.</span>
+<span class="sd">                You can show the detailed information at `matplotlib.lines.Line2D</span>
+<span class="sd">                 &lt;https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D&gt;`_</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            matplotlib.pyplot.Figure: Figure</span>
 
 <span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; ship.draw_xy_trajectory(save_fig_path=&quot;test.png&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span>
+            <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">,</span>
+            <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
+            <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span>
+            <span class="n">facecolor</span><span class="o">=</span><span class="n">facecolor</span><span class="p">,</span>
+            <span class="n">edgecolor</span><span class="o">=</span><span class="n">edgecolor</span><span class="p">,</span>
+            <span class="n">frameon</span><span class="o">=</span><span class="n">frameon</span><span class="p">,</span>
+            <span class="n">FigureClass</span><span class="o">=</span><span class="n">FigureClass</span><span class="p">,</span>
+            <span class="n">clear</span><span class="o">=</span><span class="n">clear</span><span class="p">,</span>
+            <span class="n">tight_layout</span><span class="o">=</span><span class="n">tight_layout</span><span class="p">,</span>
+            <span class="n">constrained_layout</span><span class="o">=</span><span class="n">constrained_layout</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">dimensionless</span><span class="p">:</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">fmt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+                <span class="p">)</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$x/L$&quot;</span><span class="p">)</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$y/L$&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -315,9 +401,19 @@
         <span class="n">y_index</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">figsize</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">],</span>
         <span class="n">dpi</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span>
+        <span class="n">facecolor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">edgecolor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">frameon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">FigureClass</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span>
+        <span class="n">clear</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">tight_layout</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">constrained_layout</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">save_fig_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Draw chart.</span>
 
@@ -332,15 +428,62 @@
 <span class="sd">            ylabel (string, optional):</span>
 <span class="sd">                Label of Y axis.</span>
 <span class="sd">                Defaults to None.</span>
+<span class="sd">            num (int or str, optional):</span>
+<span class="sd">                A unique identifier for the figure.</span>
+<span class="sd">                If a figure with that identifier already exists, this figure is made active and returned.</span>
+<span class="sd">                An integer refers to the Figure.number attribute, a string refers to the figure label.</span>
+<span class="sd">                If there is no figure with the identifier or num is not given,</span>
+<span class="sd">                a new figure is created, made active and returned.</span>
+<span class="sd">                If num is an int, it will be used for the Figure.number attribute.</span>
+<span class="sd">                Otherwise, an auto-generated integer value is used (starting at 1 and incremented for each new figure).</span>
+<span class="sd">                If num is a string, the figure label and the window title is set to this value.</span>
+<span class="sd">                Default to None.</span>
 <span class="sd">            figsize ((float, float), optional):</span>
 <span class="sd">                Width, height in inches.</span>
 <span class="sd">                Default to [6.4, 4.8]</span>
 <span class="sd">            dpi (float, optional):</span>
 <span class="sd">                The resolution of the figure in dots-per-inch.</span>
-<span class="sd">                Default to 100.0</span>
+<span class="sd">                Default to 100.0.</span>
+<span class="sd">            facecolor (str, optional):</span>
+<span class="sd">                The background color.</span>
+<span class="sd">            edgecolor (str, optional):</span>
+<span class="sd">                The border color.</span>
+<span class="sd">            frameon (bool, optional):</span>
+<span class="sd">                If False, suppress drawing the figure frame.</span>
+<span class="sd">                Defaults to True.</span>
+<span class="sd">            FigureClass (subclass of matplotlib.figure.Figure, optional):</span>
+<span class="sd">                Optionally use a custom Figure instance.</span>
+<span class="sd">                Defaults to matplotlib.figure.Figure.</span>
+<span class="sd">            clear (bool, optional):</span>
+<span class="sd">                If True and the figure already exists, then it is cleared.</span>
+<span class="sd">                Defaults to False.</span>
+<span class="sd">            tight_layout (bool, optional):</span>
+<span class="sd">                If False use subplotpars.</span>
+<span class="sd">                If True adjust subplot parameters using tight_layout with default padding.</span>
+<span class="sd">                When providing a dict containing the keys pad, w_pad, h_pad, and rect,</span>
+<span class="sd">                the default tight_layout paddings will be overridden.</span>
+<span class="sd">                Defaults to False.</span>
+<span class="sd">            constrained_layout (bool, optional):</span>
+<span class="sd">                If True use constrained layout to adjust positioning of plot elements.</span>
+<span class="sd">                Like tight_layout, but designed to be more flexible.</span>
+<span class="sd">                See Constrained Layout Guide for examples.</span>
+<span class="sd">                (Note: does not work with add_subplot or subplot2grid.)</span>
+<span class="sd">                Defaults to False.</span>
+<span class="sd">            fmt (str, optional):</span>
+<span class="sd">                A format string, e.g. &#39;ro&#39; for red circles.</span>
+<span class="sd">                See the Notes section for a full description of the format strings.</span>
+<span class="sd">                Format strings are just an abbreviation for quickly setting basic line properties.</span>
+<span class="sd">                All of these and more can also be controlled by keyword arguments.</span>
+<span class="sd">                This argument cannot be passed as keyword.</span>
+<span class="sd">                Defaults to None.</span>
 <span class="sd">            save_fig_path (str, optional):</span>
 <span class="sd">                Path of saving figure.</span>
 <span class="sd">                Defaults to None.</span>
+<span class="sd">            **kwargs (matplotlib.lines.Line2D properties, optional):</span>
+<span class="sd">                kwargs are used to specify properties</span>
+<span class="sd">                like a line label (for auto legends), linewidth, antialiasing, marker face color.</span>
+<span class="sd">                You can show the detailed information at `matplotlib.lines.Line2D</span>
+<span class="sd">                 &lt;https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D&gt;`_</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            matplotlib.pyplot.Figure: Figure</span>
 
@@ -415,12 +558,26 @@
                 <span class="s2">&quot; psi&quot;</span>
                 <span class="s2">&quot;]&quot;</span>
             <span class="p">)</span>
-        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span>
+            <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">,</span>
+            <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
+            <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span>
+            <span class="n">facecolor</span><span class="o">=</span><span class="n">facecolor</span><span class="p">,</span>
+            <span class="n">edgecolor</span><span class="o">=</span><span class="n">edgecolor</span><span class="p">,</span>
+            <span class="n">frameon</span><span class="o">=</span><span class="n">frameon</span><span class="p">,</span>
+            <span class="n">FigureClass</span><span class="o">=</span><span class="n">FigureClass</span><span class="p">,</span>
+            <span class="n">clear</span><span class="o">=</span><span class="n">clear</span><span class="p">,</span>
+            <span class="n">tight_layout</span><span class="o">=</span><span class="n">tight_layout</span><span class="p">,</span>
+            <span class="n">constrained_layout</span><span class="o">=</span><span class="n">constrained_layout</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">xlabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ylabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">target_x</span><span class="p">,</span> <span class="n">target_y</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fmt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">target_x</span><span class="p">,</span> <span class="n">target_y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">target_x</span><span class="p">,</span> <span class="n">target_y</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">save_fig_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -433,9 +590,19 @@
         <span class="n">aspect_equal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">frate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
         <span class="n">interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">figsize</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">],</span>
         <span class="n">dpi</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span>
+        <span class="n">facecolor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">edgecolor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">frameon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">FigureClass</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span>
+        <span class="n">clear</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">tight_layout</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">constrained_layout</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;--k&quot;</span><span class="p">,</span>
         <span class="n">save_fig_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Draw GIF of ship trajectory</span>
 <span class="sd">        Args:</span>
@@ -453,21 +620,79 @@
 <span class="sd">            interval (int, optional):</span>
 <span class="sd">                Delay between frames in milliseconds.</span>
 <span class="sd">                Defaults to 100.</span>
+<span class="sd">            num (int or str, optional):</span>
+<span class="sd">                A unique identifier for the figure.</span>
+<span class="sd">                If a figure with that identifier already exists, this figure is made active and returned.</span>
+<span class="sd">                An integer refers to the Figure.number attribute, a string refers to the figure label.</span>
+<span class="sd">                If there is no figure with the identifier or num is not given,</span>
+<span class="sd">                a new figure is created, made active and returned.</span>
+<span class="sd">                If num is an int, it will be used for the Figure.number attribute.</span>
+<span class="sd">                Otherwise, an auto-generated integer value is used (starting at 1 and incremented for each new figure).</span>
+<span class="sd">                If num is a string, the figure label and the window title is set to this value.</span>
+<span class="sd">                Default to None.</span>
 <span class="sd">            figsize ((float, float), optional):</span>
 <span class="sd">                Width, height in inches.</span>
 <span class="sd">                Default to [6.4, 4.8]</span>
 <span class="sd">            dpi (float, optional):</span>
 <span class="sd">                The resolution of the figure in dots-per-inch.</span>
-<span class="sd">                Default to 100.0</span>
+<span class="sd">                Default to 100.0.</span>
+<span class="sd">            facecolor (str, optional):</span>
+<span class="sd">                The background color.</span>
+<span class="sd">            edgecolor (str, optional):</span>
+<span class="sd">                The border color.</span>
+<span class="sd">            frameon (bool, optional):</span>
+<span class="sd">                If False, suppress drawing the figure frame.</span>
+<span class="sd">                Defaults to True.</span>
+<span class="sd">            FigureClass (subclass of matplotlib.figure.Figure, optional):</span>
+<span class="sd">                Optionally use a custom Figure instance.</span>
+<span class="sd">                Defaults to matplotlib.figure.Figure.</span>
+<span class="sd">            clear (bool, optional):</span>
+<span class="sd">                If True and the figure already exists, then it is cleared.</span>
+<span class="sd">                Defaults to False.</span>
+<span class="sd">            tight_layout (bool, optional):</span>
+<span class="sd">                If False use subplotpars.</span>
+<span class="sd">                If True adjust subplot parameters using tight_layout with default padding.</span>
+<span class="sd">                When providing a dict containing the keys pad, w_pad, h_pad, and rect,</span>
+<span class="sd">                the default tight_layout paddings will be overridden.</span>
+<span class="sd">                Defaults to False.</span>
+<span class="sd">            constrained_layout (bool, optional):</span>
+<span class="sd">                If True use constrained layout to adjust positioning of plot elements.</span>
+<span class="sd">                Like tight_layout, but designed to be more flexible.</span>
+<span class="sd">                See Constrained Layout Guide for examples.</span>
+<span class="sd">                (Note: does not work with add_subplot or subplot2grid.)</span>
+<span class="sd">                Defaults to False.</span>
+<span class="sd">            fmt (str, optional):</span>
+<span class="sd">                A format string, e.g. &#39;ro&#39; for red circles.</span>
+<span class="sd">                See the Notes section for a full description of the format strings.</span>
+<span class="sd">                Format strings are just an abbreviation for quickly setting basic line properties.</span>
+<span class="sd">                All of these and more can also be controlled by keyword arguments.</span>
+<span class="sd">                This argument cannot be passed as keyword.</span>
+<span class="sd">                Defaults to &quot;--k&quot;.</span>
 <span class="sd">            save_fig_path (str, optional):</span>
 <span class="sd">                Path of saving figure.</span>
 <span class="sd">                Defaults to None.</span>
+<span class="sd">            **kwargs (matplotlib.lines.Line2D properties, optional):</span>
+<span class="sd">                kwargs are used to specify properties</span>
+<span class="sd">                like a line label (for auto legends), linewidth, antialiasing, marker face color.</span>
+<span class="sd">                You can show the detailed information at `matplotlib.lines.Line2D</span>
+<span class="sd">                 &lt;https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D&gt;`_</span>
 
 <span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; ship.draw_gif(save_fig_path=&#39;test.gif&#39;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span>
+            <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">,</span>
+            <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
+            <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span>
+            <span class="n">facecolor</span><span class="o">=</span><span class="n">facecolor</span><span class="p">,</span>
+            <span class="n">edgecolor</span><span class="o">=</span><span class="n">edgecolor</span><span class="p">,</span>
+            <span class="n">frameon</span><span class="o">=</span><span class="n">frameon</span><span class="p">,</span>
+            <span class="n">FigureClass</span><span class="o">=</span><span class="n">FigureClass</span><span class="p">,</span>
+            <span class="n">clear</span><span class="o">=</span><span class="n">clear</span><span class="p">,</span>
+            <span class="n">tight_layout</span><span class="o">=</span><span class="n">tight_layout</span><span class="p">,</span>
+            <span class="n">constrained_layout</span><span class="o">=</span><span class="n">constrained_layout</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dimensionless</span><span class="p">:</span>
             <span class="n">draw_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span>
@@ -482,13 +707,11 @@
             <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$y$&quot;</span><span class="p">)</span>
             <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">draw_x</span><span class="p">,</span>
-            <span class="n">draw_y</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;trajectory&quot;</span><span class="p">,</span>
-            <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
-            <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">fmt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">draw_x</span><span class="p">,</span> <span class="n">draw_y</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">draw_x</span><span class="p">,</span> <span class="n">draw_y</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">aspect_equal</span><span class="p">:</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
 
@@ -531,28 +754,25 @@
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2021, Taiga MITSUYUKI
+        &#169; Copyright 2021, Taiga MITSUYUKI.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

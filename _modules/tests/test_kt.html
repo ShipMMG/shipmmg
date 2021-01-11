@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>tests.test_kt &mdash; shipmmg 0.0.2 documentation</title>
   
@@ -16,7 +16,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -50,7 +53,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> shipmmg
+            <a href="../../index.html" class="icon icon-home"> shipmmg
           
 
           
@@ -125,6 +128,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -179,10 +184,11 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fixture for testing in this file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">time_list</span><span class="p">,</span> <span class="n">simulation_result</span> <span class="o">=</span> <span class="n">sim_result</span>
+    <span class="n">time_list</span><span class="p">,</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">sim_result</span>
+    <span class="n">simulation_result</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">sol</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
     <span class="n">u_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_list</span><span class="p">),</span> <span class="mi">20</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1852.0</span> <span class="o">/</span> <span class="mi">3600</span><span class="p">))</span>
     <span class="n">v_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_list</span><span class="p">))</span>
-    <span class="n">r_list</span> <span class="o">=</span> <span class="n">simulation_result</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">r_list</span> <span class="o">=</span> <span class="n">simulation_result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">ship</span> <span class="o">=</span> <span class="n">ShipObj3dof</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
     <span class="n">ship</span><span class="o">.</span><span class="n">load_simulation_result</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">u_list</span><span class="p">,</span> <span class="n">v_list</span><span class="p">,</span> <span class="n">r_list</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ship</span></div>
@@ -193,7 +199,7 @@
 
     <span class="c1"># Ship3DOF.draw_xy_trajectory()</span>
     <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;test.png&quot;</span>
-    <span class="n">ship_kt</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">dimensionless</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ship_kt</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">dimensionless</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;ro&quot;</span><span class="p">)</span>
     <span class="n">ship_kt</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
@@ -205,6 +211,14 @@
         <span class="s2">&quot;u&quot;</span><span class="p">,</span>
         <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;time [sec]&quot;</span><span class="p">,</span>
         <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u$&quot;</span> <span class="o">+</span> <span class="s2">&quot; [m/s]&quot;</span><span class="p">,</span>
+        <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ship_kt</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span>
+        <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;u&quot;</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;time [sec]&quot;</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u$&quot;</span> <span class="o">+</span> <span class="s2">&quot; [m/s]&quot;</span><span class="p">,</span>
+        <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;ro&quot;</span><span class="p">,</span>
         <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
@@ -222,7 +236,7 @@
         <span class="n">ship_kt</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span><span class="s2">&quot;hogehoge&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">)</span>
 
     <span class="c1"># Ship3DOF.draw_gif()</span>
-    <span class="n">ship_kt</span><span class="o">.</span><span class="n">draw_gif</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
+    <span class="n">ship_kt</span><span class="o">.</span><span class="n">draw_gif</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">ship_kt</span><span class="o">.</span><span class="n">draw_gif</span><span class="p">(</span><span class="n">dimensionless</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
@@ -234,28 +248,25 @@
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2021, Taiga MITSUYUKI
+        &#169; Copyright 2021, Taiga MITSUYUKI.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
