@@ -5,6 +5,7 @@ from typing import List
 import dataclasses
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 from matplotlib.animation import FuncAnimation
 from .draw_obj import DrawObj
 
@@ -113,9 +114,19 @@ class ShipObj3dof:
         self,
         dimensionless: bool = False,
         aspect_equal: bool = True,
+        num: int or str = None,
         figsize: List[float] = [6.4, 4.8],
         dpi: float = 100.0,
+        fmt: str = None,
+        facecolor: str = None,
+        edgecolor: str = None,
+        frameon: bool = True,
+        FigureClass: matplotlib.figure.Figure = matplotlib.figure.Figure,
+        clear: bool = False,
+        tight_layout: bool = False,
+        constrained_layout: bool = False,
         save_fig_path: str = None,
+        **kwargs
     ) -> plt.Figure:
         """Draw trajectry(x,y).
 
@@ -126,25 +137,95 @@ class ShipObj3dof:
             aspect_equal (bool, optional):
                 Set equal of figure aspect or not.
                 Defaults to True.
+            num (int or str, optional):
+                A unique identifier for the figure.
+                If a figure with that identifier already exists, this figure is made active and returned.
+                An integer refers to the Figure.number attribute, a string refers to the figure label.
+                If there is no figure with the identifier or num is not given,
+                a new figure is created, made active and returned.
+                If num is an int, it will be used for the Figure.number attribute.
+                Otherwise, an auto-generated integer value is used (starting at 1 and incremented for each new figure).
+                If num is a string, the figure label and the window title is set to this value.
+                Default to None.
+            figsize ((float, float), optional):
+                Width, height in inches.
+                Default to [6.4, 4.8]
+            dpi (float, optional):
+                The resolution of the figure in dots-per-inch.
+                Default to 100.0.
             figsize ((float, float), optional):
                 Width, height in inches.
                 Default to [6.4, 4.8]
             dpi (float, optional):
                 The resolution of the figure in dots-per-inch.
                 Default to 100.0
+            facecolor (str, optional):
+                The background color.
+            edgecolor (str, optional):
+                The border color.
+            frameon (bool, optional):
+                If False, suppress drawing the figure frame.
+                Defaults to True.
+            FigureClass (subclass of matplotlib.figure.Figure, optional):
+                Optionally use a custom Figure instance.
+                Defaults to matplotlib.figure.Figure.
+            clear (bool, optional):
+                If True and the figure already exists, then it is cleared.
+                Defaults to False.
+            tight_layout (bool, optional):
+                If False use subplotpars.
+                If True adjust subplot parameters using tight_layout with default padding.
+                When providing a dict containing the keys pad, w_pad, h_pad, and rect,
+                the default tight_layout paddings will be overridden.
+                Defaults to False.
+            constrained_layout (bool, optional):
+                If True use constrained layout to adjust positioning of plot elements.
+                Like tight_layout, but designed to be more flexible.
+                See Constrained Layout Guide for examples.
+                (Note: does not work with add_subplot or subplot2grid.)
+                Defaults to False.
+            fmt (str, optional):
+                A format string, e.g. 'ro' for red circles.
+                See the Notes section for a full description of the format strings.
+                Format strings are just an abbreviation for quickly setting basic line properties.
+                All of these and more can also be controlled by keyword arguments.
+                This argument cannot be passed as keyword.
+                Defaults to None.
             save_fig_path (str, optional):
                 Path of saving figure.
                 Defaults to None.
+            **kwargs (matplotlib.lines.Line2D properties, optional):
+                kwargs are used to specify properties
+                like a line label (for auto legends), linewidth, antialiasing, marker face color.
+                You can show the detailed information at `matplotlib.lines.Line2D
+                 <https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D>`_
+
         Returns:
             matplotlib.pyplot.Figure: Figure
 
         Examples:
             >>> ship.draw_xy_trajectory(save_fig_path="test.png")
         """
-        fig = plt.figure(figsize=figsize, dpi=dpi)
+        fig = plt.figure(
+            num=num,
+            figsize=figsize,
+            dpi=dpi,
+            facecolor=facecolor,
+            edgecolor=edgecolor,
+            frameon=frameon,
+            FigureClass=FigureClass,
+            clear=clear,
+            tight_layout=tight_layout,
+            constrained_layout=constrained_layout,
+        )
 
         if dimensionless:
-            plt.plot(np.array(self.x) / self.L, np.array(self.y) / self.L)
+            if fmt is None:
+                plt.plot(np.array(self.x) / self.L, np.array(self.y) / self.L, **kwargs)
+            else:
+                plt.plot(
+                    np.array(self.x) / self.L, np.array(self.y) / self.L, fmt, **kwargs
+                )
             plt.xlabel(r"$x/L$")
             plt.ylabel(r"$y/L$")
         else:
@@ -164,9 +245,19 @@ class ShipObj3dof:
         y_index: str,
         xlabel: str = None,
         ylabel: str = None,
+        num: int or str = None,
         figsize: List[float] = [6.4, 4.8],
         dpi: float = 100.0,
+        facecolor: str = None,
+        edgecolor: str = None,
+        frameon: bool = True,
+        FigureClass: matplotlib.figure.Figure = matplotlib.figure.Figure,
+        clear: bool = False,
+        tight_layout: bool = False,
+        constrained_layout: bool = False,
+        fmt: str = None,
         save_fig_path: str = None,
+        **kwargs
     ) -> plt.Figure:
         """Draw chart.
 
@@ -181,15 +272,62 @@ class ShipObj3dof:
             ylabel (string, optional):
                 Label of Y axis.
                 Defaults to None.
+            num (int or str, optional):
+                A unique identifier for the figure.
+                If a figure with that identifier already exists, this figure is made active and returned.
+                An integer refers to the Figure.number attribute, a string refers to the figure label.
+                If there is no figure with the identifier or num is not given,
+                a new figure is created, made active and returned.
+                If num is an int, it will be used for the Figure.number attribute.
+                Otherwise, an auto-generated integer value is used (starting at 1 and incremented for each new figure).
+                If num is a string, the figure label and the window title is set to this value.
+                Default to None.
             figsize ((float, float), optional):
                 Width, height in inches.
                 Default to [6.4, 4.8]
             dpi (float, optional):
                 The resolution of the figure in dots-per-inch.
-                Default to 100.0
+                Default to 100.0.
+            facecolor (str, optional):
+                The background color.
+            edgecolor (str, optional):
+                The border color.
+            frameon (bool, optional):
+                If False, suppress drawing the figure frame.
+                Defaults to True.
+            FigureClass (subclass of matplotlib.figure.Figure, optional):
+                Optionally use a custom Figure instance.
+                Defaults to matplotlib.figure.Figure.
+            clear (bool, optional):
+                If True and the figure already exists, then it is cleared.
+                Defaults to False.
+            tight_layout (bool, optional):
+                If False use subplotpars.
+                If True adjust subplot parameters using tight_layout with default padding.
+                When providing a dict containing the keys pad, w_pad, h_pad, and rect,
+                the default tight_layout paddings will be overridden.
+                Defaults to False.
+            constrained_layout (bool, optional):
+                If True use constrained layout to adjust positioning of plot elements.
+                Like tight_layout, but designed to be more flexible.
+                See Constrained Layout Guide for examples.
+                (Note: does not work with add_subplot or subplot2grid.)
+                Defaults to False.
+            fmt (str, optional):
+                A format string, e.g. 'ro' for red circles.
+                See the Notes section for a full description of the format strings.
+                Format strings are just an abbreviation for quickly setting basic line properties.
+                All of these and more can also be controlled by keyword arguments.
+                This argument cannot be passed as keyword.
+                Defaults to None.
             save_fig_path (str, optional):
                 Path of saving figure.
                 Defaults to None.
+            **kwargs (matplotlib.lines.Line2D properties, optional):
+                kwargs are used to specify properties
+                like a line label (for auto legends), linewidth, antialiasing, marker face color.
+                You can show the detailed information at `matplotlib.lines.Line2D
+                 <https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D>`_
         Returns:
             matplotlib.pyplot.Figure: Figure
 
@@ -264,12 +402,26 @@ class ShipObj3dof:
                 " psi"
                 "]"
             )
-        fig = plt.figure(figsize=figsize, dpi=dpi)
+        fig = plt.figure(
+            num=num,
+            figsize=figsize,
+            dpi=dpi,
+            facecolor=facecolor,
+            edgecolor=edgecolor,
+            frameon=frameon,
+            FigureClass=FigureClass,
+            clear=clear,
+            tight_layout=tight_layout,
+            constrained_layout=constrained_layout,
+        )
         if xlabel is not None:
             plt.xlabel(xlabel)
         if ylabel is not None:
             plt.ylabel(ylabel)
-        plt.plot(target_x, target_y)
+        if fmt is None:
+            plt.plot(target_x, target_y, **kwargs)
+        else:
+            plt.plot(target_x, target_y, fmt, **kwargs)
         if save_fig_path is not None:
             plt.savefig(save_fig_path)
         plt.close()
@@ -282,9 +434,19 @@ class ShipObj3dof:
         aspect_equal: bool = True,
         frate: int = 10,
         interval: int = 100,
+        num: int or str = None,
         figsize: List[float] = [6.4, 4.8],
         dpi: float = 100.0,
+        facecolor: str = None,
+        edgecolor: str = None,
+        frameon: bool = True,
+        FigureClass: matplotlib.figure.Figure = matplotlib.figure.Figure,
+        clear: bool = False,
+        tight_layout: bool = False,
+        constrained_layout: bool = False,
+        fmt: str = "--k",
         save_fig_path: str = None,
+        **kwargs
     ) -> plt.Figure:
         """Draw GIF of ship trajectory
         Args:
@@ -302,21 +464,79 @@ class ShipObj3dof:
             interval (int, optional):
                 Delay between frames in milliseconds.
                 Defaults to 100.
+            num (int or str, optional):
+                A unique identifier for the figure.
+                If a figure with that identifier already exists, this figure is made active and returned.
+                An integer refers to the Figure.number attribute, a string refers to the figure label.
+                If there is no figure with the identifier or num is not given,
+                a new figure is created, made active and returned.
+                If num is an int, it will be used for the Figure.number attribute.
+                Otherwise, an auto-generated integer value is used (starting at 1 and incremented for each new figure).
+                If num is a string, the figure label and the window title is set to this value.
+                Default to None.
             figsize ((float, float), optional):
                 Width, height in inches.
                 Default to [6.4, 4.8]
             dpi (float, optional):
                 The resolution of the figure in dots-per-inch.
-                Default to 100.0
+                Default to 100.0.
+            facecolor (str, optional):
+                The background color.
+            edgecolor (str, optional):
+                The border color.
+            frameon (bool, optional):
+                If False, suppress drawing the figure frame.
+                Defaults to True.
+            FigureClass (subclass of matplotlib.figure.Figure, optional):
+                Optionally use a custom Figure instance.
+                Defaults to matplotlib.figure.Figure.
+            clear (bool, optional):
+                If True and the figure already exists, then it is cleared.
+                Defaults to False.
+            tight_layout (bool, optional):
+                If False use subplotpars.
+                If True adjust subplot parameters using tight_layout with default padding.
+                When providing a dict containing the keys pad, w_pad, h_pad, and rect,
+                the default tight_layout paddings will be overridden.
+                Defaults to False.
+            constrained_layout (bool, optional):
+                If True use constrained layout to adjust positioning of plot elements.
+                Like tight_layout, but designed to be more flexible.
+                See Constrained Layout Guide for examples.
+                (Note: does not work with add_subplot or subplot2grid.)
+                Defaults to False.
+            fmt (str, optional):
+                A format string, e.g. 'ro' for red circles.
+                See the Notes section for a full description of the format strings.
+                Format strings are just an abbreviation for quickly setting basic line properties.
+                All of these and more can also be controlled by keyword arguments.
+                This argument cannot be passed as keyword.
+                Defaults to "--k".
             save_fig_path (str, optional):
                 Path of saving figure.
                 Defaults to None.
+            **kwargs (matplotlib.lines.Line2D properties, optional):
+                kwargs are used to specify properties
+                like a line label (for auto legends), linewidth, antialiasing, marker face color.
+                You can show the detailed information at `matplotlib.lines.Line2D
+                 <https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D>`_
 
         Examples:
             >>> ship.draw_gif(save_fig_path='test.gif')
         """
 
-        fig = plt.figure(figsize=figsize, dpi=dpi)
+        fig = plt.figure(
+            num=num,
+            figsize=figsize,
+            dpi=dpi,
+            facecolor=facecolor,
+            edgecolor=edgecolor,
+            frameon=frameon,
+            FigureClass=FigureClass,
+            clear=clear,
+            tight_layout=tight_layout,
+            constrained_layout=constrained_layout,
+        )
         ax = fig.add_subplot(111)
         if dimensionless:
             draw_x = np.array(self.x) / self.L
@@ -331,13 +551,11 @@ class ShipObj3dof:
             ax.set_ylabel(r"$y$")
             shape = (self.L / 2, self.B / 2)
 
-        plt.plot(
-            draw_x,
-            draw_y,
-            label="trajectory",
-            ls="--",
-            color="k",
-        )
+        if fmt is not None:
+            plt.plot(draw_x, draw_y, fmt, **kwargs)
+        else:
+            plt.plot(draw_x, draw_y, ls="--", color="k", **kwargs)
+
         if aspect_equal:
             ax.set_aspect("equal")
 
