@@ -43,7 +43,7 @@ def test_Ship3DOF_drawing_function(ship_kt):
 
     # Ship3DOF.draw_xy_trajectory()
     save_fig_path = "test.png"
-    ship_kt.draw_xy_trajectory(dimensionless=True)
+    ship_kt.draw_xy_trajectory(dimensionless=True, fmt="ro")
     ship_kt.draw_xy_trajectory(save_fig_path=save_fig_path)
     if os.path.exists(save_fig_path):
         os.remove(save_fig_path)
@@ -55,6 +55,14 @@ def test_Ship3DOF_drawing_function(ship_kt):
         "u",
         xlabel="time [sec]",
         ylabel=r"$u$" + " [m/s]",
+        save_fig_path=save_fig_path,
+    )
+    ship_kt.draw_chart(
+        "time",
+        "u",
+        xlabel="time [sec]",
+        ylabel=r"$u$" + " [m/s]",
+        fmt="ro",
         save_fig_path=save_fig_path,
     )
     if os.path.exists(save_fig_path):
@@ -72,7 +80,7 @@ def test_Ship3DOF_drawing_function(ship_kt):
         ship_kt.draw_chart("hogehoge", "y")
 
     # Ship3DOF.draw_gif()
-    ship_kt.draw_gif(save_fig_path=save_fig_path)
+    ship_kt.draw_gif(fmt=None, save_fig_path=save_fig_path)
     if os.path.exists(save_fig_path):
         os.remove(save_fig_path)
     ship_kt.draw_gif(dimensionless=True, save_fig_path=save_fig_path)
