@@ -146,7 +146,8 @@ def simulate_kt(
         >>> time_list = np.linspace(0.00, duration, num_of_sampling)
         >>> delta_list = 35 * np.pi / 180 * np.sin(3.0 * np.pi / Ts * time_list)
         >>> r0 = 0.0
-        >>> result = simulate_kt(kt_params, time_list, delta_list, r0)
+        >>> sol = simulate_kt(kt_params, time_list, delta_list, r0)
+        >>> result = sol.sol(time_list)
     """
     return simulate(
         K=kt_params.K,
@@ -292,7 +293,8 @@ def simulate(
         >>> time_list = np.linspace(0.00, duration, num_of_sampling)
         >>> delta_list = 35 * np.pi / 180 * np.sin(3.0 * np.pi / Ts * time_list)
         >>> r0 = 0.0
-        >>> result = simulate(K, T, time_list, delta_list, r0)
+        >>> sol = simulate_kt(K, T, time_list, delta_list, r0)
+        >>> result = sol.sol(time_list)
     """
     spl_delta = interp1d(time_list, delta_list, "cubic", fill_value="extrapolate")
 

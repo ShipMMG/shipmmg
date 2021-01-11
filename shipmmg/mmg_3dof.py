@@ -296,6 +296,73 @@ def simulate_mmg_3dof(
             success (bool):
                 True if the solver reached the interval end or a termination event occurred (`status >= 0`).
 
+    Examples:
+        >>> duration = 50  # [s]
+        >>> sampling = 2000
+        >>> time_list = np.linspace(0.00, duration, sampling)
+        >>> delta_list = np.full(len(time_list), 30.0 * np.pi / 180.0)
+        >>> npm_list = np.full(len(time_list), 20.338)
+        >>> R0_func = scipy.interpolate.interp1d(np.linspace(0.0, 10.0, 10), np.full(10, 0.0))
+        >>> basic_params = Mmg3DofBasicParams(
+        >>>                     L_pp=2.19048,
+        >>>                     B=0.3067,
+        >>>                     d=0.10286,
+        >>>                     nabla=0.04495,
+        >>>                     x_G=0.0,
+        >>>                     D_p=0.0756,
+        >>>                     m_=0.1822,
+        >>>                     I_zG=0.01138,
+        >>>                     Λ=2.1683,
+        >>>                     A_R_Ld=0.01867,
+        >>>                     η=0.7916,
+        >>>                     m_x_=0.00601,
+        >>>                     m_y_=0.1521,
+        >>>                     J_z=0.00729,
+        >>>                     f_α=(6.13 * 2.1683) / (2.25 + 2.1683),
+        >>>                     ϵ=0.90,
+        >>>                     t_R=0.441,
+        >>>                     a_H=0.232,
+        >>>                     x_H=-0.711,
+        >>>                     γ_R=0.4115,
+        >>>                     l_R=-0.774,
+        >>>                     κ=0.713,
+        >>>                     t_P=0.20,
+        >>>                     w_P0=0.326,
+        >>>                 )
+        >>> maneuvering_params = Mmg3DofManeuveringParams(
+        >>>                    C_1=0.48301,
+        >>>                    C_2=-0.29765,
+        >>>                    C_3=-0.16423,
+        >>>                    X_0=-0.07234,
+        >>>                    X_ββ=-0.23840,
+        >>>                    X_βγ=-0.03231 + 0.1521,
+        >>>                    X_γγ=-0.06405,
+        >>>                    X_ββββ=-0.30047,
+        >>>                    Y_β=0.85475,
+        >>>                    Y_γ=0.11461 + 0.00601,
+        >>>                    Y_βββ=6.73201,
+        >>>                    Y_ββγ=-2.23689,
+        >>>                    Y_βγγ=3.38577,
+        >>>                    Y_γγγ=-0.04151,
+        >>>                    N_β=0.096567,
+        >>>                    N_γ=-0.036501,
+        >>>                    N_βββ=0.14090,
+        >>>                    N_ββγ=-0.46158,
+        >>>                    N_βγγ=0.01648,
+        >>>                    N_γγγ=-0.030404,
+        >>>                )
+        >>> sol = simulate_mmg_3dof(
+        >>>                    basic_params,
+        >>>                    maneuvering_params,
+        >>>                    R0_func,
+        >>>                    time_list,
+        >>>                    delta_rad_list,
+        >>>                    npm_list,
+        >>>                    u0=1.21,
+        >>>                )
+        >>> result = sol.sol(time_list)
+
+
     Note:
         For more information, please see the following articles.
 
@@ -634,6 +701,110 @@ def simulate(
                 Human-readable description of the termination reason.
             success (bool):
                 True if the solver reached the interval end or a termination event occurred (`status >= 0`).
+
+    Examples:
+        >>> duration = 50  # [s]
+        >>> sampling = 2000
+        >>> time_list = np.linspace(0.00, duration, sampling)
+        >>> delta_list = np.full(len(time_list), 30.0 * np.pi / 180.0)
+        >>> npm_list = np.full(len(time_list), 20.338)
+        >>> R0_func = scipy.interpolate.interp1d(np.linspace(0.0, 10.0, 10), np.full(10, 0.0))
+        >>> L_pp=2.19048
+        >>> B=0.3067
+        >>> d=0.10286
+        >>> nabla=0.04495
+        >>> x_G=0.0
+        >>> D_p=0.0756
+        >>> m_=0.1822
+        >>> I_zG=0.01138
+        >>> Λ=2.1683
+        >>> A_R_Ld=0.01867
+        >>> η=0.7916
+        >>> m_x_=0.00601
+        >>> m_y_=0.1521
+        >>> J_z=0.00729
+        >>> f_α=(6.13 * 2.1683) / (2.25 + 2.1683)
+        >>> ϵ=0.90
+        >>> t_R=0.441
+        >>> a_H=0.232
+        >>> x_H=-0.711
+        >>> γ_R=0.4115
+        >>> l_R=-0.774
+        >>> κ=0.713
+        >>> t_P=0.20
+        >>> w_P0=0.326
+        >>> C_1=0.48301
+        >>> C_2=-0.29765
+        >>> C_3=-0.16423
+        >>> X_0=-0.07234
+        >>> X_ββ=-0.23840
+        >>> X_βγ=-0.03231 + 0.1521
+        >>> X_γγ=-0.06405
+        >>> X_ββββ=-0.30047
+        >>> Y_β=0.85475
+        >>> Y_γ=0.11461 + 0.00601
+        >>> Y_βββ=6.73201
+        >>> Y_ββγ=-2.23689
+        >>> Y_βγγ=3.38577
+        >>> Y_γγγ=-0.04151
+        >>> N_β=0.096567
+        >>> N_γ=-0.036501
+        >>> N_βββ=0.14090
+        >>> N_ββγ=-0.46158
+        >>> N_βγγ=0.01648
+        >>> N_γγγ=-0.030404
+        >>> sol = simulate_mmg_3dof(
+        >>>                    L_pp=L_pp,
+        >>>                    B=B,
+        >>>                    d=d,
+        >>>                    nabla=nabla,
+        >>>                    x_G=x_G,
+        >>>                    D_p=D_p,
+        >>>                    m_=m_,
+        >>>                    I_zG=I_zG,
+        >>>                    Λ=Λ,
+        >>>                    A_R_Ld=A_R_Ld,
+        >>>                    η=η,
+        >>>                    m_x_=m_x_,
+        >>>                    m_y_=m_y_,
+        >>>                    J_z=J_z,
+        >>>                    f_α=f_α,
+        >>>                    ϵ=ϵ,
+        >>>                    t_R=t_R,
+        >>>                    a_H=a_H,
+        >>>                    x_H=x_H,
+        >>>                    γ_R=γ_R,
+        >>>                    l_R=l_R,
+        >>>                    κ=κ,
+        >>>                    t_P=t_P,
+        >>>                    w_P0=w_P0,
+        >>>                    C_1=C_1,
+        >>>                    C_2=C_2,
+        >>>                    C_3=C_3,
+        >>>                    X_0=X_0,
+        >>>                    X_ββ=X_ββ,
+        >>>                    X_βγ=X_βγ,
+        >>>                    X_γγ=X_γγ,
+        >>>                    X_ββββ=X_ββββ,
+        >>>                    Y_β=Y_β,
+        >>>                    Y_γ=Y_γ,
+        >>>                    Y_βββ=Y_βββ,
+        >>>                    Y_ββγ=Y_ββγ,
+        >>>                    Y_βγγ=Y_βγγ,
+        >>>                    Y_γγγ=Y_γγγ,
+        >>>                    N_β=N_β,
+        >>>                    N_γ=N_γ,
+        >>>                    N_βββ=N_βββ,
+        >>>                    N_ββγ=N_ββγ,
+        >>>                    N_βγγ=N_βγγ,
+        >>>                    N_γγγ=N_γγγ,
+        >>>                    R0_func,
+        >>>                    time_list,
+        >>>                    delta_rad_list,
+        >>>                    npm_list,
+        >>>                    u0=1.21,
+        >>>                )
+        >>> result = sol.sol(time_list)
 
     Note:
         For more information, please see the following articles.
