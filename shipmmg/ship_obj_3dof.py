@@ -86,7 +86,7 @@ class ShipObj3dof:
             >>> result = kt.simulate_kt(kt_params, time_list, delta_list)
             >>> u_list = np.full(len(time_list), 20 * (1852.0 / 3600))
             >>> v_list = np.zeros(len(time_list))
-            >>> r_list = result.T[0]
+            >>> r_list = result[0]
             >>> ship = ShipObj3dof(L = 180, B = 20)
             >>> ship.load_simulation_result(time_list, u_list, v_list, r_list)
             >>> print(ship.x, ship.y, ship.psi)
