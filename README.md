@@ -1,5 +1,7 @@
 # ShipMMG: Ship Maneuvering Simulation Model
 
+[![PyPi version](https://pypip.in/v/shipmmg/badge.png)](https://pypi.org/project/shipmmg/)
+[![Anaconda-Server Badge](https://anaconda.org/taiga4112/shipmmg/badges/version.svg)](https://anaconda.org/taiga4112/shipmmg)
 ![codecov](https://github.com/ShipMMG/shipmmg/workflows/codecov/badge.svg)
 [![codecov](https://codecov.io/gh/ShipMMG/shipmmg/branch/main/graph/badge.svg?token=VQ1J2RTC7X)](https://codecov.io/gh/ShipMMG/shipmmg)
 
@@ -15,6 +17,7 @@ Binary installers for the latest released version will be available at the Pytho
 ```sh
 pip install shipmmg
 # pip install git+ssh://git@github.com/ShipMMG/shipmmg.git # Install from GitHub
+# conda install -c conda-forge -c taiga4112 shipmmg # Install from Anaconda
 ```
 
 ## License
