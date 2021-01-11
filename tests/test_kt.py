@@ -28,10 +28,11 @@ def ship_kt(sim_result):
     """
     Fixture for testing in this file.
     """
-    time_list, simulation_result = sim_result
+    time_list, sol = sim_result
+    simulation_result = sol.sol(time_list)
     u_list = np.full(len(time_list), 20 * (1852.0 / 3600))
     v_list = np.zeros(len(time_list))
-    r_list = simulation_result.T[0]
+    r_list = simulation_result[0]
     ship = ShipObj3dof(L=100, B=10)
     ship.load_simulation_result(time_list, u_list, v_list, r_list)
     return ship
