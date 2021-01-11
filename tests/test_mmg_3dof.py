@@ -89,7 +89,7 @@ def ship_mmg_3dof(basic_params, maneuvering_params):
     R0_list = np.full(10, 0.0)
     R0_func = interp1d(u_list, R0_list)
 
-    result = simulate_mmg_3dof(
+    sol = simulate_mmg_3dof(
         basic_params,
         maneuvering_params,
         R0_func,
@@ -98,8 +98,9 @@ def ship_mmg_3dof(basic_params, maneuvering_params):
         npm_list,
         u0=1.21,
     )
+    sim_result = sol.sol(time_list)
     ship = ShipObj3dof(L=basic_params.L_pp, B=basic_params.B)
-    ship.load_simulation_result(time_list, result.T[0], result.T[1], result.T[2])
+    ship.load_simulation_result(time_list, sim_result[0], sim_result[1], sim_result[2])
     return ship
 
 

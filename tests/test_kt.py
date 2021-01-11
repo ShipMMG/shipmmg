@@ -28,10 +28,11 @@ def ship_kt(sim_result):
     """
     Fixture for testing in this file.
     """
-    time_list, simulation_result = sim_result
+    time_list, sol = sim_result
+    simulation_result = sol.sol(time_list)
     u_list = np.full(len(time_list), 20 * (1852.0 / 3600))
     v_list = np.zeros(len(time_list))
-    r_list = simulation_result.T[0]
+    r_list = simulation_result[0]
     ship = ShipObj3dof(L=100, B=10)
     ship.load_simulation_result(time_list, u_list, v_list, r_list)
     return ship
@@ -42,7 +43,7 @@ def test_Ship3DOF_drawing_function(ship_kt):
 
     # Ship3DOF.draw_xy_trajectory()
     save_fig_path = "test.png"
-    ship_kt.draw_xy_trajectory(dimensionless=True)
+    ship_kt.draw_xy_trajectory(dimensionless=True, fmt="ro")
     ship_kt.draw_xy_trajectory(save_fig_path=save_fig_path)
     if os.path.exists(save_fig_path):
         os.remove(save_fig_path)
@@ -54,6 +55,14 @@ def test_Ship3DOF_drawing_function(ship_kt):
         "u",
         xlabel="time [sec]",
         ylabel=r"$u$" + " [m/s]",
+        save_fig_path=save_fig_path,
+    )
+    ship_kt.draw_chart(
+        "time",
+        "u",
+        xlabel="time [sec]",
+        ylabel=r"$u$" + " [m/s]",
+        fmt="ro",
         save_fig_path=save_fig_path,
     )
     if os.path.exists(save_fig_path):
@@ -71,7 +80,7 @@ def test_Ship3DOF_drawing_function(ship_kt):
         ship_kt.draw_chart("hogehoge", "y")
 
     # Ship3DOF.draw_gif()
-    ship_kt.draw_gif(save_fig_path=save_fig_path)
+    ship_kt.draw_gif(fmt=None, save_fig_path=save_fig_path)
     if os.path.exists(save_fig_path):
         os.remove(save_fig_path)
     ship_kt.draw_gif(dimensionless=True, save_fig_path=save_fig_path)
