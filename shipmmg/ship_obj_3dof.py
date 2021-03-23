@@ -572,7 +572,7 @@ class ShipObj3dof:
             ψT = np.array(ψ_list).T
             _ψ_list_j = list(ψT[j].T)
 
-            return drawer.draw_square_with_angle(
+            return drawer.draw_obj_with_angle(
                 _x_list_j, _y_list_j, shape_list, _ψ_list_j
             )
 
