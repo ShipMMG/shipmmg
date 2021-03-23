@@ -813,7 +813,8 @@ def simulate(
           J Mar Sci Technol 20, 37–52 https://doi.org/10.1007/s00773-014-0293-y
 
     """
-    spl_delta = interp1d(time_list, delta_list, "cubic", fill_value="extrapolate")
+    spl_delta = interp1d(time_list, delta_list, "cubic",
+                         fill_value="extrapolate")
     spl_npm = interp1d(time_list, npm_list, "cubic", fill_value="extrapolate")
 
     def mmg_3dof_eom_solve_ivp(t, X):
@@ -858,7 +859,8 @@ def simulate(
         )
         R_0 = R_0_func(u)
         X_R = -(1 - t_R) * F_N * np.sin(δ) / L_pp
-        X_P = (1 - t_P) * ρ * K_T * npm ** 2 * D_p ** 4 * (2 / (ρ * d * L_pp ** 2))
+        X_P = (1 - t_P) * ρ * K_T * npm ** 2 * \
+            D_p ** 4 * (2 / (ρ * d * L_pp ** 2))
         Y_H = (
             0.5
             * ρ
