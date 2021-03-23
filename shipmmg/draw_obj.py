@@ -83,7 +83,7 @@ class DrawObj:
         trans_points += np.array([center_x, center_y])
 
         return trans_points[:, 0], trans_points[:, 1]
-    
+
     def __ship(self, center_x, center_y, shape, angle):
         """Create ship
         Args:
@@ -134,7 +134,7 @@ class DrawObj:
         angle_y = np.array([center_y, center_y + np.sin(angle) * shape[1]])
 
         return square_x, square_y, angle_x, angle_y
-    
+
     def __ship_with_angle(self, center_x, center_y, shape, angle):
         """Create ship with angle line
         Args:

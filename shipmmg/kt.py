@@ -296,7 +296,8 @@ def simulate(
         >>> sol = simulate_kt(K, T, time_list, delta_list, r0)
         >>> result = sol.sol(time_list)
     """
-    spl_delta = interp1d(time_list, delta_list, "cubic", fill_value="extrapolate")
+    spl_delta = interp1d(time_list, delta_list, "cubic",
+                         fill_value="extrapolate")
 
     def kt_eom_solve_ivp(t, X, K, T):
         r, delta = X
