@@ -173,11 +173,11 @@ def simulate_mmg_3dof(
 
     .. math::
 
-        m (\dot{u}-vr)&=-m_x\dot{u}+m_yvr+X_H+R_0+X_P+X_R
+        m (\\dot{u}-vr)&=-m_x\\dot{u}+m_yvr+X_H+R_0+X_P+X_R
 
-        m (\dot{v}+ur)&=-m_y\dot{v}+m_xur+Y_H+Y_R
+        m (\\dot{v}+ur)&=-m_y\\dot{v}+m_xur+Y_H+Y_R
 
-        I_{zG}\dot{r}&=-J_Z\dot{r}+N_H+N_R
+        I_{zG}\\dot{r}&=-J_Z\\dot{r}+N_H+N_R
 
     Args:
         basic_params (Mmg3DofBasicParams):
@@ -495,11 +495,11 @@ def simulate(
 
     .. math::
 
-        m (\dot{u}-vr)&=-m_x\dot{u}+m_yvr+X_H+R_0+X_P+X_R
+        m (\\dot{u}-vr)&=-m_x\\dot{u}+m_yvr+X_H+R_0+X_P+X_R
 
-        m (\dot{v}+ur)&=-m_y\dot{v}+m_xur+Y_H+Y_R
+        m (\\dot{v}+ur)&=-m_y\\dot{v}+m_xur+Y_H+Y_R
 
-        I_{zG}\dot{r}&=-J_Z\dot{r}+N_H+N_R
+        I_{zG}\\dot{r}&=-J_Z\\dot{r}+N_H+N_R
 
     Args:
         L_pp (float):
@@ -813,8 +813,7 @@ def simulate(
           J Mar Sci Technol 20, 37–52 https://doi.org/10.1007/s00773-014-0293-y
 
     """
-    spl_delta = interp1d(time_list, delta_list, "cubic",
-                         fill_value="extrapolate")
+    spl_delta = interp1d(time_list, delta_list, "cubic", fill_value="extrapolate")
     spl_npm = interp1d(time_list, npm_list, "cubic", fill_value="extrapolate")
 
     def mmg_3dof_eom_solve_ivp(t, X):
@@ -859,8 +858,7 @@ def simulate(
         )
         R_0 = R_0_func(u)
         X_R = -(1 - t_R) * F_N * np.sin(δ) / L_pp
-        X_P = (1 - t_P) * ρ * K_T * npm ** 2 * \
-            D_p ** 4 * (2 / (ρ * d * L_pp ** 2))
+        X_P = (1 - t_P) * ρ * K_T * npm ** 2 * D_p ** 4 * (2 / (ρ * d * L_pp ** 2))
         Y_H = (
             0.5
             * ρ
@@ -905,5 +903,10 @@ def simulate(
         [time_list[0], time_list[-1]],
         [u0, v0, r0, delta_list[0], npm_list[0]],
         dense_output=True,
+        method=method,
+        t_eval=t_eval,
+        events=events,
+        vectorized=vectorized,
+        **options
     )
     return sol
