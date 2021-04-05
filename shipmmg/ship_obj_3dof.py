@@ -97,8 +97,10 @@ class ShipObj3dof:
         for i, (ut, vt, rt) in enumerate(zip(u, v, r)):
             if i > 0:
                 dt = time[i] - time[i - 1]
-                x.append(x[-1] + (ut * np.cos(psi[-1]) - vt * np.sin(psi[-1])) * dt)
-                y.append(y[-1] + (ut * np.sin(psi[-1]) + vt * np.cos(psi[-1])) * dt)
+                x.append(x[-1] + (ut * np.cos(psi[-1]) -
+                         vt * np.sin(psi[-1])) * dt)
+                y.append(y[-1] + (ut * np.sin(psi[-1]) +
+                         vt * np.cos(psi[-1])) * dt)
                 psi.append(psi[-1] + rt * dt)
 
         # Register
@@ -221,7 +223,8 @@ class ShipObj3dof:
 
         if dimensionless:
             if fmt is None:
-                plt.plot(np.array(self.x) / self.L, np.array(self.y) / self.L, **kwargs)
+                plt.plot(np.array(self.x) / self.L,
+                         np.array(self.y) / self.L, **kwargs)
             else:
                 plt.plot(
                     np.array(self.x) / self.L, np.array(self.y) / self.L, fmt, **kwargs
@@ -572,7 +575,7 @@ class ShipObj3dof:
             ψT = np.array(ψ_list).T
             _ψ_list_j = list(ψT[j].T)
 
-            return drawer.draw_square_with_angle(
+            return drawer.draw_obj_with_angle(
                 _x_list_j, _y_list_j, shape_list, _ψ_list_j
             )
 

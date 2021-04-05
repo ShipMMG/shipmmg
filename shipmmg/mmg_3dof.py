@@ -173,11 +173,11 @@ def simulate_mmg_3dof(
 
     .. math::
 
-        m (\dot{u}-vr)&=-m_x\dot{u}+m_yvr+X_H+R_0+X_P+X_R
+        m (\\dot{u}-vr)&=-m_x\\dot{u}+m_yvr+X_H+R_0+X_P+X_R
 
-        m (\dot{v}+ur)&=-m_y\dot{v}+m_xur+Y_H+Y_R
+        m (\\dot{v}+ur)&=-m_y\\dot{v}+m_xur+Y_H+Y_R
 
-        I_{zG}\dot{r}&=-J_Z\dot{r}+N_H+N_R
+        I_{zG}\\dot{r}&=-J_Z\\dot{r}+N_H+N_R
 
     Args:
         basic_params (Mmg3DofBasicParams):
@@ -495,11 +495,11 @@ def simulate(
 
     .. math::
 
-        m (\dot{u}-vr)&=-m_x\dot{u}+m_yvr+X_H+R_0+X_P+X_R
+        m (\\dot{u}-vr)&=-m_x\\dot{u}+m_yvr+X_H+R_0+X_P+X_R
 
-        m (\dot{v}+ur)&=-m_y\dot{v}+m_xur+Y_H+Y_R
+        m (\\dot{v}+ur)&=-m_y\\dot{v}+m_xur+Y_H+Y_R
 
-        I_{zG}\dot{r}&=-J_Z\dot{r}+N_H+N_R
+        I_{zG}\\dot{r}&=-J_Z\\dot{r}+N_H+N_R
 
     Args:
         L_pp (float):
@@ -903,5 +903,10 @@ def simulate(
         [time_list[0], time_list[-1]],
         [u0, v0, r0, delta_list[0], npm_list[0]],
         dense_output=True,
+        method=method,
+        t_eval=t_eval,
+        events=events,
+        vectorized=vectorized,
+        **options
     )
     return sol

@@ -310,5 +310,10 @@ def simulate(
         [r0, delta_list[0]],
         args=(K, T),
         dense_output=True,
+        method=method,
+        t_eval=t_eval,
+        events=events,
+        vectorized=vectorized,
+        **options
     )
     return sol
