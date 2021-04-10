@@ -8,7 +8,6 @@ from shipmmg.mmg_3dof import (
 )
 from shipmmg.ship_obj_3dof import ShipObj3dof
 import numpy as np
-from scipy.interpolate import interp1d
 import pytest
 import os
 
@@ -83,15 +82,14 @@ def ship_mmg_3dof(basic_params, maneuvering_params):
     n_const = 20.338
     npm_list = np.array([n_const for i in range(sampling)])
 
-    # R0 (R0(u) = 0.0)
-    u_list = np.linspace(0.00, 10.00, 10)
-    R0_list = np.full(10, 0.0)
-    R0_func = interp1d(u_list, R0_list)
+    # # R0 (R0(u) = 0.0)
+    # u_list = np.linspace(0.00, 10.00, 10)
+    # R0_list = np.full(10, 0.0)
+    # R0_func = interp1d(u_list, R0_list)
 
     sol = simulate_mmg_3dof(
         basic_params,
         maneuvering_params,
-        R0_func,
         time_list,
         delta_rad_list,
         npm_list,

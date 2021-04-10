@@ -151,7 +151,6 @@ class Mmg3DofManeuveringParams:
 def simulate_mmg_3dof(
     basic_params: Mmg3DofBasicParams,
     maneuvering_params: Mmg3DofManeuveringParams,
-    R_0_func: interp1d,
     time_list: List[float],
     delta_list: List[float],
     npm_list: List[float],
@@ -181,8 +180,6 @@ def simulate_mmg_3dof(
             Basic paramters for MMG 3DOF simulation.
         maneuvering_params (Mmg3DofManeuveringParams):
             Maneuvering parameters for MMG 3DOF simulation.
-        R_0_func (scipy.interpolate.interp1d):
-            R_0 function which input value is `u`.
         time_list (list[float]):
             time list of simulation.
         delta_list (list[float]):
@@ -299,7 +296,6 @@ def simulate_mmg_3dof(
         >>> time_list = np.linspace(0.00, duration, sampling)
         >>> delta_list = np.full(len(time_list), 30.0 * np.pi / 180.0)
         >>> npm_list = np.full(len(time_list), 20.338)
-        >>> R0_func = scipy.interpolate.interp1d(np.linspace(0.0, 10.0, 10), np.full(10, 0.0))
         >>> basic_params = Mmg3DofBasicParams(
         >>>                     L_pp=2.19048,
         >>>                     B=0.3067,
@@ -350,7 +346,6 @@ def simulate_mmg_3dof(
         >>> sol = simulate_mmg_3dof(
         >>>                    basic_params,
         >>>                    maneuvering_params,
-        >>>                    R0_func,
         >>>                    time_list,
         >>>                    delta_rad_list,
         >>>                    npm_list,
@@ -410,7 +405,6 @@ def simulate_mmg_3dof(
         N_vvr_dash=maneuvering_params.N_vvr_dash,
         N_vrr_dash=maneuvering_params.N_vrr_dash,
         N_rrr_dash=maneuvering_params.N_rrr_dash,
-        R_0_func=R_0_func,
         time_list=time_list,
         delta_list=delta_list,
         npm_list=npm_list,
@@ -470,7 +464,6 @@ def simulate(
     N_vvr_dash: float,
     N_vrr_dash: float,
     N_rrr_dash: float,
-    R_0_func: interp1d,
     time_list: List[float],
     delta_list: List[float],
     npm_list: List[float],
@@ -582,8 +575,6 @@ def simulate(
             One of manuevering parameters of MMG 3DOF
         N_rrr_dash (float):
             One of manuevering parameters of MMG 3DOF
-        R_0_func (scipy.interpolate.interp1d):
-            R_0 function which input value is `u`.
         time_list (list[float]):
             time list of simulation.
         delta_list (list[float]):
@@ -700,7 +691,6 @@ def simulate(
         >>> time_list = np.linspace(0.00, duration, sampling)
         >>> delta_list = np.full(len(time_list), 30.0 * np.pi / 180.0)
         >>> npm_list = np.full(len(time_list), 20.338)
-        >>> R0_func = scipy.interpolate.interp1d(np.linspace(0.0, 10.0, 10), np.full(10, 0.0))
         >>> L_pp=2.19048
         >>> B=0.3067
         >>> d=0.10286
@@ -788,7 +778,6 @@ def simulate(
         >>>                    N_vvr_dash=N_vvr_dash,
         >>>                    N_vrr_dash=N_vrr_dash,
         >>>                    N_rrr_dash=N_rrr_dash,
-        >>>                    R0_func,
         >>>                    time_list,
         >>>                    delta_rad_list,
         >>>                    npm_list,
