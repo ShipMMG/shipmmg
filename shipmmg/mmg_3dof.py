@@ -30,7 +30,7 @@ class Mmg3DofBasicParams:
             Moment of inertia of ship around center of gravity [-]
         Λ (float):
             Rudder aspect ratio [-]
-        A_R_Ld (float):
+        A_R (float):
             Profile area of movable part of mariner rudder[-]
         η (float):
             Ratio of propeller diameter to rudder span (=D_p/HR)
@@ -76,7 +76,7 @@ class Mmg3DofBasicParams:
     m_: float
     I_zG: float
     Λ: float
-    A_R_Ld: float
+    A_R: float
     η: float
     m_x_: float
     m_y_: float
@@ -309,7 +309,7 @@ def simulate_mmg_3dof(
         >>>                     m_=0.1822,
         >>>                     I_zG=0.01138,
         >>>                     Λ=2.1683,
-        >>>                     A_R_Ld=0.01867,
+        >>>                     A_R=0.01867,
         >>>                     η=0.7916,
         >>>                     m_x_=0.00601,
         >>>                     m_y_=0.1521,
@@ -375,7 +375,7 @@ def simulate_mmg_3dof(
         m_=basic_params.m_,
         I_zG=basic_params.I_zG,
         Λ=basic_params.Λ,
-        A_R_Ld=basic_params.A_R_Ld,
+        A_R=basic_params.A_R,
         η=basic_params.η,
         m_x_=basic_params.m_x_,
         m_y_=basic_params.m_y_,
@@ -435,7 +435,7 @@ def simulate(
     m_: float,
     I_zG: float,
     Λ: float,
-    A_R_Ld: float,
+    A_R: float,
     η: float,
     m_x_: float,
     m_y_: float,
@@ -512,7 +512,7 @@ def simulate(
             Moment of inertia of ship around center of gravity [-]
         Λ (float):
             Rudder aspect ratio [-]
-        A_R_Ld (float):
+        A_R (float):
             Profile area of movable part of mariner rudder[-]
         η (float):
             Ratio of propeller diameter to rudder span (=D_p/HR)
@@ -709,7 +709,7 @@ def simulate(
         >>> m_=0.1822
         >>> I_zG=0.01138
         >>> Λ=2.1683
-        >>> A_R_Ld=0.01867
+        >>> A_R=0.01867
         >>> η=0.7916
         >>> m_x_=0.00601
         >>> m_y_=0.1521
@@ -753,7 +753,7 @@ def simulate(
         >>>                    m_=m_,
         >>>                    I_zG=I_zG,
         >>>                    Λ=Λ,
-        >>>                    A_R_Ld=A_R_Ld,
+        >>>                    A_R=A_R,
         >>>                    η=η,
         >>>                    m_x_=m_x_,
         >>>                    m_y_=m_y_,
@@ -830,7 +830,7 @@ def simulate(
         )
         U_R = np.sqrt(u_R ** 2 + v_R ** 2)
         α_R = δ - np.arctan2(v_R, u_R)
-        F_N = A_R_Ld * f_α * (U_R ** 2) * np.sin(α_R)
+        F_N = 0.50 * A_R * ρ * f_α * (U_R ** 2) * np.sin(α_R)
 
         X_H = (
             0.5
