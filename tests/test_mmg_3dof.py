@@ -46,9 +46,9 @@ def basic_params():
 @pytest.fixture
 def maneuvering_params():
     return Mmg3DofManeuveringParams(
-        C_1=0.48301,
-        C_2=-0.29765,
-        C_3=-0.16423,
+        k_0=0.48301,
+        k_1=-0.29765,
+        k_2=-0.16423,
         X_0=-0.07234,
         X_ββ=-0.23840,
         X_βγ=-0.03231 + 0.1521,

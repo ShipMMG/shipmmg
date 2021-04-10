@@ -98,9 +98,9 @@ class Mmg3DofManeuveringParams:
     """Dataclass for setting maneuvering parameters of MMG 3ODF.
 
     Attributes:
-        C_1 (float): One of manuevering parameters of MMG 3DOF
-        C_2 (float): One of manuevering parameters of MMG 3DOF
-        C_3 (float): One of manuevering parameters of MMG 3DOF
+        k_0 (float): One of manuevering parameters of coefficients representing K_T
+        k_1 (float): One of manuevering parameters of coefficients representing K_T
+        k_2 (float): One of manuevering parameters of coefficients representing K_T
         X_0 (float): One of manuevering parameters of MMG 3DOF
         X_ββ (float): One of manuevering parameters of MMG 3DOF
         X_βγ (float): One of manuevering parameters of MMG 3DOF
@@ -126,9 +126,9 @@ class Mmg3DofManeuveringParams:
           J Mar Sci Technol 20, 37–52 https://doi.org/10.1007/s00773-014-0293-y
     """
 
-    C_1: float
-    C_2: float
-    C_3: float
+    k_0: float
+    k_1: float
+    k_2: float
     X_0: float
     X_ββ: float
     X_βγ: float
@@ -326,9 +326,9 @@ def simulate_mmg_3dof(
         >>>                     w_P0=0.326,
         >>>                 )
         >>> maneuvering_params = Mmg3DofManeuveringParams(
-        >>>                    C_1=0.48301,
-        >>>                    C_2=-0.29765,
-        >>>                    C_3=-0.16423,
+        >>>                    k_0=0.48301,
+        >>>                    k_1=-0.29765,
+        >>>                    k_2=-0.16423,
         >>>                    X_0=-0.07234,
         >>>                    X_ββ=-0.23840,
         >>>                    X_βγ=-0.03231 + 0.1521,
@@ -390,9 +390,9 @@ def simulate_mmg_3dof(
         κ=basic_params.κ,
         t_P=basic_params.t_P,
         w_P0=basic_params.w_P0,
-        C_1=maneuvering_params.C_1,
-        C_2=maneuvering_params.C_2,
-        C_3=maneuvering_params.C_3,
+        k_0=maneuvering_params.k_0,
+        k_1=maneuvering_params.k_1,
+        k_2=maneuvering_params.k_2,
         X_0=maneuvering_params.X_0,
         X_ββ=maneuvering_params.X_ββ,
         X_βγ=maneuvering_params.X_βγ,
@@ -450,9 +450,9 @@ def simulate(
     κ: float,
     t_P: float,
     w_P0: float,
-    C_1: float,
-    C_2: float,
-    C_3: float,
+    k_0: float,
+    k_1: float,
+    k_2: float,
     X_0: float,
     X_ββ: float,
     X_βγ: float,
@@ -542,12 +542,12 @@ def simulate(
             Thrust deduction factor
         w_P0 (float):
             Wake coefficient at propeller position in straight moving
-        C_1 (float):
-            One of manuevering parameters of MMG 3DOF
-        C_2 (float):
-            One of manuevering parameters of MMG 3DOF
-        C_3 (float):
-            One of manuevering parameters of MMG 3DOF
+        k_0 (float):
+            One of manuevering parameters of coefficients representing K_T
+        k_1 (float):
+            One of manuevering parameters of coefficients representing K_T
+        k_2 (float):
+            One of manuevering parameters of coefficients representing K_T
         X_0 (float):
             One of manuevering parameters of MMG 3DOF
         X_ββ (float):
@@ -724,9 +724,9 @@ def simulate(
         >>> κ=0.713
         >>> t_P=0.20
         >>> w_P0=0.326
-        >>> C_1=0.48301
-        >>> C_2=-0.29765
-        >>> C_3=-0.16423
+        >>> k_0=0.48301
+        >>> k_1=-0.29765
+        >>> k_2=-0.16423
         >>> X_0=-0.07234
         >>> X_ββ=-0.23840
         >>> X_βγ=-0.03231 + 0.1521
@@ -768,9 +768,9 @@ def simulate(
         >>>                    κ=κ,
         >>>                    t_P=t_P,
         >>>                    w_P0=w_P0,
-        >>>                    C_1=C_1,
-        >>>                    C_2=C_2,
-        >>>                    C_3=C_3,
+        >>>                    k_0=k_0,
+        >>>                    k_1=k_1,
+        >>>                    k_2=k_2,
         >>>                    X_0=X_0,
         >>>                    X_ββ=X_ββ,
         >>>                    X_βγ=X_βγ,
@@ -815,10 +815,10 @@ def simulate(
 
         γ_dash = 0.0 if U == 0.0 else r * L_pp / U
         J = 0.0 if npm == 0.0 else (1 - w_P0) * u / (npm * D_p)
-        K_T = C_1 + C_2 * J + C_3 * J ** 2
+        K_T = k_0 + k_1 * J + k_2 * J ** 2
         v_R = U * γ_R * (np.sin(β) - l_R * γ_dash)
         u_R = (
-            np.sqrt(η * (κ * ϵ * 8.0 * C_1 * npm ** 2 * D_p ** 4 / np.pi) ** 2)
+            np.sqrt(η * (κ * ϵ * 8.0 * k_0 * npm ** 2 * D_p ** 4 / np.pi) ** 2)
             if J == 0.0
             else u
             * (1 - w_P0)
