@@ -115,14 +115,14 @@ def kvlcc2_L7_35_turning(ship_KVLCC2_L7_model):
     basic_params, maneuvering_params = ship_KVLCC2_L7_model
     duration = 200  # [s]
     # steering_rate = 1.76 * 4  # [°/s]
-    max_delta_rad = 35 * np.pi / 180.0  # [rad]
+    max_δ_rad = 35 * np.pi / 180.0  # [rad]
     n_const = 17.95  # [rpm]
 
     sampling = duration * 10
     time_list = np.linspace(0.00, duration, sampling)
-    delta_rad_list = [0] * sampling
+    δ_rad_list = [0] * sampling
     for i in range(sampling):
-        delta_rad_list[i] = max_delta_rad
+        δ_rad_list[i] = max_δ_rad
 
     npm_list = np.array([n_const for i in range(sampling)])
 
@@ -130,7 +130,7 @@ def kvlcc2_L7_35_turning(ship_KVLCC2_L7_model):
         basic_params,
         maneuvering_params,
         time_list,
-        delta_rad_list,
+        δ_rad_list,
         npm_list,
         u0=2.29 * 0.512,
         v0=0.0,

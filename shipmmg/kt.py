@@ -24,7 +24,7 @@ class KTParams:
 def simulate_kt(
     kt_params: KTParams,
     time_list: List[float],
-    delta_list: List[float],
+    δ_list: List[float],
     r0: float = 0.0,
     method: str = "RK45",
     t_eval=None,
@@ -42,7 +42,7 @@ def simulate_kt(
             KT parameters.
         time_list (list[float]):
             time list of simulation.
-        delta_list (list[float]):
+        δ_list (list[float]):
             rudder angle list of simulation.
         r0 (float, optional):
             rate of turn [rad/s] in initial condition (`time_list[0]`).
@@ -144,16 +144,16 @@ def simulate_kt(
         >>> duration = 300
         >>> num_of_sampling = 3000
         >>> time_list = np.linspace(0.00, duration, num_of_sampling)
-        >>> delta_list = 35 * np.pi / 180 * np.sin(3.0 * np.pi / Ts * time_list)
+        >>> δ_list = 35 * np.pi / 180 * np.sin(3.0 * np.pi / Ts * time_list)
         >>> r0 = 0.0
-        >>> sol = simulate_kt(kt_params, time_list, delta_list, r0)
+        >>> sol = simulate_kt(kt_params, time_list, δ_list, r0)
         >>> result = sol.sol(time_list)
     """
     return simulate(
         K=kt_params.K,
         T=kt_params.T,
         time_list=time_list,
-        delta_list=delta_list,
+        δ_list=δ_list,
         r0=r0,
         method=method,
         t_eval=t_eval,
@@ -167,7 +167,7 @@ def simulate(
     K: float,
     T: float,
     time_list: List[float],
-    delta_list: List[float],
+    δ_list: List[float],
     r0: float = 0.0,
     method: str = "RK45",
     t_eval=None,
@@ -187,7 +187,7 @@ def simulate(
             parameter T of KT model.
         time_list (list[float]):
             time list of simulation.
-        delta_list (list[float]):
+        δ_list (list[float]):
             rudder angle list of simulation.
         r0 (float, optional):
             rate of turn [rad/s] in initial condition (`time_list[0]`).
@@ -291,23 +291,23 @@ def simulate(
         >>> duration = 300
         >>> num_of_sampling = 3000
         >>> time_list = np.linspace(0.00, duration, num_of_sampling)
-        >>> delta_list = 35 * np.pi / 180 * np.sin(3.0 * np.pi / Ts * time_list)
+        >>> δ_list = 35 * np.pi / 180 * np.sin(3.0 * np.pi / Ts * time_list)
         >>> r0 = 0.0
-        >>> sol = simulate_kt(K, T, time_list, delta_list, r0)
+        >>> sol = simulate_kt(K, T, time_list, δ_list, r0)
         >>> result = sol.sol(time_list)
     """
-    spl_delta = interp1d(time_list, delta_list, "cubic", fill_value="extrapolate")
+    spl_δ = interp1d(time_list, δ_list, "cubic", fill_value="extrapolate")
 
     def kt_eom_solve_ivp(t, X, K, T):
-        r, delta = X
-        d_r = 1.0 / T * (-r + K * delta)
-        d_delta = derivative(spl_delta, t)
-        return [d_r, d_delta]
+        r, δ = X
+        d_r = 1.0 / T * (-r + K * δ)
+        d_δ = derivative(spl_δ, t)
+        return [d_r, d_δ]
 
     sol = solve_ivp(
         kt_eom_solve_ivp,
         [time_list[0], time_list[-1]],
-        [r0, delta_list[0]],
+        [r0, δ_list[0]],
         args=(K, T),
         dense_output=True,
         method=method,
