@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>tests.test_kt &mdash; shipmmg 0.0.2 documentation</title>
+  <title>tests.test_kt &mdash; shipmmg 0.0.5 documentation</title>
   
 
   
@@ -174,8 +174,8 @@
     <span class="n">num_of_sampling</span> <span class="o">=</span> <span class="mi">1000</span>
     <span class="n">time_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">num_of_sampling</span><span class="p">)</span>
     <span class="n">Ts</span> <span class="o">=</span> <span class="mf">50.0</span>
-    <span class="n">delta_list</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">Ts</span> <span class="o">*</span> <span class="n">time_list</span><span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">simulate_kt</span><span class="p">(</span><span class="n">kt_params</span><span class="p">,</span> <span class="n">time_list</span><span class="p">,</span> <span class="n">delta_list</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">δ_list</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">Ts</span> <span class="o">*</span> <span class="n">time_list</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">simulate_kt</span><span class="p">(</span><span class="n">kt_params</span><span class="p">,</span> <span class="n">time_list</span><span class="p">,</span> <span class="n">δ_list</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">time_list</span><span class="p">,</span> <span class="n">result</span></div>
 
 
