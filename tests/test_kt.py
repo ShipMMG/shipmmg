@@ -18,8 +18,8 @@ def sim_result():
     num_of_sampling = 1000
     time_list = np.linspace(0.00, duration, num_of_sampling)
     Ts = 50.0
-    delta_list = 10 * np.pi / 180 * np.sin(2.0 * np.pi / Ts * time_list)
-    result = simulate_kt(kt_params, time_list, delta_list, 0.0)
+    δ_list = 10 * np.pi / 180 * np.sin(2.0 * np.pi / Ts * time_list)
+    result = simulate_kt(kt_params, time_list, δ_list, 0.0)
     return time_list, result
 
 
