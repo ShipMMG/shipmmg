@@ -24,8 +24,8 @@ class Mmg3DofBasicParams:
             Longitudinal coordinate of center of gravity of ship [-]
         D_p (float):
             Propeller diameter [m]
-        m_ (float):
-            Ship mass (non-dimensionalized) [-]
+        m (float):
+            Ship mass [kg]
         I_zG (float):
             Moment of inertia of ship around center of gravity [-]
         Λ (float):
@@ -34,12 +34,12 @@ class Mmg3DofBasicParams:
             Profile area of movable part of mariner rudder[-]
         η (float):
             Ratio of propeller diameter to rudder span (=D_p/HR)
-        m_x_ (float):
-            Added masses of x axis direction (non-dimensionalized)
-        m_y_ (float):
-            Added masses of y axis direction (non-dimensionalized)
+        m_x (float):
+            Added masses of x axis direction [kg]
+        m_y (float):
+            Added masses of y axis direction [kg]
         J_z (float):
-            Added moment of inertia (non-dimensionalized)
+            Added moment of inertia
         f_α (float):
             Rudder lift gradient coefficient
         ϵ (float):
@@ -73,13 +73,13 @@ class Mmg3DofBasicParams:
     d: float
     x_G: float
     D_p: float
-    m_: float
+    m: float
     I_zG: float
     Λ: float
     A_R: float
     η: float
-    m_x_: float
-    m_y_: float
+    m_x: float
+    m_y: float
     J_z: float
     f_α: float
     ϵ: float
@@ -306,13 +306,13 @@ def simulate_mmg_3dof(
         >>>                     d=0.10286,
         >>>                     x_G=0.0,
         >>>                     D_p=0.0756,
-        >>>                     m_=0.1822,
+        >>>                     m=0.1822,
         >>>                     I_zG=0.01138,
         >>>                     Λ=2.1683,
         >>>                     A_R=0.01867,
         >>>                     η=0.7916,
-        >>>                     m_x_=0.00601,
-        >>>                     m_y_=0.1521,
+        >>>                     m_x=0.00601,
+        >>>                     m_y=0.1521,
         >>>                     J_z=0.00729,
         >>>                     f_α=(6.13 * 2.1683) / (2.25 + 2.1683),
         >>>                     ϵ=0.90,
@@ -372,13 +372,13 @@ def simulate_mmg_3dof(
         d=basic_params.d,
         x_G=basic_params.x_G,
         D_p=basic_params.D_p,
-        m_=basic_params.m_,
+        m=basic_params.m,
         I_zG=basic_params.I_zG,
         Λ=basic_params.Λ,
         A_R=basic_params.A_R,
         η=basic_params.η,
-        m_x_=basic_params.m_x_,
-        m_y_=basic_params.m_y_,
+        m_x=basic_params.m_x,
+        m_y=basic_params.m_y,
         J_z=basic_params.J_z,
         f_α=basic_params.f_α,
         ϵ=basic_params.ϵ,
@@ -432,13 +432,13 @@ def simulate(
     d: float,
     x_G: float,
     D_p: float,
-    m_: float,
+    m: float,
     I_zG: float,
     Λ: float,
     A_R: float,
     η: float,
-    m_x_: float,
-    m_y_: float,
+    m_x: float,
+    m_y: float,
     J_z: float,
     f_α: float,
     ϵ: float,
@@ -506,8 +506,8 @@ def simulate(
             Longitudinal coordinate of center of gravity of ship [-]
         D_p (float):
             Propeller diameter [m]
-        m_ (float):
-            Ship mass (non-dimensionalized) [-]
+        m (float):
+            Ship mass [kg]
         I_zG (float):
             Moment of inertia of ship around center of gravity [-]
         Λ (float):
@@ -516,12 +516,12 @@ def simulate(
             Profile area of movable part of mariner rudder[-]
         η (float):
             Ratio of propeller diameter to rudder span (=D_p/HR)
-        m_x_ (float):
-            Added masses of x axis direction (non-dimensionalized)
-        m_y_ (float):
-            Added masses of y axis direction (non-dimensionalized)
+        m_x (float):
+            Added masses of x axis direction [kg]
+        m_y (float):
+            Added masses of y axis direction [kg]
         J_z (float):
-            Added moment of inertia (non-dimensionalized)
+            Added moment of inertia
         f_α (float):
             Rudder lift gradient coefficient
         ϵ (float):
@@ -706,13 +706,13 @@ def simulate(
         >>> d=0.10286
         >>> x_G=0.0
         >>> D_p=0.0756
-        >>> m_=0.1822
+        >>> m=0.1822
         >>> I_zG=0.01138
         >>> Λ=2.1683
         >>> A_R=0.01867
         >>> η=0.7916
-        >>> m_x_=0.00601
-        >>> m_y_=0.1521
+        >>> m_x=0.00601
+        >>> m_y=0.1521
         >>> J_z=0.00729
         >>> f_α=(6.13 * 2.1683) / (2.25 + 2.1683)
         >>> ϵ=0.90
@@ -750,13 +750,13 @@ def simulate(
         >>>                    d=d,
         >>>                    x_G=x_G,
         >>>                    D_p=D_p,
-        >>>                    m_=m_,
+        >>>                    m=m,
         >>>                    I_zG=I_zG,
         >>>                    Λ=Λ,
         >>>                    A_R=A_R,
         >>>                    η=η,
-        >>>                    m_x_=m_x_,
-        >>>                    m_y_=m_y_,
+        >>>                    m_x=m_x,
+        >>>                    m_y=m_y,
         >>>                    J_z=J_z,
         >>>                    f_α=f_α,
         >>>                    ϵ=ϵ,
@@ -882,9 +882,13 @@ def simulate(
             )
         )
         N_R = -(-0.5 + a_H * x_H) * F_N * np.cos(δ) / L_pp ** 2
-        d_u = ((X_H + X_R + X_P) + (m_ + m_y_) * v * r) / (m_ + m_x_)
-        d_v = ((Y_H + Y_R) - (m_ + m_x_) * u * r) / (m_ + m_y_)
-        d_r = (N_H + N_R) / (I_zG + J_z)
+        d_u = ((X_H + X_R + X_P) + (m + m_y) * v * r + x_G * m * (r ** 2)) / (m + m_x)
+        d_v = (
+            (x_G ** 2) * (m ** 2) * u * r
+            - (N_H + N_R) * x_G * m
+            + ((Y_H + Y_R) - (m + m_x) * u * r) * (I_zG + J_z + (x_G ** 2) * m)
+        ) / ((I_zG + J_z + (x_G ** 2) * m) * (m + m_y) - (x_G ** 2) * (m ** 2))
+        d_r = (N_H + N_R - x_G * m * (d_v + u * r)) / (I_zG + J_z + (x_G ** 2) * m)
         d_δ = derivative(spl_delta, t)
         d_npm = derivative(spl_npm, t)
         return [d_u, d_v, d_r, d_δ, d_npm]
