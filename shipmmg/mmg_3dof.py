@@ -797,7 +797,7 @@ def simulate(
 
         J = 0.0 if npm == 0.0 else (1 - w_P0) * u / (npm * D_p)
         K_T = k_0 + k_1 * J + k_2 * J ** 2
-        v_R = U * γ_R * (np.sin(β) - l_R * r_dash)
+        v_R = U * γ_R * (β - l_R * r_dash)
         u_R = (
             np.sqrt(η * (κ * ϵ * 8.0 * k_0 * npm ** 2 * D_p ** 4 / np.pi) ** 2)
             if J == 0.0
@@ -827,8 +827,8 @@ def simulate(
                 + X_vvvv_dash * (v_dash ** 4)
             )
         )
-        X_R = -(1 - t_R) * F_N * np.sin(δ) / L_pp
-        X_P = (1 - t_P) * ρ * K_T * npm ** 2 * D_p ** 4 * (2 / (ρ * d * L_pp ** 2))
+        X_R = -(1 - t_R) * F_N * np.sin(δ)
+        X_P = (1 - t_P) * ρ * K_T * npm ** 2 * D_p ** 4
         Y_H = (
             0.5
             * ρ
@@ -836,15 +836,15 @@ def simulate(
             * d
             * (U ** 2)
             * (
-                Y_v_dash * β
+                Y_v_dash * v_dash
                 + Y_r_dash * r_dash
+                + Y_vvv_dash * (v_dash ** 3)
                 + Y_vvr_dash * (v_dash ** 2) * r_dash
                 + Y_vrr_dash * v_dash * (r_dash ** 2)
-                + Y_vvv_dash * (v_dash ** 3)
                 + Y_rrr_dash * (r_dash ** 3)
             )
         )
-        Y_R = -(1 + a_H) * F_N * np.cos(δ) / L_pp
+        Y_R = -(1 + a_H) * F_N * np.cos(δ)
         N_H = (
             0.5
             * ρ
@@ -852,15 +852,15 @@ def simulate(
             * d
             * (U ** 2)
             * (
-                N_v_dash * β
+                N_v_dash * v_dash
                 + N_r_dash * r_dash
+                + N_vvv_dash * (v_dash ** 3)
                 + N_vvr_dash * (v_dash ** 2) * r_dash
                 + N_vrr_dash * v_dash * (r_dash ** 2)
-                + N_vvv_dash * (v_dash ** 3)
                 + N_rrr_dash * (r_dash ** 3)
             )
         )
-        N_R = -(-0.5 + a_H * x_H) * F_N * np.cos(δ) / L_pp ** 2
+        N_R = -(-0.5 + a_H * x_H) * F_N * np.cos(δ)
         d_u = ((X_H + X_R + X_P) + (m + m_y) * v * r + x_G * m * (r ** 2)) / (m + m_x)
         d_v = (
             (x_G ** 2) * (m ** 2) * u * r
