@@ -28,10 +28,8 @@ class Mmg3DofBasicParams:
             Ship mass [kg]
         I_zG (float):
             Moment of inertia of ship around center of gravity [-]
-        Λ (float):
-            Rudder aspect ratio [-]
         A_R (float):
-            Profile area of movable part of mariner rudder[-]
+            Profile area of movable part of mariner rudder [m^2]
         η (float):
             Ratio of propeller diameter to rudder span (=D_p/HR)
         m_x (float):
@@ -75,7 +73,6 @@ class Mmg3DofBasicParams:
     D_p: float
     m: float
     I_zG: float
-    Λ: float
     A_R: float
     η: float
     m_x: float
@@ -304,7 +301,6 @@ def simulate_mmg_3dof(
         >>>                     D_p=0.0756,
         >>>                     m=0.1822,
         >>>                     I_zG=0.01138,
-        >>>                     Λ=2.1683,
         >>>                     A_R=0.01867,
         >>>                     η=0.7916,
         >>>                     m_x=0.00601,
@@ -369,7 +365,6 @@ def simulate_mmg_3dof(
         D_p=basic_params.D_p,
         m=basic_params.m,
         I_zG=basic_params.I_zG,
-        Λ=basic_params.Λ,
         A_R=basic_params.A_R,
         η=basic_params.η,
         m_x=basic_params.m_x,
@@ -428,7 +423,6 @@ def simulate(
     D_p: float,
     m: float,
     I_zG: float,
-    Λ: float,
     A_R: float,
     η: float,
     m_x: float,
@@ -503,8 +497,6 @@ def simulate(
             Ship mass [kg]
         I_zG (float):
             Moment of inertia of ship around center of gravity [-]
-        Λ (float):
-            Rudder aspect ratio [-]
         A_R (float):
             Profile area of movable part of mariner rudder[-]
         η (float):
@@ -698,7 +690,6 @@ def simulate(
         >>> D_p=0.0756
         >>> m=0.1822
         >>> I_zG=0.01138
-        >>> Λ=2.1683
         >>> A_R=0.01867
         >>> η=0.7916
         >>> m_x=0.00601
@@ -742,7 +733,6 @@ def simulate(
         >>>                    D_p=D_p,
         >>>                    m=m,
         >>>                    I_zG=I_zG,
-        >>>                    Λ=Λ,
         >>>                    A_R=A_R,
         >>>                    η=η,
         >>>                    m_x=m_x,
