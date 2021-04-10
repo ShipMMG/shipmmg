@@ -101,23 +101,23 @@ class Mmg3DofManeuveringParams:
         k_0 (float): One of manuevering parameters of coefficients representing K_T
         k_1 (float): One of manuevering parameters of coefficients representing K_T
         k_2 (float): One of manuevering parameters of coefficients representing K_T
-        X_0 (float): One of manuevering parameters of MMG 3DOF
-        X_ββ (float): One of manuevering parameters of MMG 3DOF
-        X_βγ (float): One of manuevering parameters of MMG 3DOF
-        X_γγ (float): One of manuevering parameters of MMG 3DOF
-        X_ββββ (float): One of manuevering parameters of MMG 3DOF
-        Y_β (float): One of manuevering parameters of MMG 3DOF
-        Y_γ (float): One of manuevering parameters of MMG 3DOF
-        Y_βββ (float): One of manuevering parameters of MMG 3DOF
-        Y_ββγ (float): One of manuevering parameters of MMG 3DOF
-        Y_βγγ (float): One of manuevering parameters of MMG 3DOF
-        Y_γγγ (float): One of manuevering parameters of MMG 3DOF
-        N_β (float): One of manuevering parameters of MMG 3DOF
-        N_γ (float): One of manuevering parameters of MMG 3DOF
-        N_βββ (float): One of manuevering parameters of MMG 3DOF
-        N_ββγ (float): One of manuevering parameters of MMG 3DOF
-        N_βγγ (float): One of manuevering parameters of MMG 3DOF
-        N_γγγ (float): One of manuevering parameters of MMG 3DOF
+        R_0_dash (float): One of manuevering parameters of Ship resistance coefficient in straight moving
+        X_vv_dash (float): One of manuevering parameters of MMG 3DOF
+        X_vr_dash (float): One of manuevering parameters of MMG 3DOF
+        X_rr_dash (float): One of manuevering parameters of MMG 3DOF
+        X_vvvv_dash (float): One of manuevering parameters of MMG 3DOF
+        Y_v_dash (float): One of manuevering parameters of MMG 3DOF
+        Y_r_dash (float): One of manuevering parameters of MMG 3DOF
+        Y_vvv_dash (float): One of manuevering parameters of MMG 3DOF
+        Y_vvr_dash (float): One of manuevering parameters of MMG 3DOF
+        Y_vrr_dash (float): One of manuevering parameters of MMG 3DOF
+        Y_rrr_dash (float): One of manuevering parameters of MMG 3DOF
+        N_v_dash (float): One of manuevering parameters of MMG 3DOF
+        N_r_dash (float): One of manuevering parameters of MMG 3DOF
+        N_vvv_dash (float): One of manuevering parameters of MMG 3DOF
+        N_vvr_dash (float): One of manuevering parameters of MMG 3DOF
+        N_vrr_dash (float): One of manuevering parameters of MMG 3DOF
+        N_rrr_dash (float): One of manuevering parameters of MMG 3DOF
 
     Note:
         For more information, please see the following articles.
@@ -129,23 +129,23 @@ class Mmg3DofManeuveringParams:
     k_0: float
     k_1: float
     k_2: float
-    X_0: float
-    X_ββ: float
-    X_βγ: float
-    X_γγ: float
-    X_ββββ: float
-    Y_β: float
-    Y_γ: float
-    Y_βββ: float
-    Y_ββγ: float
-    Y_βγγ: float
-    Y_γγγ: float
-    N_β: float
-    N_γ: float
-    N_βββ: float
-    N_ββγ: float
-    N_βγγ: float
-    N_γγγ: float
+    R_0_dash: float
+    X_vv_dash: float
+    X_vr_dash: float
+    X_rr_dash: float
+    X_vvvv_dash: float
+    Y_v_dash: float
+    Y_r_dash: float
+    Y_vvv_dash: float
+    Y_vvr_dash: float
+    Y_vrr_dash: float
+    Y_rrr_dash: float
+    N_v_dash: float
+    N_r_dash: float
+    N_vvv_dash: float
+    N_vvr_dash: float
+    N_vrr_dash: float
+    N_rrr_dash: float
 
 
 def simulate_mmg_3dof(
@@ -329,23 +329,23 @@ def simulate_mmg_3dof(
         >>>                    k_0=0.48301,
         >>>                    k_1=-0.29765,
         >>>                    k_2=-0.16423,
-        >>>                    X_0=-0.07234,
-        >>>                    X_ββ=-0.23840,
-        >>>                    X_βγ=-0.03231 + 0.1521,
-        >>>                    X_γγ=-0.06405,
-        >>>                    X_ββββ=-0.30047,
-        >>>                    Y_β=0.85475,
-        >>>                    Y_γ=0.11461 + 0.00601,
-        >>>                    Y_βββ=6.73201,
-        >>>                    Y_ββγ=-2.23689,
-        >>>                    Y_βγγ=3.38577,
-        >>>                    Y_γγγ=-0.04151,
-        >>>                    N_β=0.096567,
-        >>>                    N_γ=-0.036501,
-        >>>                    N_βββ=0.14090,
-        >>>                    N_ββγ=-0.46158,
-        >>>                    N_βγγ=0.01648,
-        >>>                    N_γγγ=-0.030404,
+        >>>                    R_0_dash=-0.07234,
+        >>>                    X_vv_dash=-0.23840,
+        >>>                    X_vr_dash=-0.03231 + 0.1521,
+        >>>                    X_rr_dash=-0.06405,
+        >>>                    X_vvvv_dash=-0.30047,
+        >>>                    Y_v_dash=0.85475,
+        >>>                    Y_r_dash=0.11461 + 0.00601,
+        >>>                    Y_vvv_dash=6.73201,
+        >>>                    Y_vvr_dash=-2.23689,
+        >>>                    Y_vrr_dash=3.38577,
+        >>>                    Y_rrr_dash=-0.04151,
+        >>>                    N_v_dash=0.096567,
+        >>>                    N_r_dash=-0.036501,
+        >>>                    N_vvv_dash=0.14090,
+        >>>                    N_vvr_dash=-0.46158,
+        >>>                    N_vrr_dash=0.01648,
+        >>>                    N_rrr_dash=-0.030404,
         >>>                )
         >>> sol = simulate_mmg_3dof(
         >>>                    basic_params,
@@ -393,23 +393,23 @@ def simulate_mmg_3dof(
         k_0=maneuvering_params.k_0,
         k_1=maneuvering_params.k_1,
         k_2=maneuvering_params.k_2,
-        X_0=maneuvering_params.X_0,
-        X_ββ=maneuvering_params.X_ββ,
-        X_βγ=maneuvering_params.X_βγ,
-        X_γγ=maneuvering_params.X_γγ,
-        X_ββββ=maneuvering_params.X_ββββ,
-        Y_β=maneuvering_params.Y_β,
-        Y_γ=maneuvering_params.Y_γ,
-        Y_βββ=maneuvering_params.Y_βββ,
-        Y_ββγ=maneuvering_params.Y_ββγ,
-        Y_βγγ=maneuvering_params.Y_βγγ,
-        Y_γγγ=maneuvering_params.Y_γγγ,
-        N_β=maneuvering_params.N_β,
-        N_γ=maneuvering_params.N_γ,
-        N_βββ=maneuvering_params.N_βββ,
-        N_ββγ=maneuvering_params.N_ββγ,
-        N_βγγ=maneuvering_params.N_βγγ,
-        N_γγγ=maneuvering_params.N_γγγ,
+        R_0_dash=maneuvering_params.R_0_dash,
+        X_vv_dash=maneuvering_params.X_vv_dash,
+        X_vr_dash=maneuvering_params.X_vr_dash,
+        X_rr_dash=maneuvering_params.X_rr_dash,
+        X_vvvv_dash=maneuvering_params.X_vvvv_dash,
+        Y_v_dash=maneuvering_params.Y_v_dash,
+        Y_r_dash=maneuvering_params.Y_r_dash,
+        Y_vvv_dash=maneuvering_params.Y_vvv_dash,
+        Y_vvr_dash=maneuvering_params.Y_vvr_dash,
+        Y_vrr_dash=maneuvering_params.Y_vrr_dash,
+        Y_rrr_dash=maneuvering_params.Y_rrr_dash,
+        N_v_dash=maneuvering_params.N_v_dash,
+        N_r_dash=maneuvering_params.N_r_dash,
+        N_vvv_dash=maneuvering_params.N_vvv_dash,
+        N_vvr_dash=maneuvering_params.N_vvr_dash,
+        N_vrr_dash=maneuvering_params.N_vrr_dash,
+        N_rrr_dash=maneuvering_params.N_rrr_dash,
         R_0_func=R_0_func,
         time_list=time_list,
         delta_list=delta_list,
@@ -453,23 +453,23 @@ def simulate(
     k_0: float,
     k_1: float,
     k_2: float,
-    X_0: float,
-    X_ββ: float,
-    X_βγ: float,
-    X_γγ: float,
-    X_ββββ: float,
-    Y_β: float,
-    Y_γ: float,
-    Y_βββ: float,
-    Y_ββγ: float,
-    Y_βγγ: float,
-    Y_γγγ: float,
-    N_β: float,
-    N_γ: float,
-    N_βββ: float,
-    N_ββγ: float,
-    N_βγγ: float,
-    N_γγγ: float,
+    R_0_dash: float,
+    X_vv_dash: float,
+    X_vr_dash: float,
+    X_rr_dash: float,
+    X_vvvv_dash: float,
+    Y_v_dash: float,
+    Y_r_dash: float,
+    Y_vvv_dash: float,
+    Y_vvr_dash: float,
+    Y_vrr_dash: float,
+    Y_rrr_dash: float,
+    N_v_dash: float,
+    N_r_dash: float,
+    N_vvv_dash: float,
+    N_vvr_dash: float,
+    N_vrr_dash: float,
+    N_rrr_dash: float,
     R_0_func: interp1d,
     time_list: List[float],
     delta_list: List[float],
@@ -556,7 +556,7 @@ def simulate(
             One of manuevering parameters of MMG 3DOF
         X_γγ (float):
             One of manuevering parameters of MMG 3DOF
-        X_ββββ (float):
+        X_vvvv_dash (float):
             One of manuevering parameters of MMG 3DOF
         Y_β (float):
             One of manuevering parameters of MMG 3DOF
@@ -564,23 +564,23 @@ def simulate(
             One of manuevering parameters of MMG 3DOF
         Y_βββ (float):
             One of manuevering parameters of MMG 3DOF
-        Y_ββγ (float):
+        Y_vvr_dash (float):
             One of manuevering parameters of MMG 3DOF
-        Y_βγγ (float):
+        Y_vrr_dash (float):
             One of manuevering parameters of MMG 3DOF
-        Y_γγγ (float):
+        Y_rrr_dash (float):
             One of manuevering parameters of MMG 3DOF
         N_β (float):
             One of manuevering parameters of MMG 3DOF
         N_γ (float):
             One of manuevering parameters of MMG 3DOF
-        N_βββ (float):
+        N_vvv_dash (float):
             One of manuevering parameters of MMG 3DOF
-        N_ββγ (float):
+        N_vvr_dash (float):
             One of manuevering parameters of MMG 3DOF
-        N_βγγ (float):
+        N_vrr_dash (float):
             One of manuevering parameters of MMG 3DOF
-        N_γγγ (float):
+        N_rrr_dash (float):
             One of manuevering parameters of MMG 3DOF
         R_0_func (scipy.interpolate.interp1d):
             R_0 function which input value is `u`.
@@ -731,19 +731,19 @@ def simulate(
         >>> X_ββ=-0.23840
         >>> X_βγ=-0.03231 + 0.1521
         >>> X_γγ=-0.06405
-        >>> X_ββββ=-0.30047
+        >>> X_vvvv_dash=-0.30047
         >>> Y_β=0.85475
         >>> Y_γ=0.11461 + 0.00601
         >>> Y_βββ=6.73201
-        >>> Y_ββγ=-2.23689
-        >>> Y_βγγ=3.38577
-        >>> Y_γγγ=-0.04151
+        >>> Y_vvr_dash=-2.23689
+        >>> Y_vrr_dash=3.38577
+        >>> Y_rrr_dash=-0.04151
         >>> N_β=0.096567
         >>> N_γ=-0.036501
-        >>> N_βββ=0.14090
-        >>> N_ββγ=-0.46158
-        >>> N_βγγ=0.01648
-        >>> N_γγγ=-0.030404
+        >>> N_vvv_dash=0.14090
+        >>> N_vvr_dash=-0.46158
+        >>> N_vrr_dash=0.01648
+        >>> N_rrr_dash=-0.030404
         >>> sol = simulate_mmg_3dof(
         >>>                    L_pp=L_pp,
         >>>                    B=B,
@@ -775,19 +775,19 @@ def simulate(
         >>>                    X_ββ=X_ββ,
         >>>                    X_βγ=X_βγ,
         >>>                    X_γγ=X_γγ,
-        >>>                    X_ββββ=X_ββββ,
+        >>>                    X_vvvv_dash=X_vvvv_dash,
         >>>                    Y_β=Y_β,
         >>>                    Y_γ=Y_γ,
         >>>                    Y_βββ=Y_βββ,
-        >>>                    Y_ββγ=Y_ββγ,
-        >>>                    Y_βγγ=Y_βγγ,
-        >>>                    Y_γγγ=Y_γγγ,
+        >>>                    Y_vvr_dash=Y_vvr_dash,
+        >>>                    Y_vrr_dash=Y_vrr_dash,
+        >>>                    Y_rrr_dash=Y_rrr_dash,
         >>>                    N_β=N_β,
         >>>                    N_γ=N_γ,
-        >>>                    N_βββ=N_βββ,
-        >>>                    N_ββγ=N_ββγ,
-        >>>                    N_βγγ=N_βγγ,
-        >>>                    N_γγγ=N_γγγ,
+        >>>                    N_vvv_dash=N_vvv_dash,
+        >>>                    N_vvr_dash=N_vvr_dash,
+        >>>                    N_vrr_dash=N_vrr_dash,
+        >>>                    N_rrr_dash=N_rrr_dash,
         >>>                    R0_func,
         >>>                    time_list,
         >>>                    delta_rad_list,
@@ -811,12 +811,14 @@ def simulate(
         u, v, r, δ, npm = X
 
         U = np.sqrt(u ** 2 + (v - r * x_G) ** 2)
-        β = 0.0 if U == 0.0 else np.arcsin(-(v - r * x_G) / U)
 
-        γ_dash = 0.0 if U == 0.0 else r * L_pp / U
+        β = 0.0 if U == 0.0 else np.arcsin(-(v - r * x_G) / U)
+        v_dash = 0.0 if U == 0.0 else v / U
+        r_dash = 0.0 if U == 0.0 else r * L_pp / U
+
         J = 0.0 if npm == 0.0 else (1 - w_P0) * u / (npm * D_p)
         K_T = k_0 + k_1 * J + k_2 * J ** 2
-        v_R = U * γ_R * (np.sin(β) - l_R * γ_dash)
+        v_R = U * γ_R * (np.sin(β) - l_R * r_dash)
         u_R = (
             np.sqrt(η * (κ * ϵ * 8.0 * k_0 * npm ** 2 * D_p ** 4 / np.pi) ** 2)
             if J == 0.0
@@ -830,7 +832,7 @@ def simulate(
         )
         U_R = np.sqrt(u_R ** 2 + v_R ** 2)
         α_R = δ - np.arctan2(v_R, u_R)
-        F_N = 0.50 * A_R * ρ * f_α * (U_R ** 2) * np.sin(α_R)
+        F_N = 0.5 * A_R * ρ * f_α * (U_R ** 2) * np.sin(α_R)
 
         X_H = (
             0.5
@@ -839,14 +841,13 @@ def simulate(
             * d
             * (U ** 2)
             * (
-                X_0
-                + X_ββ * β ** 2
-                + X_βγ * β * γ_dash
-                + X_γγ * γ_dash ** 2
-                + X_ββββ * β ** 4
+                -R_0_dash
+                + X_vv_dash * (v_dash ** 2)
+                + X_vr_dash * v_dash * r_dash
+                + X_rr_dash * (r_dash ** 2)
+                + X_vvvv_dash * (v_dash ** 4)
             )
         )
-        R_0 = R_0_func(u)
         X_R = -(1 - t_R) * F_N * np.sin(δ) / L_pp
         X_P = (1 - t_P) * ρ * K_T * npm ** 2 * D_p ** 4 * (2 / (ρ * d * L_pp ** 2))
         Y_H = (
@@ -856,12 +857,12 @@ def simulate(
             * d
             * (U ** 2)
             * (
-                Y_β * β
-                + Y_γ * γ_dash
-                + Y_ββγ * (β ** 2) * γ_dash
-                + Y_βγγ * β * (γ_dash ** 2)
-                + Y_βββ * (β ** 3)
-                + Y_γγγ * (γ_dash ** 3)
+                Y_v_dash * β
+                + Y_r_dash * r_dash
+                + Y_vvr_dash * (v_dash ** 2) * r_dash
+                + Y_vrr_dash * v_dash * (r_dash ** 2)
+                + Y_vvv_dash * (v_dash ** 3)
+                + Y_rrr_dash * (r_dash ** 3)
             )
         )
         Y_R = -(1 + a_H) * F_N * np.cos(δ) / L_pp
@@ -872,16 +873,16 @@ def simulate(
             * d
             * (U ** 2)
             * (
-                N_β * β
-                + N_γ * γ_dash
-                + N_ββγ * (β ** 2) * γ_dash
-                + N_βγγ * β * (γ_dash ** 2)
-                + N_βββ * (β ** 3)
-                + N_γγγ * (γ_dash ** 3)
+                N_v_dash * β
+                + N_r_dash * r_dash
+                + N_vvr_dash * (v_dash ** 2) * r_dash
+                + N_vrr_dash * v_dash * (r_dash ** 2)
+                + N_vvv_dash * (v_dash ** 3)
+                + N_rrr_dash * (r_dash ** 3)
             )
         )
         N_R = -(-0.5 + a_H * x_H) * F_N * np.cos(δ) / L_pp ** 2
-        d_u = ((X_H - R_0 + X_R + X_P) + (m_ + m_y_) * v * r) / (m_ + m_x_)
+        d_u = ((X_H + X_R + X_P) + (m_ + m_y_) * v * r) / (m_ + m_x_)
         d_v = ((Y_H + Y_R) - (m_ + m_x_) * u * r) / (m_ + m_y_)
         d_r = (N_H + N_R) / (I_zG + J_z)
         d_δ = derivative(spl_delta, t)
