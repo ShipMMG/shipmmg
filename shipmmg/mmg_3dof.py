@@ -20,8 +20,6 @@ class Mmg3DofBasicParams:
             Ship breadth [m]
         d (float):
             Ship draft [m]
-        nabla (float):
-            Displacement volume of ship [m^3]
         x_G (float):
             Longitudinal coordinate of center of gravity of ship [-]
         D_p (float):
@@ -73,7 +71,6 @@ class Mmg3DofBasicParams:
     L_pp: float
     B: float
     d: float
-    nabla: float
     x_G: float
     D_p: float
     m_: float
@@ -307,7 +304,6 @@ def simulate_mmg_3dof(
         >>>                     L_pp=2.19048,
         >>>                     B=0.3067,
         >>>                     d=0.10286,
-        >>>                     nabla=0.04495,
         >>>                     x_G=0.0,
         >>>                     D_p=0.0756,
         >>>                     m_=0.1822,
@@ -374,7 +370,6 @@ def simulate_mmg_3dof(
         L_pp=basic_params.L_pp,
         B=basic_params.B,
         d=basic_params.d,
-        nabla=basic_params.nabla,
         x_G=basic_params.x_G,
         D_p=basic_params.D_p,
         m_=basic_params.m_,
@@ -435,7 +430,6 @@ def simulate(
     L_pp: float,
     B: float,
     d: float,
-    nabla: float,
     x_G: float,
     D_p: float,
     m_: float,
@@ -508,8 +502,6 @@ def simulate(
             Ship breadth [m]
         d (float):
             Ship draft [m]
-        nabla (float):
-            Displacement volume of ship [m^3]
         x_G (float):
             Longitudinal coordinate of center of gravity of ship [-]
         D_p (float):
@@ -712,7 +704,6 @@ def simulate(
         >>> L_pp=2.19048
         >>> B=0.3067
         >>> d=0.10286
-        >>> nabla=0.04495
         >>> x_G=0.0
         >>> D_p=0.0756
         >>> m_=0.1822
@@ -757,7 +748,6 @@ def simulate(
         >>>                    L_pp=L_pp,
         >>>                    B=B,
         >>>                    d=d,
-        >>>                    nabla=nabla,
         >>>                    x_G=x_G,
         >>>                    D_p=D_p,
         >>>                    m_=m_,
