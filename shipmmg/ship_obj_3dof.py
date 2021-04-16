@@ -33,6 +33,10 @@ class ShipObj3dof:
             List of position of Y axis [m/s] in simulation result.
         psi (list[float]):
             List of azimuth [rad] in simulation result.
+        δ (list[float]):
+            rudder angle list of simulation.
+        npm (List[float]):
+            npm list of simulation.
     """
 
     # Ship overview
@@ -46,6 +50,8 @@ class ShipObj3dof:
     x: List[float] = dataclasses.field(default_factory=list)
     y: List[float] = dataclasses.field(default_factory=list)
     psi: List[float] = dataclasses.field(default_factory=list)
+    δ: List[float] = dataclasses.field(default_factory=list)
+    npm: List[float] = dataclasses.field(default_factory=list)
 
     def load_simulation_result(
         self,
@@ -97,10 +103,8 @@ class ShipObj3dof:
         for i, (ut, vt, rt) in enumerate(zip(u, v, r)):
             if i > 0:
                 dt = time[i] - time[i - 1]
-                x.append(x[-1] + (ut * np.cos(psi[-1]) -
-                         vt * np.sin(psi[-1])) * dt)
-                y.append(y[-1] + (ut * np.sin(psi[-1]) +
-                         vt * np.cos(psi[-1])) * dt)
+                x.append(x[-1] + (ut * np.cos(psi[-1]) - vt * np.sin(psi[-1])) * dt)
+                y.append(y[-1] + (ut * np.sin(psi[-1]) + vt * np.cos(psi[-1])) * dt)
                 psi.append(psi[-1] + rt * dt)
 
         # Register
@@ -223,8 +227,7 @@ class ShipObj3dof:
 
         if dimensionless:
             if fmt is None:
-                plt.plot(np.array(self.x) / self.L,
-                         np.array(self.y) / self.L, **kwargs)
+                plt.plot(np.array(self.x) / self.L, np.array(self.y) / self.L, **kwargs)
             else:
                 plt.plot(
                     np.array(self.x) / self.L, np.array(self.y) / self.L, fmt, **kwargs
@@ -353,6 +356,12 @@ class ShipObj3dof:
             target_x = self.y
         elif x_index == "psi":
             target_x = self.psi
+        elif x_index == "delta":
+            target_x = self.δ
+        elif x_index == "δ":
+            target_x = self.δ
+        elif x_index == "npm":
+            target_x = self.npm
         if target_x is None:
             raise Exception(
                 "`x_index` is not good. Please set `x_index` from ["
@@ -369,6 +378,12 @@ class ShipObj3dof:
                 " y"
                 ", "
                 " psi"
+                ", "
+                " delta"
+                ", "
+                " δ"
+                ", "
+                " npm"
                 "]"
             )
 
@@ -387,6 +402,12 @@ class ShipObj3dof:
             target_y = self.y
         elif y_index == "psi":
             target_y = self.psi
+        elif y_index == "delta":
+            target_y = self.δ
+        elif y_index == "δ":
+            target_y = self.δ
+        elif y_index == "npm":
+            target_y = self.npm
         if target_y is None:
             raise Exception(
                 "`y_index` is not good. Please set `y_index` from ["
@@ -403,6 +424,13 @@ class ShipObj3dof:
                 " y"
                 ", "
                 " psi"
+                ", "
+                " delta"
+                ", "
+                " δ"
+                ", "
+                " npm"
+                "]"
                 "]"
             )
         fig = plt.figure(
