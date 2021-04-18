@@ -1005,6 +1005,11 @@ def zigzag_test_mmg_3dof(
             `scipy.integrate.solve_ivp()
             <https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html>`_:
 
+    Returns:
+        final_δ_list (list[float])) : list of rudder angle.
+        final_u_list (list[float])) : list of surge velocity.
+        final_v_list (list[float])) : list of sway velocity.
+        final_r_list (list[float])) : list of rate of turn.
     """
     target_ψ_rad_deviation = np.abs(target_ψ_rad_deviation)
 

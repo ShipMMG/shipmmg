@@ -420,6 +420,10 @@ def zigzag_test_kt(
             All options available for already implemented solvers are listed in
             `scipy.integrate.solve_ivp()
             <https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html>`_:
+
+    Returns:
+        final_δ_list (list[float])) : list of rudder angle.
+        final_r_list (list[float])) : list of rate of turn.
     """
     target_ψ_rad_deviation = np.abs(target_ψ_rad_deviation)
 
