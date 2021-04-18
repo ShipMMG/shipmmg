@@ -91,14 +91,14 @@ def test_Ship3DOF_drawing_function(ship_kt):
 def test_zigzag_test_kt():
     K = 0.155
     T = 80.5
+    kt_params = KTParams(K=K, T=T)
     target_δ_rad = 30.0 * np.pi / 180.0
     target_ψ_rad_deviation = 10.0 * np.pi / 180.0
     duration = 500
     num_of_sampling = 50000
     time_list = np.linspace(0.00, duration, num_of_sampling)
     δ_list, r_list = zigzag_test_kt(
-        K,
-        T,
+        kt_params,
         target_δ_rad,
         target_ψ_rad_deviation,
         time_list,

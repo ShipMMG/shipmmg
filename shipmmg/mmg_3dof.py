@@ -923,9 +923,11 @@ def zigzag_test_mmg_3dof(
         npm_list (List[float]):
             npm list of simulation.
         δ0 (float):
-            aa
+            Initial rudder angle [rad].
+            Defaults to 0.0.
         δ_rad_rate (float):
-            aa
+            Initial rudder angle rate [rad/s].
+            Defaults to 1.0.
         u0 (float, optional):
             axial velocity [m/s] in initial condition (`time_list[0]`).
             Defaults to 0.0.

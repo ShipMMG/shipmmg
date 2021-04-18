@@ -322,13 +322,12 @@ def simulate(
 
 
 def zigzag_test_kt(
-    K: float,
-    T: float,
+    kt_params: KTParams,
     target_δ_rad: float,
     target_ψ_rad_deviation: float,
     time_list: List[float],
     δ0: float = 0.0,
-    δ_rad_rate: float = 2.0 * np.pi / 180,
+    δ_rad_rate: float = 1.0 * np.pi / 180,
     r0: float = 0.0,
     ψ0: float = 0.0,
     method: str = "RK45",
@@ -340,10 +339,8 @@ def zigzag_test_kt(
     """Zig-zag test simulation
 
     Args:
-        K (float):
-            parameter K of KT model.
-        T (float):
-            parameter T of KT model.
+        kt_params (KTParams):
+            KT parameters.
         target_δ_rad (float):
             target absolute value of rudder angle.
         target_ψ_rad_deviation (float):
@@ -351,9 +348,11 @@ def zigzag_test_kt(
         time_list (list[float]):
             time list of simulation.
         δ0 (float):
-            aa
+            Initial rudder angle [rad].
+            Defaults to 0.0.
         δ_rad_rate (float):
-            aa
+            Initial rudder angle rate [rad/s].
+            Defaults to 1.0.
         r0 (float, optional):
             rate of turn [rad/s] in initial condition (`time_list[0]`).
             Defaults to 0.0.
@@ -457,7 +456,7 @@ def zigzag_test_kt(
                 δ_list[i - start_index] = δ
 
         # Simulate & project simulation result to ShipObj3dof for getting ψ information
-        sol = simulate(K, T, time_list[start_index:], δ_list, r0=r0)
+        sol = simulate(kt_params.K, kt_params.T, time_list[start_index:], δ_list, r0=r0)
         simulation_result = sol.sol(time_list[start_index:])
         u_list = np.zeros(len(time_list[start_index:]))
         v_list = np.zeros(len(time_list[start_index:]))
