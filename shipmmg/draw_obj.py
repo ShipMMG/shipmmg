@@ -14,7 +14,7 @@ class DrawObj:
         self.img.append(ax.plot([], [], color="y"))
 
     def draw_obj_with_angle(
-        self, center_x_list, center_y_list, shape_list, angle_list, obj='ship'
+        self, center_x_list, center_y_list, shape_list, angle_list, obj="ship"
     ):
         """Draw square image with angle
         Args:
@@ -27,11 +27,11 @@ class DrawObj:
             Image: List of Image
         """
         for i in range(len(shape_list)):
-            if obj == 'square':
+            if obj == "square":
                 square_x, square_y, angle_x, angle_y = self.__square_with_angle(
                     center_x_list[i], center_y_list[i], shape_list[i], angle_list[i]
                 )
-            elif obj == 'ship':
+            elif obj == "ship":
                 square_x, square_y, angle_x, angle_y = self.__ship_with_angle(
                     center_x_list[i], center_y_list[i], shape_list[i], angle_list[i]
                 )
@@ -99,12 +99,12 @@ class DrawObj:
         # create point in counterclockwise, local
         ship_xy = np.array(
             [
-                [shape[0]*0.75, shape[1]],
+                [shape[0] * 0.75, shape[1]],
                 [-shape[0], shape[1]],
                 [-shape[0], -shape[1]],
-                [shape[0]*0.75, -shape[1]],
+                [shape[0] * 0.75, -shape[1]],
                 [shape[0], 0],
-                [shape[0]*0.75, shape[1]]
+                [shape[0] * 0.75, shape[1]],
             ]
         )
         # translate position to world

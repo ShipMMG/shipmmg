@@ -7,6 +7,7 @@ import numpy as np
 from scipy.misc import derivative
 from scipy.interpolate import interp1d
 from scipy.integrate import solve_ivp
+from .ship_obj_3dof import ShipObj3dof
 
 
 @dataclasses.dataclass
@@ -884,3 +885,209 @@ def simulate(
         **options
     )
     return sol
+
+
+def zigzag_test_mmg_3dof(
+    basic_params: Mmg3DofBasicParams,
+    maneuvering_params: Mmg3DofManeuveringParams,
+    target_δ_rad: float,
+    target_ψ_rad_deviation: float,
+    time_list: List[float],
+    npm_list: List[float],
+    δ0: float = 0.0,
+    δ_rad_rate: float = 1.0 * np.pi / 180,
+    u0: float = 0.0,
+    v0: float = 0.0,
+    r0: float = 0.0,
+    ψ0: float = 0.0,
+    ρ: float = 1.025,
+    method: str = "RK45",
+    t_eval=None,
+    events=None,
+    vectorized=False,
+    **options
+):
+    """Zig-zag test simulation
+
+    Args:
+        basic_params (Mmg3DofBasicParams):
+            Basic paramters for MMG 3DOF simulation.
+        maneuvering_params (Mmg3DofManeuveringParams):
+            Maneuvering parameters for MMG 3DOF simulation.
+        target_δ_rad (float):
+            target absolute value of rudder angle.
+        target_ψ_rad_deviation (float):
+            target absolute value of psi deviation from ψ0[rad].
+        time_list (list[float]):
+            time list of simulation.
+        npm_list (List[float]):
+            npm list of simulation.
+        δ0 (float):
+            Initial rudder angle [rad].
+            Defaults to 0.0.
+        δ_rad_rate (float):
+            Initial rudder angle rate [rad/s].
+            Defaults to 1.0.
+        u0 (float, optional):
+            axial velocity [m/s] in initial condition (`time_list[0]`).
+            Defaults to 0.0.
+        v0 (float, optional):
+            lateral velocity [m/s] in initial condition (`time_list[0]`).
+            Defaults to 0.0.
+        r0 (float, optional):
+            rate of turn [rad/s] in initial condition (`time_list[0]`).
+            Defaults to 0.0.
+        ψ0 (float, optional):
+            Inital azimuth [rad] in initial condition (`time_list[0]`)..
+            Defaults to 0.0.
+        ρ (float, optional):
+            seawater density [kg/m^3]
+            Defaults to 1.025.
+        method (str, optional):
+            Integration method to use in
+            `scipy.integrate.solve_ivp()
+            <https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html>`_:
+
+                "RK45" (default):
+                    Explicit Runge-Kutta method of order 5(4).
+                    The error is controlled assuming accuracy of the fourth-order method,
+                    but steps are taken using the fifth-order accurate formula (local extrapolation is done).
+                    A quartic interpolation polynomial is used for the dense output.
+                    Can be applied in the complex domain.
+                "RK23":
+                    Explicit Runge-Kutta method of order 3(2).
+                    The error is controlled assuming accuracy of the second-order method,
+                    but steps are taken using the third-order accurate formula (local extrapolation is done).
+                    A cubic Hermite polynomial is used for the dense output.
+                    Can be applied in the complex domain.
+                "DOP853":
+                    Explicit Runge-Kutta method of order 8.
+                    Python implementation of the “DOP853” algorithm originally written in Fortran.
+                    A 7-th order interpolation polynomial accurate to 7-th order is used for the dense output.
+                    Can be applied in the complex domain.
+                "Radau":
+                    Implicit Runge-Kutta method of the Radau IIA family of order 5.
+                    The error is controlled with a third-order accurate embedded formula.
+                    A cubic polynomial which satisfies the collocation conditions is used for the dense output.
+                "BDF":
+                    Implicit multi-step variable-order (1 to 5) method
+                    based on a backward differentiation formula for the derivative approximation.
+                    A quasi-constant step scheme is used and accuracy is enhanced using the NDF modification.
+                    Can be applied in the complex domain.
+                "LSODA":
+                    Adams/BDF method with automatic stiffness detection and switching.
+                    This is a wrapper of the Fortran solver from ODEPACK.
+
+        t_eval (array_like or None, optional):
+            Times at which to store the computed solution, must be sorted and lie within t_span.
+            If None (default), use points selected by the solver.
+        events (callable, or list of callables, optional):
+            Events to track. If None (default), no events will be tracked.
+            Each event occurs at the zeros of a continuous function of time and state.
+            Each function must have the signature event(t, y) and return a float.
+            The solver will find an accurate value of t at which event(t, y(t)) = 0 using a root-finding algorithm.
+            By default, all zeros will be found. The solver looks for a sign change over each step,
+            so if multiple zero crossings occur within one step, events may be missed.
+            Additionally each event function might have the following attributes:
+                terminal (bool, optional):
+                    Whether to terminate integration if this event occurs. Implicitly False if not assigned.
+                direction (float, optional):
+                    Direction of a zero crossing.
+                    If direction is positive, event will only trigger when going from negative to positive,
+                    and vice versa if direction is negative.
+                    If 0, then either direction will trigger event. Implicitly 0 if not assigned.
+            You can assign attributes like `event.terminal = True` to any function in Python.
+        vectorized (bool, optional):
+            Whether `fun` is implemented in a vectorized fashion. Default is False.
+        options:
+            Options passed to a chosen solver.
+            All options available for already implemented solvers are listed in
+            `scipy.integrate.solve_ivp()
+            <https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html>`_:
+
+    Returns:
+        final_δ_list (list[float])) : list of rudder angle.
+        final_u_list (list[float])) : list of surge velocity.
+        final_v_list (list[float])) : list of sway velocity.
+        final_r_list (list[float])) : list of rate of turn.
+    """
+    target_ψ_rad_deviation = np.abs(target_ψ_rad_deviation)
+
+    final_δ_list = [0.0] * len(time_list)
+    final_u_list = [0.0] * len(time_list)
+    final_v_list = [0.0] * len(time_list)
+    final_r_list = [0.0] * len(time_list)
+
+    next_stage_index = 0
+    target_δ_rad = -target_δ_rad  # for changing in while loop
+
+    while next_stage_index < len(time_list):
+        target_δ_rad = -target_δ_rad
+        start_index = next_stage_index
+
+        # Make delta list
+        δ_list = [0.0] * (len(time_list) - start_index)
+        if start_index == 0:
+            δ_list[0] = δ0
+            u0 = u0
+            v0 = v0
+            r0 = r0
+        else:
+            δ_list[0] = final_δ_list[start_index - 1]
+            u0 = final_u_list[start_index - 1]
+            v0 = final_v_list[start_index - 1]
+            r0 = final_r_list[start_index - 1]
+
+        for i in range(start_index + 1, len(time_list)):
+            Δt = time_list[i] - time_list[i - 1]
+            if target_δ_rad > 0:
+                δ = δ_list[i - 1 - start_index] + δ_rad_rate * Δt
+                if δ >= target_δ_rad:
+                    δ = target_δ_rad
+                δ_list[i - start_index] = δ
+            elif target_δ_rad <= 0:
+                δ = δ_list[i - 1 - start_index] - δ_rad_rate * Δt
+                if δ <= target_δ_rad:
+                    δ = target_δ_rad
+                δ_list[i - start_index] = δ
+
+        sol = simulate_mmg_3dof(
+            basic_params,
+            maneuvering_params,
+            time_list[start_index:],
+            δ_list,
+            npm_list[start_index:],
+            u0=u0,
+            v0=v0,
+            r0=r0,
+        )
+        sim_result = sol.sol(time_list[start_index:])
+        u_list = sim_result[0]
+        v_list = sim_result[1]
+        r_list = sim_result[2]
+        ship = ShipObj3dof(L=basic_params.L_pp, B=basic_params.B)
+        ship.load_simulation_result(time_list, u_list, v_list, r_list)
+
+        # get finish index
+        target_ψ_rad = ψ0 + target_ψ_rad_deviation
+        if target_δ_rad < 0:
+            target_ψ_rad = ψ0 - target_ψ_rad_deviation
+        ψ_list = ship.psi
+        bool_ψ_list = [True if ψ < target_ψ_rad else False for ψ in ψ_list]
+        if target_δ_rad < 0:
+            bool_ψ_list = [True if ψ > target_ψ_rad else False for ψ in ψ_list]
+        over_index_list = [i for i, flag in enumerate(bool_ψ_list) if flag is False]
+        next_stage_index = len(time_list)
+        if len(over_index_list) > 0:
+            next_stage_index = over_index_list[0] + start_index
+            final_δ_list[start_index:next_stage_index] = δ_list[: over_index_list[0]]
+            final_u_list[start_index:next_stage_index] = u_list[: over_index_list[0]]
+            final_v_list[start_index:next_stage_index] = v_list[: over_index_list[0]]
+            final_r_list[start_index:next_stage_index] = r_list[: over_index_list[0]]
+        else:
+            final_δ_list[start_index:next_stage_index] = δ_list
+            final_u_list[start_index:next_stage_index] = u_list
+            final_v_list[start_index:next_stage_index] = v_list
+            final_r_list[start_index:next_stage_index] = r_list
+
+    return final_δ_list, final_u_list, final_v_list, final_r_list
