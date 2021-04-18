@@ -422,6 +422,7 @@ def zigzag_test_kt(
             `scipy.integrate.solve_ivp()
             <https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html>`_:
     """
+    target_ψ_rad_deviation = np.abs(target_ψ_rad_deviation)
 
     final_δ_list = [0.0] * len(time_list)
     final_r_list = [0.0] * len(time_list)

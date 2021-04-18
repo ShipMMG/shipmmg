@@ -1004,6 +1004,7 @@ def zigzag_test_mmg_3dof(
             <https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html>`_:
 
     """
+    target_ψ_rad_deviation = np.abs(target_ψ_rad_deviation)
 
     final_δ_list = [0.0] * len(time_list)
     final_u_list = [0.0] * len(time_list)
