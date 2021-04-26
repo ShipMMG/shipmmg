@@ -188,7 +188,7 @@ def test_Ship3DOF_drawing_function(kvlcc2_L7_35_turning):
 
 def test_zigzag_test_mmg(ship_KVLCC2_L7_model):
     basic_params, maneuvering_params = ship_KVLCC2_L7_model
-    target_δ_rad = -20.0 * np.pi / 180.0
+    target_δ_rad = 20.0 * np.pi / 180.0
     target_ψ_rad_deviation = -20.0 * np.pi / 180.0
     duration = 100
     num_of_sampling = 10000
@@ -229,6 +229,28 @@ def test_zigzag_test_mmg(ship_KVLCC2_L7_model):
         "delta",
         xlabel="time [sec]",
         ylabel=r"$\delta$" + " [rad]",
+        save_fig_path=save_fig_path,
+    )
+    if os.path.exists(save_fig_path):
+        os.remove(save_fig_path)
+
+    save_fig_path = "test_delta_psi.png"
+    ship.draw_multi_y_chart(
+        "time",
+        ["delta", "psi"],
+        xlabel="time [sec]",
+        ylabel="[rad]",
+        save_fig_path=save_fig_path,
+    )
+    if os.path.exists(save_fig_path):
+        os.remove(save_fig_path)
+
+    save_fig_path = "test_delta_psi.png"
+    ship.draw_multi_x_chart(
+        ["delta", "psi"],
+        "time",
+        ylabel="time [sec]",
+        xlabel="[rad]",
         save_fig_path=save_fig_path,
     )
     if os.path.exists(save_fig_path):
