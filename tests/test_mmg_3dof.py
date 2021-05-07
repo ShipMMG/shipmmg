@@ -5,12 +5,14 @@ from shipmmg.mmg_3dof import (
     Mmg3DofBasicParams,
     Mmg3DofManeuveringParams,
     simulate_mmg_3dof,
+    get_sub_values_from_simulation_result,
     zigzag_test_mmg_3dof,
 )
 from shipmmg.ship_obj_3dof import ShipObj3dof
 import numpy as np
 import pytest
 import os
+import matplotlib.pyplot as plt
 
 
 @pytest.fixture
@@ -140,12 +142,72 @@ def kvlcc2_L7_35_turning(ship_KVLCC2_L7_model):
     sim_result = sol.sol(time_list)
     ship = ShipObj3dof(L=basic_params.L_pp, B=basic_params.B)
     ship.load_simulation_result(time_list, sim_result[0], sim_result[1], sim_result[2])
+    ship.npm = npm_list
+    ship.δ = δ_rad_list
     return ship
 
 
-def test_Ship3DOF_drawing_function(kvlcc2_L7_35_turning):
-    """Check drawing functions of Ship3DOF class by using MMG 3DOF simulation results"""
+def test_get_sub_values_from_simulation_result(
+    kvlcc2_L7_35_turning, ship_KVLCC2_L7_model
+):
+    basic_params, maneuvering_params = ship_KVLCC2_L7_model
+    (
+        X_H_list,
+        X_R_list,
+        X_P_list,
+        Y_H_list,
+        Y_R_list,
+        N_H_list,
+        N_R_list,
+    ) = get_sub_values_from_simulation_result(
+        kvlcc2_L7_35_turning.u,
+        kvlcc2_L7_35_turning.v,
+        kvlcc2_L7_35_turning.r,
+        kvlcc2_L7_35_turning.δ,
+        kvlcc2_L7_35_turning.npm,
+        basic_params,
+        maneuvering_params,
+    )
+    (
+        X_H_list,
+        X_R_list,
+        X_P_list,
+        Y_H_list,
+        Y_R_list,
+        N_H_list,
+        N_R_list,
+        U_list,
+        β_list,
+        v_dash_list,
+        r_dash_list,
+        J_list,
+        K_T_list,
+        v_R_list,
+        u_R_list,
+        U_R_list,
+        α_R_list,
+        F_N_list,
+    ) = get_sub_values_from_simulation_result(
+        kvlcc2_L7_35_turning.u,
+        kvlcc2_L7_35_turning.v,
+        kvlcc2_L7_35_turning.r,
+        kvlcc2_L7_35_turning.δ,
+        kvlcc2_L7_35_turning.npm,
+        basic_params,
+        maneuvering_params,
+        return_all_vals=True,
+    )
 
+    save_fig_path = "testFN.png"
+    fig = plt.figure()
+    plt.plot(kvlcc2_L7_35_turning.time, F_N_list)
+    fig.savefig(save_fig_path)
+    if os.path.exists(save_fig_path):
+        os.remove(save_fig_path)
+
+
+def test_Ship3DOF_drawing_function(kvlcc2_L7_35_turning):
+    """Check drawing functions of Ship3DOF class by using MMG 3DOF simulation results."""
     # Ship3DOF.draw_xy_trajectory()
     save_fig_path = "trajectory.png"
     kvlcc2_L7_35_turning.draw_xy_trajectory(dimensionless=True)

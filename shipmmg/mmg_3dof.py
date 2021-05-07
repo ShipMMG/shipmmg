@@ -887,6 +887,277 @@ def simulate(
     return sol
 
 
+def get_sub_values_from_simulation_result(
+    u_list: List[float],
+    v_list: List[float],
+    r_list: List[float],
+    δ_list: List[float],
+    npm_list: List[float],
+    basic_params: Mmg3DofBasicParams,
+    maneuvering_params: Mmg3DofManeuveringParams,
+    ρ: float = 1.025,
+    return_all_vals: bool = False,
+):
+    """Get sub values of MMG calculation from simulation result.
+
+    Args:
+        u_list (List[float]):
+            u list of MMG simulation result.
+        v_list (List[float]):
+            v list of MMG simulation result.
+        r_list (List[float]):
+            r list of MMG simulation result.
+        δ_list (List[float]):
+            δ list of MMG simulation result.
+        npm_list (List[float]):
+            npm list of MMG simulation result.
+        basic_params (Mmg3DofBasicParams):
+            u of MMG simulation result.
+        maneuvering_params (Mmg3DofManeuveringParams):
+            u of MMG simulation result.
+        ρ (float, optional):
+            seawater density [kg/m^3]
+            Defaults to 1.025.
+        return_all_vals (bool, optional):
+            Whether all sub values are returned or not.
+            Defaults to false.
+    Returns:
+        X_H_list (List[float]): List of X_H
+        X_R_list (List[float]): List of X_R
+        X_P_list (List[float]): List of X_P
+        Y_H_list (List[float]): List of Y_H
+        Y_R_list (List[float]): List of Y_R
+        N_H_list (List[float]): List of N_H
+        N_R_list (List[float]): List of N_R
+        U_list (List[float], optional): List of U if return_all_vals is True
+        β_list (List[float], optional): List of β if return_all_vals is True
+        v_dash_list (List[float], optional): List of v_dash if return_all_vals is True
+        r_dash_list (List[float], optional): List of r_dash if return_all_vals is True
+        J_list (List[float], optional): List of J if return_all_vals is True
+        K_T_list (List[float], optional): List of K_T if return_all_vals is True
+        v_R_list (List[float], optional): List of v_R if return_all_vals is True
+        u_R_list (List[float], optional): List of u_R if return_all_vals is True
+        U_R_list (List[float], optional): List of U_R if return_all_vals is True
+        α_R_list (List[float], optional): List of α_R if return_all_vals is True
+        F_N_list (List[float], optional): List of F_N if return_all_vals is True
+    """
+    U_list = list(
+        map(
+            lambda u, v, r: np.sqrt(u ** 2 + (v - r * basic_params.x_G) ** 2),
+            u_list,
+            v_list,
+            r_list,
+        )
+    )
+    β_list = list(
+        map(
+            lambda U, v, r: 0.0
+            if U == 0.0
+            else np.arcsin(-(v - r * basic_params.x_G) / U),
+            U_list,
+            v_list,
+            r_list,
+        )
+    )
+    v_dash_list = list(map(lambda U, v: 0.0 if U == 0.0 else v / U, U_list, v_list))
+    r_dash_list = list(
+        map(lambda U, r: 0.0 if U == 0.0 else r * basic_params.L_pp / U, U_list, r_list)
+    )
+    J_list = list(
+        map(
+            lambda u, npm: 0.0
+            if npm == 0.0
+            else (1 - basic_params.w_P0) * u / (npm * basic_params.D_p),
+            u_list,
+            npm_list,
+        )
+    )
+    K_T_list = list(
+        map(
+            lambda J: maneuvering_params.k_0
+            + maneuvering_params.k_1 * J
+            + maneuvering_params.k_2 * J ** 2,
+            J_list,
+        )
+    )
+    v_R_list = list(
+        map(
+            lambda U, β, r_dash: U * basic_params.γ_R * (β - basic_params.l_R * r_dash),
+            U_list,
+            β_list,
+            r_dash_list,
+        )
+    )
+    u_R_list = list(
+        map(
+            lambda u, J, npm, K_T: np.sqrt(
+                basic_params.η
+                * (
+                    basic_params.κ
+                    * basic_params.ϵ
+                    * 8.0
+                    * maneuvering_params.k_0
+                    * npm ** 2
+                    * basic_params.D_p ** 4
+                    / np.pi
+                )
+                ** 2
+            )
+            if J == 0.0
+            else u
+            * (1 - basic_params.w_P0)
+            * basic_params.ϵ
+            * np.sqrt(
+                basic_params.η
+                * (
+                    1.0
+                    + basic_params.κ * (np.sqrt(1.0 + 8.0 * K_T / (np.pi * J ** 2)) - 1)
+                )
+                ** 2
+                + (1 - basic_params.η)
+            ),
+            u_list,
+            J_list,
+            npm_list,
+            K_T_list,
+        )
+    )
+    U_R_list = list(
+        map(lambda u_R, v_R: np.sqrt(u_R ** 2 + v_R ** 2), u_R_list, v_R_list)
+    )
+    α_R_list = list(
+        map(lambda δ, u_R, v_R: δ - np.arctan2(v_R, u_R), δ_list, u_R_list, v_R_list)
+    )
+    F_N_list = list(
+        map(
+            lambda U_R, α_R: 0.5
+            * basic_params.A_R
+            * ρ
+            * basic_params.f_α
+            * (U_R ** 2)
+            * np.sin(α_R),
+            U_R_list,
+            α_R_list,
+        )
+    )
+    X_H_list = list(
+        map(
+            lambda U, v_dash, r_dash: 0.5
+            * ρ
+            * basic_params.L_pp
+            * basic_params.d
+            * (U ** 2)
+            * (
+                -maneuvering_params.R_0_dash
+                + maneuvering_params.X_vv_dash * (v_dash ** 2)
+                + maneuvering_params.X_vr_dash * v_dash * r_dash
+                + maneuvering_params.X_rr_dash * (r_dash ** 2)
+                + maneuvering_params.X_vvvv_dash * (v_dash ** 4)
+            ),
+            U_list,
+            v_dash_list,
+            r_dash_list,
+        )
+    )
+    X_R_list = list(
+        map(lambda F_N, δ: -(1 - basic_params.t_R) * F_N * np.sin(δ), F_N_list, δ_list)
+    )
+    X_P_list = list(
+        map(
+            lambda K_T, npm: (1 - basic_params.t_P)
+            * ρ
+            * K_T
+            * npm ** 2
+            * basic_params.D_p ** 4,
+            K_T_list,
+            npm_list,
+        )
+    )
+    Y_H_list = list(
+        map(
+            lambda U, v_dash, r_dash: 0.5
+            * ρ
+            * basic_params.L_pp
+            * basic_params.d
+            * (U ** 2)
+            * (
+                maneuvering_params.Y_v_dash * v_dash
+                + maneuvering_params.Y_r_dash * r_dash
+                + maneuvering_params.Y_vvv_dash * (v_dash ** 3)
+                + maneuvering_params.Y_vvr_dash * (v_dash ** 2) * r_dash
+                + maneuvering_params.Y_vrr_dash * v_dash * (r_dash ** 2)
+                + maneuvering_params.Y_rrr_dash * (r_dash ** 3)
+            ),
+            U_list,
+            v_dash_list,
+            r_dash_list,
+        )
+    )
+    Y_R_list = list(
+        map(lambda F_N, δ: -(1 - basic_params.t_R) * F_N * np.cos(δ), F_N_list, δ_list)
+    )
+    N_H_list = list(
+        map(
+            lambda U, v_dash, r_dash: 0.5
+            * ρ
+            * (basic_params.L_pp ** 2)
+            * basic_params.d
+            * (U ** 2)
+            * (
+                maneuvering_params.N_v_dash * v_dash
+                + maneuvering_params.N_r_dash * r_dash
+                + maneuvering_params.N_vvv_dash * (v_dash ** 3)
+                + maneuvering_params.N_vvr_dash * (v_dash ** 2) * r_dash
+                + maneuvering_params.N_vrr_dash * v_dash * (r_dash ** 2)
+                + maneuvering_params.N_rrr_dash * (r_dash ** 3)
+            ),
+            U_list,
+            v_dash_list,
+            r_dash_list,
+        )
+    )
+    N_R_list = list(
+        map(
+            lambda F_N, δ: -(-0.5 + basic_params.a_H * basic_params.x_H)
+            * F_N
+            * np.cos(δ),
+            F_N_list,
+            δ_list,
+        )
+    )
+    if return_all_vals:
+        return (
+            X_H_list,
+            X_R_list,
+            X_P_list,
+            Y_H_list,
+            Y_R_list,
+            N_H_list,
+            N_R_list,
+            U_list,
+            β_list,
+            v_dash_list,
+            r_dash_list,
+            J_list,
+            K_T_list,
+            v_R_list,
+            u_R_list,
+            U_R_list,
+            α_R_list,
+            F_N_list,
+        )
+    else:
+        return (
+            X_H_list,
+            X_R_list,
+            X_P_list,
+            Y_H_list,
+            Y_R_list,
+            N_H_list,
+            N_R_list,
+        )
+
+
 def zigzag_test_mmg_3dof(
     basic_params: Mmg3DofBasicParams,
     maneuvering_params: Mmg3DofManeuveringParams,
