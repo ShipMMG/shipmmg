@@ -432,6 +432,7 @@ def zigzag_test_kt(
 
     next_stage_index = 0
     target_δ_rad = -target_δ_rad  # for changing in while loop
+    ψ = ψ0
 
     while next_stage_index < len(time_list):
         target_δ_rad = -target_δ_rad
@@ -466,7 +467,9 @@ def zigzag_test_kt(
         v_list = np.zeros(len(time_list[start_index:]))
         r_list = simulation_result[0]
         ship = ShipObj3dof(L=100, B=10)
-        ship.load_simulation_result(time_list[start_index:], u_list, v_list, r_list)
+        ship.load_simulation_result(
+            time_list[start_index:], u_list, v_list, r_list, psi0=ψ
+        )
 
         # get finish index
         target_ψ_rad = ψ0 + target_ψ_rad_deviation
@@ -479,6 +482,7 @@ def zigzag_test_kt(
         over_index_list = [i for i, flag in enumerate(bool_ψ_list) if flag is False]
         next_stage_index = len(time_list)
         if len(over_index_list) > 0:
+            ψ = ψ_list[over_index_list[0]]
             next_stage_index = over_index_list[0] + start_index
             final_δ_list[start_index:next_stage_index] = δ_list[: over_index_list[0]]
             final_r_list[start_index:next_stage_index] = r_list[: over_index_list[0]]

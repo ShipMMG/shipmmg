@@ -92,8 +92,8 @@ def test_zigzag_test_kt():
     K = 0.155
     T = 80.5
     kt_params = KTParams(K=K, T=T)
-    target_δ_rad = 30.0 * np.pi / 180.0
-    target_ψ_rad_deviation = 10.0 * np.pi / 180.0
+    target_δ_rad = 20.0 * np.pi / 180.0
+    target_ψ_rad_deviation = 20.0 * np.pi / 180.0
     duration = 500
     num_of_sampling = 50000
     time_list = np.linspace(0.00, duration, num_of_sampling)
@@ -102,6 +102,7 @@ def test_zigzag_test_kt():
         target_δ_rad,
         target_ψ_rad_deviation,
         time_list,
+        δ_rad_rate=10.0 * np.pi / 180,
     )
 
     u_list = np.full(len(time_list), 20 * (1852.0 / 3600))
@@ -131,6 +132,17 @@ def test_zigzag_test_kt():
         "delta",
         xlabel="time [sec]",
         ylabel=r"$\delta$" + " [rad]",
+        save_fig_path=save_fig_path,
+    )
+    if os.path.exists(save_fig_path):
+        os.remove(save_fig_path)
+
+    save_fig_path = "test_delta_psi.png"
+    ship.draw_multi_y_chart(
+        "time",
+        ["delta", "psi"],
+        xlabel="time [sec]",
+        ylabel="[rad]",
         save_fig_path=save_fig_path,
     )
     if os.path.exists(save_fig_path):
