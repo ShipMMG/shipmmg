@@ -59,6 +59,8 @@ class Mmg3DofBasicParams:
             Thrust deduction factor
         w_P0 (float):
             Wake coefficient at propeller position in straight moving
+        x_P (float):
+            Effective Longitudinal coordinate of propeller position in formula of βP
 
     Note:
         For more information, please see the following articles.
@@ -89,6 +91,7 @@ class Mmg3DofBasicParams:
     κ: float
     t_P: float
     w_P0: float
+    x_P: float
 
 
 @dataclasses.dataclass
@@ -317,6 +320,7 @@ def simulate_mmg_3dof(
         >>>                     κ=0.50,
         >>>                     t_P=0.220,
         >>>                     w_P0=0.40,
+        >>>                     x_P=-0.650,
         >>>                 )
         >>> maneuvering_params = Mmg3DofManeuveringParams(
         >>>                     k_0 = 0.2931,
@@ -381,6 +385,7 @@ def simulate_mmg_3dof(
         κ=basic_params.κ,
         t_P=basic_params.t_P,
         w_P0=basic_params.w_P0,
+        x_P=basic_params.x_P,
         k_0=maneuvering_params.k_0,
         k_1=maneuvering_params.k_1,
         k_2=maneuvering_params.k_2,
@@ -439,6 +444,7 @@ def simulate(
     κ: float,
     t_P: float,
     w_P0: float,
+    x_P: float,
     k_0: float,
     k_1: float,
     k_2: float,
@@ -528,6 +534,8 @@ def simulate(
             Thrust deduction factor
         w_P0 (float):
             Wake coefficient at propeller position in straight moving
+        x_P (float):
+            Effective Longitudinal coordinate of propeller position in formula of βP
         k_0 (float):
             One of manuevering parameters of coefficients representing K_T
         k_1 (float):
@@ -706,6 +714,7 @@ def simulate(
         >>> κ=0.50
         >>> t_P=0.220
         >>> w_P0=0.40
+        >>> x_P=-0.650
         >>> k_0 = 0.2931
         >>> k_1 = -0.2753
         >>> k_2 = -0.1385
@@ -749,6 +758,7 @@ def simulate(
         >>>                    κ=κ,
         >>>                    t_P=t_P,
         >>>                    w_P0=w_P0,
+        >>>                    x_P=x_P,
         >>>                    k_0=k_0,
         >>>                    k_1=k_1,
         >>>                    k_2=k_2,
@@ -796,14 +806,17 @@ def simulate(
         v_dash = 0.0 if U == 0.0 else v / U
         r_dash = 0.0 if U == 0.0 else r * L_pp / U
 
-        J = 0.0 if npm == 0.0 else (1 - w_P0) * u / (npm * D_p)
+        # w_P = w_P0
+        w_P = w_P0 * np.exp(-4.0 * (β - x_P * r_dash) ** 2)
+
+        J = 0.0 if npm == 0.0 else (1 - w_P) * u / (npm * D_p)
         K_T = k_0 + k_1 * J + k_2 * J ** 2
         v_R = U * γ_R * (β - l_R * r_dash)
         u_R = (
             np.sqrt(η * (κ * ϵ * 8.0 * k_0 * npm ** 2 * D_p ** 4 / np.pi) ** 2)
             if J == 0.0
             else u
-            * (1 - w_P0)
+            * (1 - w_P)
             * ϵ
             * np.sqrt(
                 η * (1.0 + κ * (np.sqrt(1.0 + 8.0 * K_T / (np.pi * J ** 2)) - 1)) ** 2

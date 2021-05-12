@@ -11,6 +11,7 @@ from shipmmg.ship_obj_3dof import ShipObj3dof
 import numpy as np
 import pytest
 import os
+import matplotlib.pyplot as plt
 
 
 @pytest.fixture
@@ -37,6 +38,7 @@ def ship_KVLCC2_L7_model():
     x_H_dash = -0.464  # 舵力増分作用位置
     γ_R = 0.395  # 整流係数
     l_r_dash = -0.710  # 船長に対する舵位置
+    x_P_dash = -0.650  # 船長に対するプロペラ位置
     ϵ = 1.09  # プロペラ・舵位置伴流係数比
     κ = 0.50  # 修正係数
     f_α = 2.747  # 直圧力勾配係数
@@ -64,6 +66,7 @@ def ship_KVLCC2_L7_model():
         κ=κ,  # 修正係数
         t_P=t_P,  # 推力減少率
         w_P0=w_P0,  # 有効伴流率
+        x_P=x_P_dash,  # 船長に対するプロペラ位置
     )
 
     k_0 = 0.2931
@@ -186,7 +189,7 @@ def test_Ship3DOF_drawing_function(kvlcc2_L7_35_turning):
         os.remove(save_fig_path)
 
 
-def test_zigzag_test_mmg(ship_KVLCC2_L7_model):
+def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model):
     basic_params, maneuvering_params = ship_KVLCC2_L7_model
     target_δ_rad = 20.0 * np.pi / 180.0
     target_ψ_rad_deviation = -20.0 * np.pi / 180.0
@@ -255,3 +258,36 @@ def test_zigzag_test_mmg(ship_KVLCC2_L7_model):
     )
     if os.path.exists(save_fig_path):
         os.remove(save_fig_path)
+
+
+def test_zigzag_test_mmg(ship_KVLCC2_L7_model):
+
+    basic_params, maneuvering_params = ship_KVLCC2_L7_model
+    target_δ_rad = 20.0 * np.pi / 180.0
+    target_ψ_rad_deviation = -20.0 * np.pi / 180.0
+    duration = 100
+    num_of_sampling = 10000
+    time_list = np.linspace(0.00, duration, num_of_sampling)
+    n_const = 17.95  # [rpm]
+    npm_list = np.array([n_const for i in range(num_of_sampling)])
+
+    δ_list, u_list, v_list, r_list = zigzag_test_mmg_3dof(
+        basic_params,
+        maneuvering_params,
+        target_δ_rad,
+        target_ψ_rad_deviation,
+        time_list,
+        npm_list,
+        δ_rad_rate=10.0 * np.pi / 180,
+    )
+
+    ship = ShipObj3dof(L=100, B=10)
+    ship.load_simulation_result(time_list, u_list, v_list, r_list)
+    ship.δ = δ_list
+    ship.npm = npm_list
+
+    save_fig_path = "delta_psi.png"
+    fig = plt.figure()
+    plt.plot(time_list, list(map(lambda δ: δ * 180 / np.pi, ship.δ)))
+    plt.plot(time_list, list(map(lambda psi: psi * 180 / np.pi, ship.psi)))
+    plt.savefig(save_fig_path)
