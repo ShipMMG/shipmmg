@@ -7,6 +7,7 @@ import numpy as np
 from scipy.misc import derivative
 from scipy.interpolate import interp1d
 from scipy.integrate import solve_ivp
+from .ship_obj_3dof import ShipObj3dof
 
 
 @dataclasses.dataclass
@@ -48,8 +49,10 @@ class Mmg3DofBasicParams:
             Rudder force increase factor
         x_H (float):
             Longitudinal coordinate of acting point of the additional lateral force component induced by steering
-        γ_R (float):
-            Flow straightening coefficient
+        γ_R_minus (float):
+            Flow straightening coefficient if βR < 0
+        γ_R_plus (float):
+            Flow straightening coefficient if βR > 0
         l_R (float):
             Effective longitudinal coordinate of rudder position in formula of βR
         κ (float):
@@ -58,6 +61,8 @@ class Mmg3DofBasicParams:
             Thrust deduction factor
         w_P0 (float):
             Wake coefficient at propeller position in straight moving
+        x_P (float):
+            Effective Longitudinal coordinate of propeller position in formula of βP
 
     Note:
         For more information, please see the following articles.
@@ -83,11 +88,13 @@ class Mmg3DofBasicParams:
     t_R: float
     a_H: float
     x_H: float
-    γ_R: float
+    γ_R_minus: float
+    γ_R_plus: float
     l_R: float
     κ: float
     t_P: float
     w_P0: float
+    x_P: float
 
 
 @dataclasses.dataclass
@@ -311,11 +318,13 @@ def simulate_mmg_3dof(
         >>>                     t_R=0.387,
         >>>                     a_H=0.312,
         >>>                     x_H=-0.464*L_pp,
-        >>>                     γ_R=0.395,
+        >>>                     γ_R_minus=0.395,
+        >>>                     γ_R_plus=0.640,
         >>>                     l_R=-0.710,
         >>>                     κ=0.50,
         >>>                     t_P=0.220,
         >>>                     w_P0=0.40,
+        >>>                     x_P=-0.650,
         >>>                 )
         >>> maneuvering_params = Mmg3DofManeuveringParams(
         >>>                     k_0 = 0.2931,
@@ -375,11 +384,13 @@ def simulate_mmg_3dof(
         t_R=basic_params.t_R,
         a_H=basic_params.a_H,
         x_H=basic_params.x_H,
-        γ_R=basic_params.γ_R,
+        γ_R_minus=basic_params.γ_R_minus,
+        γ_R_plus=basic_params.γ_R_plus,
         l_R=basic_params.l_R,
         κ=basic_params.κ,
         t_P=basic_params.t_P,
         w_P0=basic_params.w_P0,
+        x_P=basic_params.x_P,
         k_0=maneuvering_params.k_0,
         k_1=maneuvering_params.k_1,
         k_2=maneuvering_params.k_2,
@@ -433,11 +444,13 @@ def simulate(
     t_R: float,
     a_H: float,
     x_H: float,
-    γ_R: float,
+    γ_R_minus: float,
+    γ_R_plus: float,
     l_R: float,
     κ: float,
     t_P: float,
     w_P0: float,
+    x_P: float,
     k_0: float,
     k_1: float,
     k_2: float,
@@ -517,8 +530,10 @@ def simulate(
             Rudder force increase factor
         x_H (float):
             Longitudinal coordinate of acting point of the additional lateral force component induced by steering
-        γ_R (float):
-            Flow straightening coefficient
+        γ_R_minus (float):
+            Flow straightening coefficient if βR < 0
+        γ_R_plus (float):
+            Flow straightening coefficient if βR > 0
         l_R (float):
             Effective longitudinal coordinate of rudder position in formula of βR
         κ (float):
@@ -527,6 +542,8 @@ def simulate(
             Thrust deduction factor
         w_P0 (float):
             Wake coefficient at propeller position in straight moving
+        x_P (float):
+            Effective Longitudinal coordinate of propeller position in formula of βP
         k_0 (float):
             One of manuevering parameters of coefficients representing K_T
         k_1 (float):
@@ -705,6 +722,7 @@ def simulate(
         >>> κ=0.50
         >>> t_P=0.220
         >>> w_P0=0.40
+        >>> x_P=-0.650
         >>> k_0 = 0.2931
         >>> k_1 = -0.2753
         >>> k_2 = -0.1385
@@ -748,6 +766,7 @@ def simulate(
         >>>                    κ=κ,
         >>>                    t_P=t_P,
         >>>                    w_P0=w_P0,
+        >>>                    x_P=x_P,
         >>>                    k_0=k_0,
         >>>                    k_1=k_1,
         >>>                    k_2=k_2,
@@ -795,14 +814,19 @@ def simulate(
         v_dash = 0.0 if U == 0.0 else v / U
         r_dash = 0.0 if U == 0.0 else r * L_pp / U
 
-        J = 0.0 if npm == 0.0 else (1 - w_P0) * u / (npm * D_p)
+        # w_P = w_P0
+        w_P = w_P0 * np.exp(-4.0 * (β - x_P * r_dash) ** 2)
+
+        J = 0.0 if npm == 0.0 else (1 - w_P) * u / (npm * D_p)
         K_T = k_0 + k_1 * J + k_2 * J ** 2
-        v_R = U * γ_R * (β - l_R * r_dash)
+        β_R = β - l_R * r_dash
+        γ_R = γ_R_minus if β_R < 0.0 else γ_R_plus
+        v_R = U * γ_R * β_R
         u_R = (
             np.sqrt(η * (κ * ϵ * 8.0 * k_0 * npm ** 2 * D_p ** 4 / np.pi) ** 2)
             if J == 0.0
             else u
-            * (1 - w_P0)
+            * (1 - w_P)
             * ϵ
             * np.sqrt(
                 η * (1.0 + κ * (np.sqrt(1.0 + 8.0 * K_T / (np.pi * J ** 2)) - 1)) ** 2
@@ -884,3 +908,513 @@ def simulate(
         **options
     )
     return sol
+
+
+def get_sub_values_from_simulation_result(
+    u_list: List[float],
+    v_list: List[float],
+    r_list: List[float],
+    δ_list: List[float],
+    npm_list: List[float],
+    basic_params: Mmg3DofBasicParams,
+    maneuvering_params: Mmg3DofManeuveringParams,
+    ρ: float = 1.025,
+    return_all_vals: bool = False,
+):
+    """Get sub values of MMG calculation from simulation result.
+
+    Args:
+        u_list (List[float]):
+            u list of MMG simulation result.
+        v_list (List[float]):
+            v list of MMG simulation result.
+        r_list (List[float]):
+            r list of MMG simulation result.
+        δ_list (List[float]):
+            δ list of MMG simulation result.
+        npm_list (List[float]):
+            npm list of MMG simulation result.
+        basic_params (Mmg3DofBasicParams):
+            u of MMG simulation result.
+        maneuvering_params (Mmg3DofManeuveringParams):
+            u of MMG simulation result.
+        ρ (float, optional):
+            seawater density [kg/m^3]
+            Defaults to 1.025.
+        return_all_vals (bool, optional):
+            Whether all sub values are returned or not.
+            Defaults to false.
+    Returns:
+        X_H_list (List[float]): List of X_H
+        X_R_list (List[float]): List of X_R
+        X_P_list (List[float]): List of X_P
+        Y_H_list (List[float]): List of Y_H
+        Y_R_list (List[float]): List of Y_R
+        N_H_list (List[float]): List of N_H
+        N_R_list (List[float]): List of N_R
+        U_list (List[float], optional): List of U if return_all_vals is True
+        β_list (List[float], optional): List of β if return_all_vals is True
+        v_dash_list (List[float], optional): List of v_dash if return_all_vals is True
+        r_dash_list (List[float], optional): List of r_dash if return_all_vals is True
+        w_P_list (List[float], optional): List of w_P if return_all_vals is True
+        J_list (List[float], optional): List of J if return_all_vals is True
+        K_T_list (List[float], optional): List of K_T if return_all_vals is True
+        v_R_list (List[float], optional): List of v_R if return_all_vals is True
+        u_R_list (List[float], optional): List of u_R if return_all_vals is True
+        U_R_list (List[float], optional): List of U_R if return_all_vals is True
+        α_R_list (List[float], optional): List of α_R if return_all_vals is True
+        F_N_list (List[float], optional): List of F_N if return_all_vals is True
+    """
+    U_list = list(
+        map(
+            lambda u, v, r: np.sqrt(u ** 2 + (v - r * basic_params.x_G) ** 2),
+            u_list,
+            v_list,
+            r_list,
+        )
+    )
+    β_list = list(
+        map(
+            lambda U, v, r: 0.0
+            if U == 0.0
+            else np.arcsin(-(v - r * basic_params.x_G) / U),
+            U_list,
+            v_list,
+            r_list,
+        )
+    )
+    v_dash_list = list(map(lambda U, v: 0.0 if U == 0.0 else v / U, U_list, v_list))
+    r_dash_list = list(
+        map(lambda U, r: 0.0 if U == 0.0 else r * basic_params.L_pp / U, U_list, r_list)
+    )
+    β_P_list = list(
+        map(
+            lambda β, r_dash: β - basic_params.x_P * r_dash,
+            β_list,
+            r_dash_list,
+        )
+    )
+    # w_P_list = [basic_params.w_P0 for i in range(len(r_dash_list))]
+    w_P_list = list(
+        map(lambda β_P: basic_params.w_P0 * np.exp(-4.0 * β_P ** 2), β_P_list)
+    )
+    J_list = list(
+        map(
+            lambda w_P, u, npm: 0.0
+            if npm == 0.0
+            else (1 - w_P) * u / (npm * basic_params.D_p),
+            w_P_list,
+            u_list,
+            npm_list,
+        )
+    )
+    K_T_list = list(
+        map(
+            lambda J: maneuvering_params.k_0
+            + maneuvering_params.k_1 * J
+            + maneuvering_params.k_2 * J ** 2,
+            J_list,
+        )
+    )
+    β_R_list = list(
+        map(
+            lambda β, r_dash: β - basic_params.l_R * r_dash,
+            β_list,
+            r_dash_list,
+        )
+    )
+    γ_R_list = list(
+        map(
+            lambda β_R: basic_params.γ_R_minus if β_R < 0.0 else basic_params.γ_R_plus,
+            β_R_list,
+        )
+    )
+    v_R_list = list(
+        map(
+            lambda U, γ_R, β_R: U * γ_R * β_R,
+            U_list,
+            γ_R_list,
+            β_R_list,
+        )
+    )
+    u_R_list = list(
+        map(
+            lambda u, J, npm, K_T, w_P: np.sqrt(
+                basic_params.η
+                * (
+                    basic_params.κ
+                    * basic_params.ϵ
+                    * 8.0
+                    * maneuvering_params.k_0
+                    * npm ** 2
+                    * basic_params.D_p ** 4
+                    / np.pi
+                )
+                ** 2
+            )
+            if J == 0.0
+            else u
+            * (1 - w_P)
+            * basic_params.ϵ
+            * np.sqrt(
+                basic_params.η
+                * (
+                    1.0
+                    + basic_params.κ * (np.sqrt(1.0 + 8.0 * K_T / (np.pi * J ** 2)) - 1)
+                )
+                ** 2
+                + (1 - basic_params.η)
+            ),
+            u_list,
+            J_list,
+            npm_list,
+            K_T_list,
+            w_P_list,
+        )
+    )
+    U_R_list = list(
+        map(lambda u_R, v_R: np.sqrt(u_R ** 2 + v_R ** 2), u_R_list, v_R_list)
+    )
+    α_R_list = list(
+        map(lambda δ, u_R, v_R: δ - np.arctan2(v_R, u_R), δ_list, u_R_list, v_R_list)
+    )
+    F_N_list = list(
+        map(
+            lambda U_R, α_R: 0.5
+            * basic_params.A_R
+            * ρ
+            * basic_params.f_α
+            * (U_R ** 2)
+            * np.sin(α_R),
+            U_R_list,
+            α_R_list,
+        )
+    )
+    X_H_list = list(
+        map(
+            lambda U, v_dash, r_dash: 0.5
+            * ρ
+            * basic_params.L_pp
+            * basic_params.d
+            * (U ** 2)
+            * (
+                -maneuvering_params.R_0_dash
+                + maneuvering_params.X_vv_dash * (v_dash ** 2)
+                + maneuvering_params.X_vr_dash * v_dash * r_dash
+                + maneuvering_params.X_rr_dash * (r_dash ** 2)
+                + maneuvering_params.X_vvvv_dash * (v_dash ** 4)
+            ),
+            U_list,
+            v_dash_list,
+            r_dash_list,
+        )
+    )
+    X_R_list = list(
+        map(lambda F_N, δ: -(1 - basic_params.t_R) * F_N * np.sin(δ), F_N_list, δ_list)
+    )
+    X_P_list = list(
+        map(
+            lambda K_T, npm: (1 - basic_params.t_P)
+            * ρ
+            * K_T
+            * npm ** 2
+            * basic_params.D_p ** 4,
+            K_T_list,
+            npm_list,
+        )
+    )
+    Y_H_list = list(
+        map(
+            lambda U, v_dash, r_dash: 0.5
+            * ρ
+            * basic_params.L_pp
+            * basic_params.d
+            * (U ** 2)
+            * (
+                maneuvering_params.Y_v_dash * v_dash
+                + maneuvering_params.Y_r_dash * r_dash
+                + maneuvering_params.Y_vvv_dash * (v_dash ** 3)
+                + maneuvering_params.Y_vvr_dash * (v_dash ** 2) * r_dash
+                + maneuvering_params.Y_vrr_dash * v_dash * (r_dash ** 2)
+                + maneuvering_params.Y_rrr_dash * (r_dash ** 3)
+            ),
+            U_list,
+            v_dash_list,
+            r_dash_list,
+        )
+    )
+    Y_R_list = list(
+        map(lambda F_N, δ: -(1 - basic_params.t_R) * F_N * np.cos(δ), F_N_list, δ_list)
+    )
+    N_H_list = list(
+        map(
+            lambda U, v_dash, r_dash: 0.5
+            * ρ
+            * (basic_params.L_pp ** 2)
+            * basic_params.d
+            * (U ** 2)
+            * (
+                maneuvering_params.N_v_dash * v_dash
+                + maneuvering_params.N_r_dash * r_dash
+                + maneuvering_params.N_vvv_dash * (v_dash ** 3)
+                + maneuvering_params.N_vvr_dash * (v_dash ** 2) * r_dash
+                + maneuvering_params.N_vrr_dash * v_dash * (r_dash ** 2)
+                + maneuvering_params.N_rrr_dash * (r_dash ** 3)
+            ),
+            U_list,
+            v_dash_list,
+            r_dash_list,
+        )
+    )
+    N_R_list = list(
+        map(
+            lambda F_N, δ: -(-0.5 + basic_params.a_H * basic_params.x_H)
+            * F_N
+            * np.cos(δ),
+            F_N_list,
+            δ_list,
+        )
+    )
+    if return_all_vals:
+        return (
+            X_H_list,
+            X_R_list,
+            X_P_list,
+            Y_H_list,
+            Y_R_list,
+            N_H_list,
+            N_R_list,
+            U_list,
+            β_list,
+            v_dash_list,
+            r_dash_list,
+            β_P_list,
+            w_P_list,
+            J_list,
+            K_T_list,
+            β_R_list,
+            γ_R_list,
+            v_R_list,
+            u_R_list,
+            U_R_list,
+            α_R_list,
+            F_N_list,
+        )
+    else:
+        return (
+            X_H_list,
+            X_R_list,
+            X_P_list,
+            Y_H_list,
+            Y_R_list,
+            N_H_list,
+            N_R_list,
+        )
+
+
+def zigzag_test_mmg_3dof(
+    basic_params: Mmg3DofBasicParams,
+    maneuvering_params: Mmg3DofManeuveringParams,
+    target_δ_rad: float,
+    target_ψ_rad_deviation: float,
+    time_list: List[float],
+    npm_list: List[float],
+    δ0: float = 0.0,
+    δ_rad_rate: float = 1.0 * np.pi / 180,
+    u0: float = 0.0,
+    v0: float = 0.0,
+    r0: float = 0.0,
+    ψ0: float = 0.0,
+    ρ: float = 1.025,
+    method: str = "RK45",
+    t_eval=None,
+    events=None,
+    vectorized=False,
+    **options
+):
+    """Zig-zag test simulation
+
+    Args:
+        basic_params (Mmg3DofBasicParams):
+            Basic paramters for MMG 3DOF simulation.
+        maneuvering_params (Mmg3DofManeuveringParams):
+            Maneuvering parameters for MMG 3DOF simulation.
+        target_δ_rad (float):
+            target absolute value of rudder angle.
+        target_ψ_rad_deviation (float):
+            target absolute value of psi deviation from ψ0[rad].
+        time_list (list[float]):
+            time list of simulation.
+        npm_list (List[float]):
+            npm list of simulation.
+        δ0 (float):
+            Initial rudder angle [rad].
+            Defaults to 0.0.
+        δ_rad_rate (float):
+            Initial rudder angle rate [rad/s].
+            Defaults to 1.0.
+        u0 (float, optional):
+            axial velocity [m/s] in initial condition (`time_list[0]`).
+            Defaults to 0.0.
+        v0 (float, optional):
+            lateral velocity [m/s] in initial condition (`time_list[0]`).
+            Defaults to 0.0.
+        r0 (float, optional):
+            rate of turn [rad/s] in initial condition (`time_list[0]`).
+            Defaults to 0.0.
+        ψ0 (float, optional):
+            Inital azimuth [rad] in initial condition (`time_list[0]`)..
+            Defaults to 0.0.
+        ρ (float, optional):
+            seawater density [kg/m^3]
+            Defaults to 1.025.
+        method (str, optional):
+            Integration method to use in
+            `scipy.integrate.solve_ivp()
+            <https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html>`_:
+
+                "RK45" (default):
+                    Explicit Runge-Kutta method of order 5(4).
+                    The error is controlled assuming accuracy of the fourth-order method,
+                    but steps are taken using the fifth-order accurate formula (local extrapolation is done).
+                    A quartic interpolation polynomial is used for the dense output.
+                    Can be applied in the complex domain.
+                "RK23":
+                    Explicit Runge-Kutta method of order 3(2).
+                    The error is controlled assuming accuracy of the second-order method,
+                    but steps are taken using the third-order accurate formula (local extrapolation is done).
+                    A cubic Hermite polynomial is used for the dense output.
+                    Can be applied in the complex domain.
+                "DOP853":
+                    Explicit Runge-Kutta method of order 8.
+                    Python implementation of the “DOP853” algorithm originally written in Fortran.
+                    A 7-th order interpolation polynomial accurate to 7-th order is used for the dense output.
+                    Can be applied in the complex domain.
+                "Radau":
+                    Implicit Runge-Kutta method of the Radau IIA family of order 5.
+                    The error is controlled with a third-order accurate embedded formula.
+                    A cubic polynomial which satisfies the collocation conditions is used for the dense output.
+                "BDF":
+                    Implicit multi-step variable-order (1 to 5) method
+                    based on a backward differentiation formula for the derivative approximation.
+                    A quasi-constant step scheme is used and accuracy is enhanced using the NDF modification.
+                    Can be applied in the complex domain.
+                "LSODA":
+                    Adams/BDF method with automatic stiffness detection and switching.
+                    This is a wrapper of the Fortran solver from ODEPACK.
+
+        t_eval (array_like or None, optional):
+            Times at which to store the computed solution, must be sorted and lie within t_span.
+            If None (default), use points selected by the solver.
+        events (callable, or list of callables, optional):
+            Events to track. If None (default), no events will be tracked.
+            Each event occurs at the zeros of a continuous function of time and state.
+            Each function must have the signature event(t, y) and return a float.
+            The solver will find an accurate value of t at which event(t, y(t)) = 0 using a root-finding algorithm.
+            By default, all zeros will be found. The solver looks for a sign change over each step,
+            so if multiple zero crossings occur within one step, events may be missed.
+            Additionally each event function might have the following attributes:
+                terminal (bool, optional):
+                    Whether to terminate integration if this event occurs. Implicitly False if not assigned.
+                direction (float, optional):
+                    Direction of a zero crossing.
+                    If direction is positive, event will only trigger when going from negative to positive,
+                    and vice versa if direction is negative.
+                    If 0, then either direction will trigger event. Implicitly 0 if not assigned.
+            You can assign attributes like `event.terminal = True` to any function in Python.
+        vectorized (bool, optional):
+            Whether `fun` is implemented in a vectorized fashion. Default is False.
+        options:
+            Options passed to a chosen solver.
+            All options available for already implemented solvers are listed in
+            `scipy.integrate.solve_ivp()
+            <https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html>`_:
+
+    Returns:
+        final_δ_list (list[float])) : list of rudder angle.
+        final_u_list (list[float])) : list of surge velocity.
+        final_v_list (list[float])) : list of sway velocity.
+        final_r_list (list[float])) : list of rate of turn.
+    """
+    target_ψ_rad_deviation = np.abs(target_ψ_rad_deviation)
+
+    final_δ_list = [0.0] * len(time_list)
+    final_u_list = [0.0] * len(time_list)
+    final_v_list = [0.0] * len(time_list)
+    final_r_list = [0.0] * len(time_list)
+
+    next_stage_index = 0
+    target_δ_rad = -target_δ_rad  # for changing in while loop
+    ψ = ψ0
+
+    while next_stage_index < len(time_list):
+        target_δ_rad = -target_δ_rad
+        start_index = next_stage_index
+
+        # Make delta list
+        δ_list = [0.0] * (len(time_list) - start_index)
+        if start_index == 0:
+            δ_list[0] = δ0
+            u0 = u0
+            v0 = v0
+            r0 = r0
+        else:
+            δ_list[0] = final_δ_list[start_index - 1]
+            u0 = final_u_list[start_index - 1]
+            v0 = final_v_list[start_index - 1]
+            r0 = final_r_list[start_index - 1]
+
+        for i in range(start_index + 1, len(time_list)):
+            Δt = time_list[i] - time_list[i - 1]
+            if target_δ_rad > 0:
+                δ = δ_list[i - 1 - start_index] + δ_rad_rate * Δt
+                if δ >= target_δ_rad:
+                    δ = target_δ_rad
+                δ_list[i - start_index] = δ
+            elif target_δ_rad <= 0:
+                δ = δ_list[i - 1 - start_index] - δ_rad_rate * Δt
+                if δ <= target_δ_rad:
+                    δ = target_δ_rad
+                δ_list[i - start_index] = δ
+
+        sol = simulate_mmg_3dof(
+            basic_params,
+            maneuvering_params,
+            time_list[start_index:],
+            δ_list,
+            npm_list[start_index:],
+            u0=u0,
+            v0=v0,
+            r0=r0,
+        )
+        sim_result = sol.sol(time_list[start_index:])
+        u_list = sim_result[0]
+        v_list = sim_result[1]
+        r_list = sim_result[2]
+        ship = ShipObj3dof(L=basic_params.L_pp, B=basic_params.B)
+        ship.load_simulation_result(time_list, u_list, v_list, r_list, psi0=ψ)
+
+        # get finish index
+        target_ψ_rad = ψ0 + target_ψ_rad_deviation
+        if target_δ_rad < 0:
+            target_ψ_rad = ψ0 - target_ψ_rad_deviation
+        ψ_list = ship.psi
+        bool_ψ_list = [True if ψ < target_ψ_rad else False for ψ in ψ_list]
+        if target_δ_rad < 0:
+            bool_ψ_list = [True if ψ > target_ψ_rad else False for ψ in ψ_list]
+        over_index_list = [i for i, flag in enumerate(bool_ψ_list) if flag is False]
+        next_stage_index = len(time_list)
+        if len(over_index_list) > 0:
+            ψ = ψ_list[over_index_list[0]]
+            next_stage_index = over_index_list[0] + start_index
+            final_δ_list[start_index:next_stage_index] = δ_list[: over_index_list[0]]
+            final_u_list[start_index:next_stage_index] = u_list[: over_index_list[0]]
+            final_v_list[start_index:next_stage_index] = v_list[: over_index_list[0]]
+            final_r_list[start_index:next_stage_index] = r_list[: over_index_list[0]]
+        else:
+            final_δ_list[start_index:next_stage_index] = δ_list
+            final_u_list[start_index:next_stage_index] = u_list
+            final_v_list[start_index:next_stage_index] = v_list
+            final_r_list[start_index:next_stage_index] = r_list
+
+    return final_δ_list, final_u_list, final_v_list, final_r_list

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from shipmmg.kt import KTParams, simulate_kt
+from shipmmg.kt import KTParams, simulate_kt, zigzag_test_kt
 from shipmmg.ship_obj_3dof import ShipObj3dof
 import numpy as np
 import pytest
@@ -84,5 +84,66 @@ def test_Ship3DOF_drawing_function(ship_kt):
     if os.path.exists(save_fig_path):
         os.remove(save_fig_path)
     ship_kt.draw_gif(dimensionless=True, save_fig_path=save_fig_path)
+    if os.path.exists(save_fig_path):
+        os.remove(save_fig_path)
+
+
+def test_zigzag_test_kt():
+    K = 0.155
+    T = 80.5
+    kt_params = KTParams(K=K, T=T)
+    target_δ_rad = 20.0 * np.pi / 180.0
+    target_ψ_rad_deviation = 20.0 * np.pi / 180.0
+    duration = 500
+    num_of_sampling = 50000
+    time_list = np.linspace(0.00, duration, num_of_sampling)
+    δ_list, r_list = zigzag_test_kt(
+        kt_params,
+        target_δ_rad,
+        target_ψ_rad_deviation,
+        time_list,
+        δ_rad_rate=10.0 * np.pi / 180,
+    )
+
+    u_list = np.full(len(time_list), 20 * (1852.0 / 3600))
+    v_list = np.zeros(len(time_list))
+    ship = ShipObj3dof(L=100, B=10)
+    ship.load_simulation_result(time_list, u_list, v_list, r_list)
+    ship.δ = δ_list
+
+    save_fig_path = "test.png"
+    ship.draw_xy_trajectory(save_fig_path=save_fig_path)
+    ship.draw_chart(
+        "time",
+        "psi",
+        xlabel="time [sec]",
+        ylabel=r"$\psi$" + " [rad]",
+        save_fig_path=save_fig_path,
+    )
+    ship.draw_chart(
+        "time",
+        "r",
+        xlabel="time [sec]",
+        ylabel=r"$r$" + " [rad/s]",
+        save_fig_path=save_fig_path,
+    )
+    ship.draw_chart(
+        "time",
+        "delta",
+        xlabel="time [sec]",
+        ylabel=r"$\delta$" + " [rad]",
+        save_fig_path=save_fig_path,
+    )
+    if os.path.exists(save_fig_path):
+        os.remove(save_fig_path)
+
+    save_fig_path = "test_delta_psi.png"
+    ship.draw_multi_y_chart(
+        "time",
+        ["delta", "psi"],
+        xlabel="time [sec]",
+        ylabel="[rad]",
+        save_fig_path=save_fig_path,
+    )
     if os.path.exists(save_fig_path):
         os.remove(save_fig_path)
