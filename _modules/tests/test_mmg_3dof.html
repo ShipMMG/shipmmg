@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>tests.test_mmg_3dof &mdash; shipmmg 0.0.5 documentation</title>
+  <title>tests.test_mmg_3dof &mdash; shipmmg 0.0.7 documentation</title>
   
 
   
@@ -161,11 +161,14 @@
     <span class="n">Mmg3DofBasicParams</span><span class="p">,</span>
     <span class="n">Mmg3DofManeuveringParams</span><span class="p">,</span>
     <span class="n">simulate_mmg_3dof</span><span class="p">,</span>
+    <span class="n">get_sub_values_from_simulation_result</span><span class="p">,</span>
+    <span class="n">zigzag_test_mmg_3dof</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">shipmmg.ship_obj_3dof</span> <span class="kn">import</span> <span class="n">ShipObj3dof</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pytest</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 
 <div class="viewcode-block" id="ship_KVLCC2_L7_model"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.ship_KVLCC2_L7_model">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
@@ -190,8 +193,10 @@
     <span class="n">t_R</span> <span class="o">=</span> <span class="mf">0.387</span>  <span class="c1"># 操縦抵抗減少率</span>
     <span class="n">a_H</span> <span class="o">=</span> <span class="mf">0.312</span>  <span class="c1"># 舵力増加係数</span>
     <span class="n">x_H_dash</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.464</span>  <span class="c1"># 舵力増分作用位置</span>
-    <span class="n">γ_R</span> <span class="o">=</span> <span class="mf">0.395</span>  <span class="c1"># 整流係数</span>
+    <span class="n">γ_R_minus</span> <span class="o">=</span> <span class="mf">0.395</span>  <span class="c1"># 整流係数</span>
+    <span class="n">γ_R_plus</span> <span class="o">=</span> <span class="mf">0.640</span>  <span class="c1"># 整流係数</span>
     <span class="n">l_r_dash</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.710</span>  <span class="c1"># 船長に対する舵位置</span>
+    <span class="n">x_P_dash</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.690</span>  <span class="c1"># 船長に対するプロペラ位置</span>
     <span class="n">ϵ</span> <span class="o">=</span> <span class="mf">1.09</span>  <span class="c1"># プロペラ・舵位置伴流係数比</span>
     <span class="n">κ</span> <span class="o">=</span> <span class="mf">0.50</span>  <span class="c1"># 修正係数</span>
     <span class="n">f_α</span> <span class="o">=</span> <span class="mf">2.747</span>  <span class="c1"># 直圧力勾配係数</span>
@@ -214,11 +219,13 @@
         <span class="n">t_R</span><span class="o">=</span><span class="n">t_R</span><span class="p">,</span>  <span class="c1"># 操縦抵抗減少率</span>
         <span class="n">a_H</span><span class="o">=</span><span class="n">a_H</span><span class="p">,</span>  <span class="c1"># 舵力増加係数</span>
         <span class="n">x_H</span><span class="o">=</span><span class="n">x_H_dash</span> <span class="o">*</span> <span class="n">L_pp</span><span class="p">,</span>  <span class="c1"># 舵力増分作用位置</span>
-        <span class="n">γ_R</span><span class="o">=</span><span class="n">γ_R</span><span class="p">,</span>  <span class="c1"># 整流係数</span>
+        <span class="n">γ_R_minus</span><span class="o">=</span><span class="n">γ_R_minus</span><span class="p">,</span>  <span class="c1"># 整流係数</span>
+        <span class="n">γ_R_plus</span><span class="o">=</span><span class="n">γ_R_plus</span><span class="p">,</span>  <span class="c1"># 整流係数</span>
         <span class="n">l_R</span><span class="o">=</span><span class="n">l_r_dash</span><span class="p">,</span>  <span class="c1"># 船長に対する舵位置</span>
         <span class="n">κ</span><span class="o">=</span><span class="n">κ</span><span class="p">,</span>  <span class="c1"># 修正係数</span>
         <span class="n">t_P</span><span class="o">=</span><span class="n">t_P</span><span class="p">,</span>  <span class="c1"># 推力減少率</span>
         <span class="n">w_P0</span><span class="o">=</span><span class="n">w_P0</span><span class="p">,</span>  <span class="c1"># 有効伴流率</span>
+        <span class="n">x_P</span><span class="o">=</span><span class="n">x_P_dash</span><span class="p">,</span>  <span class="c1"># 船長に対するプロペラ位置</span>
     <span class="p">)</span>
 
     <span class="n">k_0</span> <span class="o">=</span> <span class="mf">0.2931</span>
@@ -295,12 +302,76 @@
     <span class="n">sim_result</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">sol</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
     <span class="n">ship</span> <span class="o">=</span> <span class="n">ShipObj3dof</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">L_pp</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">B</span><span class="p">)</span>
     <span class="n">ship</span><span class="o">.</span><span class="n">load_simulation_result</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">sim_result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sim_result</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sim_result</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">ship</span><span class="o">.</span><span class="n">npm</span> <span class="o">=</span> <span class="n">npm_list</span>
+    <span class="n">ship</span><span class="o">.</span><span class="n">δ</span> <span class="o">=</span> <span class="n">δ_rad_list</span>
     <span class="k">return</span> <span class="n">ship</span></div>
 
 
-<div class="viewcode-block" id="test_Ship3DOF_drawing_function"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_Ship3DOF_drawing_function">[docs]</a><span class="k">def</span> <span class="nf">test_Ship3DOF_drawing_function</span><span class="p">(</span><span class="n">kvlcc2_L7_35_turning</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Check drawing functions of Ship3DOF class by using MMG 3DOF simulation results&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="test_get_sub_values_from_simulation_result"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_get_sub_values_from_simulation_result">[docs]</a><span class="k">def</span> <span class="nf">test_get_sub_values_from_simulation_result</span><span class="p">(</span>
+    <span class="n">kvlcc2_L7_35_turning</span><span class="p">,</span> <span class="n">ship_KVLCC2_L7_model</span>
+<span class="p">):</span>
+    <span class="n">basic_params</span><span class="p">,</span> <span class="n">maneuvering_params</span> <span class="o">=</span> <span class="n">ship_KVLCC2_L7_model</span>
+    <span class="p">(</span>
+        <span class="n">X_H_list</span><span class="p">,</span>
+        <span class="n">X_R_list</span><span class="p">,</span>
+        <span class="n">X_P_list</span><span class="p">,</span>
+        <span class="n">Y_H_list</span><span class="p">,</span>
+        <span class="n">Y_R_list</span><span class="p">,</span>
+        <span class="n">N_H_list</span><span class="p">,</span>
+        <span class="n">N_R_list</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="n">get_sub_values_from_simulation_result</span><span class="p">(</span>
+        <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
+        <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">v</span><span class="p">,</span>
+        <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">r</span><span class="p">,</span>
+        <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">δ</span><span class="p">,</span>
+        <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">npm</span><span class="p">,</span>
+        <span class="n">basic_params</span><span class="p">,</span>
+        <span class="n">maneuvering_params</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="p">(</span>
+        <span class="n">X_H_list</span><span class="p">,</span>
+        <span class="n">X_R_list</span><span class="p">,</span>
+        <span class="n">X_P_list</span><span class="p">,</span>
+        <span class="n">Y_H_list</span><span class="p">,</span>
+        <span class="n">Y_R_list</span><span class="p">,</span>
+        <span class="n">N_H_list</span><span class="p">,</span>
+        <span class="n">N_R_list</span><span class="p">,</span>
+        <span class="n">U_list</span><span class="p">,</span>
+        <span class="n">β_list</span><span class="p">,</span>
+        <span class="n">v_dash_list</span><span class="p">,</span>
+        <span class="n">r_dash_list</span><span class="p">,</span>
+        <span class="n">β_P_list</span><span class="p">,</span>
+        <span class="n">w_P_list</span><span class="p">,</span>
+        <span class="n">J_list</span><span class="p">,</span>
+        <span class="n">K_T_list</span><span class="p">,</span>
+        <span class="n">β_R_list</span><span class="p">,</span>
+        <span class="n">γ_R_list</span><span class="p">,</span>
+        <span class="n">v_R_list</span><span class="p">,</span>
+        <span class="n">u_R_list</span><span class="p">,</span>
+        <span class="n">U_R_list</span><span class="p">,</span>
+        <span class="n">α_R_list</span><span class="p">,</span>
+        <span class="n">F_N_list</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="n">get_sub_values_from_simulation_result</span><span class="p">(</span>
+        <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
+        <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">v</span><span class="p">,</span>
+        <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">r</span><span class="p">,</span>
+        <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">δ</span><span class="p">,</span>
+        <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">npm</span><span class="p">,</span>
+        <span class="n">basic_params</span><span class="p">,</span>
+        <span class="n">maneuvering_params</span><span class="p">,</span>
+        <span class="n">return_all_vals</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
 
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;testFN.png&quot;</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">F_N_list</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="test_Ship3DOF_drawing_function"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_Ship3DOF_drawing_function">[docs]</a><span class="k">def</span> <span class="nf">test_Ship3DOF_drawing_function</span><span class="p">(</span><span class="n">kvlcc2_L7_35_turning</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check drawing functions of Ship3DOF class by using MMG 3DOF simulation results.&quot;&quot;&quot;</span>
     <span class="c1"># Ship3DOF.draw_xy_trajectory()</span>
     <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;trajectory.png&quot;</span>
     <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">dimensionless</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -337,6 +408,203 @@
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">draw_gif</span><span class="p">(</span><span class="n">dimensionless</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="test_zigzag_test_mmg_before"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_zigzag_test_mmg_before">[docs]</a><span class="k">def</span> <span class="nf">test_zigzag_test_mmg_before</span><span class="p">(</span><span class="n">ship_KVLCC2_L7_model</span><span class="p">):</span>
+    <span class="n">basic_params</span><span class="p">,</span> <span class="n">maneuvering_params</span> <span class="o">=</span> <span class="n">ship_KVLCC2_L7_model</span>
+    <span class="n">target_δ_rad</span> <span class="o">=</span> <span class="mf">20.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
+    <span class="n">target_ψ_rad_deviation</span> <span class="o">=</span> <span class="o">-</span><span class="mf">20.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
+    <span class="n">duration</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">num_of_sampling</span> <span class="o">=</span> <span class="mi">10000</span>
+    <span class="n">time_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">num_of_sampling</span><span class="p">)</span>
+    <span class="n">n_const</span> <span class="o">=</span> <span class="mf">17.95</span>  <span class="c1"># [rpm]</span>
+    <span class="n">npm_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n_const</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_of_sampling</span><span class="p">)])</span>
+
+    <span class="n">δ_list</span><span class="p">,</span> <span class="n">u_list</span><span class="p">,</span> <span class="n">v_list</span><span class="p">,</span> <span class="n">r_list</span> <span class="o">=</span> <span class="n">zigzag_test_mmg_3dof</span><span class="p">(</span>
+        <span class="n">basic_params</span><span class="p">,</span>
+        <span class="n">maneuvering_params</span><span class="p">,</span>
+        <span class="n">target_δ_rad</span><span class="p">,</span>
+        <span class="n">target_ψ_rad_deviation</span><span class="p">,</span>
+        <span class="n">time_list</span><span class="p">,</span>
+        <span class="n">npm_list</span><span class="p">,</span>
+        <span class="n">δ_rad_rate</span><span class="o">=</span><span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">ship</span> <span class="o">=</span> <span class="n">ShipObj3dof</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">ship</span><span class="o">.</span><span class="n">load_simulation_result</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">u_list</span><span class="p">,</span> <span class="n">v_list</span><span class="p">,</span> <span class="n">r_list</span><span class="p">)</span>
+    <span class="n">ship</span><span class="o">.</span><span class="n">δ</span> <span class="o">=</span> <span class="n">δ_list</span>
+
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;test_psi.png&quot;</span>
+    <span class="n">ship</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
+    <span class="n">ship</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span>
+        <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;psi&quot;</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;time [sec]&quot;</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi$&quot;</span> <span class="o">+</span> <span class="s2">&quot; [rad]&quot;</span><span class="p">,</span>
+        <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;test_delta.png&quot;</span>
+    <span class="n">ship</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
+    <span class="n">ship</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span>
+        <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;delta&quot;</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;time [sec]&quot;</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\delta$&quot;</span> <span class="o">+</span> <span class="s2">&quot; [rad]&quot;</span><span class="p">,</span>
+        <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;test_delta_psi.png&quot;</span>
+    <span class="n">ship</span><span class="o">.</span><span class="n">draw_multi_y_chart</span><span class="p">(</span>
+        <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+        <span class="p">[</span><span class="s2">&quot;delta&quot;</span><span class="p">,</span> <span class="s2">&quot;psi&quot;</span><span class="p">],</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;time [sec]&quot;</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;[rad]&quot;</span><span class="p">,</span>
+        <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;test_delta_psi.png&quot;</span>
+    <span class="n">ship</span><span class="o">.</span><span class="n">draw_multi_x_chart</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;delta&quot;</span><span class="p">,</span> <span class="s2">&quot;psi&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;time [sec]&quot;</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;[rad]&quot;</span><span class="p">,</span>
+        <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="test_zigzag_test_mmg"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_zigzag_test_mmg">[docs]</a><span class="k">def</span> <span class="nf">test_zigzag_test_mmg</span><span class="p">(</span><span class="n">ship_KVLCC2_L7_model</span><span class="p">):</span>
+
+    <span class="n">basic_params</span><span class="p">,</span> <span class="n">maneuvering_params</span> <span class="o">=</span> <span class="n">ship_KVLCC2_L7_model</span>
+    <span class="n">target_δ_rad</span> <span class="o">=</span> <span class="mf">20.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
+    <span class="n">target_ψ_rad_deviation</span> <span class="o">=</span> <span class="mf">20.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
+    <span class="n">duration</span> <span class="o">=</span> <span class="mi">80</span>
+    <span class="n">num_of_sampling</span> <span class="o">=</span> <span class="mi">10000</span>
+    <span class="n">time_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">num_of_sampling</span><span class="p">)</span>
+    <span class="n">n_const</span> <span class="o">=</span> <span class="mf">17.95</span>  <span class="c1"># [rpm]</span>
+    <span class="n">npm_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n_const</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_of_sampling</span><span class="p">)])</span>
+
+    <span class="n">δ_list</span><span class="p">,</span> <span class="n">u_list</span><span class="p">,</span> <span class="n">v_list</span><span class="p">,</span> <span class="n">r_list</span> <span class="o">=</span> <span class="n">zigzag_test_mmg_3dof</span><span class="p">(</span>
+        <span class="n">basic_params</span><span class="p">,</span>
+        <span class="n">maneuvering_params</span><span class="p">,</span>
+        <span class="n">target_δ_rad</span><span class="p">,</span>
+        <span class="n">target_ψ_rad_deviation</span><span class="p">,</span>
+        <span class="n">time_list</span><span class="p">,</span>
+        <span class="n">npm_list</span><span class="p">,</span>
+        <span class="n">δ_rad_rate</span><span class="o">=</span><span class="mf">15.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">ship</span> <span class="o">=</span> <span class="n">ShipObj3dof</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">ship</span><span class="o">.</span><span class="n">load_simulation_result</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">u_list</span><span class="p">,</span> <span class="n">v_list</span><span class="p">,</span> <span class="n">r_list</span><span class="p">)</span>
+    <span class="n">ship</span><span class="o">.</span><span class="n">δ</span> <span class="o">=</span> <span class="n">δ_list</span>
+    <span class="n">ship</span><span class="o">.</span><span class="n">npm</span> <span class="o">=</span> <span class="n">npm_list</span>
+
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;delta_psi.png&quot;</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">δ</span><span class="p">:</span> <span class="n">δ</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">ship</span><span class="o">.</span><span class="n">δ</span><span class="p">)))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">psi</span><span class="p">:</span> <span class="n">psi</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">ship</span><span class="o">.</span><span class="n">psi</span><span class="p">)))</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+
+    <span class="p">(</span>
+        <span class="n">X_H_list</span><span class="p">,</span>
+        <span class="n">X_R_list</span><span class="p">,</span>
+        <span class="n">X_P_list</span><span class="p">,</span>
+        <span class="n">Y_H_list</span><span class="p">,</span>
+        <span class="n">Y_R_list</span><span class="p">,</span>
+        <span class="n">N_H_list</span><span class="p">,</span>
+        <span class="n">N_R_list</span><span class="p">,</span>
+        <span class="n">U_list</span><span class="p">,</span>
+        <span class="n">β_list</span><span class="p">,</span>
+        <span class="n">v_dash_list</span><span class="p">,</span>
+        <span class="n">r_dash_list</span><span class="p">,</span>
+        <span class="n">β_P_list</span><span class="p">,</span>
+        <span class="n">w_P_list</span><span class="p">,</span>
+        <span class="n">J_list</span><span class="p">,</span>
+        <span class="n">K_T_list</span><span class="p">,</span>
+        <span class="n">β_R_list</span><span class="p">,</span>
+        <span class="n">γ_R_list</span><span class="p">,</span>
+        <span class="n">v_R_list</span><span class="p">,</span>
+        <span class="n">u_R_list</span><span class="p">,</span>
+        <span class="n">U_R_list</span><span class="p">,</span>
+        <span class="n">α_R_list</span><span class="p">,</span>
+        <span class="n">F_N_list</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="n">get_sub_values_from_simulation_result</span><span class="p">(</span>
+        <span class="n">ship</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
+        <span class="n">ship</span><span class="o">.</span><span class="n">v</span><span class="p">,</span>
+        <span class="n">ship</span><span class="o">.</span><span class="n">r</span><span class="p">,</span>
+        <span class="n">ship</span><span class="o">.</span><span class="n">δ</span><span class="p">,</span>
+        <span class="n">ship</span><span class="o">.</span><span class="n">npm</span><span class="p">,</span>
+        <span class="n">basic_params</span><span class="p">,</span>
+        <span class="n">maneuvering_params</span><span class="p">,</span>
+        <span class="n">return_all_vals</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;w_P.png&quot;</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">w_P_list</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;J.png&quot;</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">J_list</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;K_T.png&quot;</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">K_T_list</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;U_R.png&quot;</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">U_R_list</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;α_R.png&quot;</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">α_R_list</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;F_N.png&quot;</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">F_N_list</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;gamma_R.png&quot;</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">γ_R_list</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span></div>
 </pre></div>

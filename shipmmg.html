@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>shipmmg package &mdash; shipmmg 0.0.5 documentation</title>
+  <title>shipmmg package &mdash; shipmmg 0.0.7 documentation</title>
   
 
   
@@ -512,12 +512,106 @@ None if events was None.</p>
 </div>
 </dd></dl>
 
+<dl class="py function">
+<dt id="shipmmg.kt.zigzag_test_kt">
+<code class="sig-prename descclassname">shipmmg.kt.</code><code class="sig-name descname">zigzag_test_kt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">kt_params</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#shipmmg.kt.KTParams" title="shipmmg.kt.KTParams">shipmmg.kt.KTParams</a></span></em>, <em class="sig-param"><span class="n">target_δ_rad</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">target_ψ_rad_deviation</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">time_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">δ0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">δ_rad_rate</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.017453292519943295</span></em>, <em class="sig-param"><span class="n">r0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">ψ0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">method</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'RK45'</span></em>, <em class="sig-param"><span class="n">t_eval</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">events</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">vectorized</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">options</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shipmmg/kt.html#zigzag_test_kt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.kt.zigzag_test_kt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zig-zag test simulation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kt_params</strong> (<a class="reference internal" href="#shipmmg.kt.KTParams" title="shipmmg.kt.KTParams"><em>KTParams</em></a>) – KT parameters.</p></li>
+<li><p><strong>target_δ_rad</strong> (<em>float</em>) – target absolute value of rudder angle.</p></li>
+<li><p><strong>target_ψ_rad_deviation</strong> (<em>float</em>) – target absolute value of psi deviation from ψ0[rad].</p></li>
+<li><p><strong>time_list</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – time list of simulation.</p></li>
+<li><p><strong>δ0</strong> (<em>float</em>) – Initial rudder angle [rad].
+Defaults to 0.0.</p></li>
+<li><p><strong>δ_rad_rate</strong> (<em>float</em>) – Initial rudder angle rate [rad/s].
+Defaults to 1.0.</p></li>
+<li><p><strong>r0</strong> (<em>float</em><em>, </em><em>optional</em>) – rate of turn [rad/s] in initial condition (<cite>time_list[0]</cite>).
+Defaults to 0.0.</p></li>
+<li><p><strong>ψ0</strong> (<em>float</em><em>, </em><em>optional</em>) – Inital azimuth [rad] in initial condition (<cite>time_list[0]</cite>)..
+Defaults to 0.0.</p></li>
+<li><p><strong>method</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Integration method to use in
+<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html">scipy.integrate.solve_ivp()</a>:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>”RK45” (default):</dt><dd><p>Explicit Runge-Kutta method of order 5(4).
+The error is controlled assuming accuracy of the fourth-order method,
+but steps are taken using the fifth-order accurate formula (local extrapolation is done).
+A quartic interpolation polynomial is used for the dense output.
+Can be applied in the complex domain.</p>
+</dd>
+<dt>”RK23”:</dt><dd><p>Explicit Runge-Kutta method of order 3(2).
+The error is controlled assuming accuracy of the second-order method,
+but steps are taken using the third-order accurate formula (local extrapolation is done).
+A cubic Hermite polynomial is used for the dense output.
+Can be applied in the complex domain.</p>
+</dd>
+<dt>”DOP853”:</dt><dd><p>Explicit Runge-Kutta method of order 8.
+Python implementation of the “DOP853” algorithm originally written in Fortran.
+A 7-th order interpolation polynomial accurate to 7-th order is used for the dense output.
+Can be applied in the complex domain.</p>
+</dd>
+<dt>”Radau”:</dt><dd><p>Implicit Runge-Kutta method of the Radau IIA family of order 5.
+The error is controlled with a third-order accurate embedded formula.
+A cubic polynomial which satisfies the collocation conditions is used for the dense output.</p>
+</dd>
+<dt>”BDF”:</dt><dd><p>Implicit multi-step variable-order (1 to 5) method
+based on a backward differentiation formula for the derivative approximation.
+A quasi-constant step scheme is used and accuracy is enhanced using the NDF modification.
+Can be applied in the complex domain.</p>
+</dd>
+<dt>”LSODA”:</dt><dd><p>Adams/BDF method with automatic stiffness detection and switching.
+This is a wrapper of the Fortran solver from ODEPACK.</p>
+</dd>
+</dl>
+</div></blockquote>
+</p></li>
+<li><p><strong>t_eval</strong> (<em>array_like</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Times at which to store the computed solution, must be sorted and lie within t_span.
+If None (default), use points selected by the solver.</p></li>
+<li><p><strong>events</strong> (<em>callable</em><em>, or </em><em>list of callables</em><em>, </em><em>optional</em>) – <p>Events to track. If None (default), no events will be tracked.
+Each event occurs at the zeros of a continuous function of time and state.
+Each function must have the signature event(t, y) and return a float.
+The solver will find an accurate value of t at which event(t, y(t)) = 0 using a root-finding algorithm.
+By default, all zeros will be found. The solver looks for a sign change over each step,
+so if multiple zero crossings occur within one step, events may be missed.
+Additionally each event function might have the following attributes:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>terminal (bool, optional):</dt><dd><p>Whether to terminate integration if this event occurs. Implicitly False if not assigned.</p>
+</dd>
+<dt>direction (float, optional):</dt><dd><p>Direction of a zero crossing.
+If direction is positive, event will only trigger when going from negative to positive,
+and vice versa if direction is negative.
+If 0, then either direction will trigger event. Implicitly 0 if not assigned.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>You can assign attributes like <cite>event.terminal = True</cite> to any function in Python.</p>
+</p></li>
+<li><p><strong>vectorized</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether <cite>fun</cite> is implemented in a vectorized fashion. Default is False.</p></li>
+<li><p><strong>options</strong> – <p>Options passed to a chosen solver.
+All options available for already implemented solvers are listed in
+<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html">scipy.integrate.solve_ivp()</a>:</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of rudder angle.
+final_r_list (list[float])) : list of rate of turn.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>final_δ_list (list[float]))</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-shipmmg.mmg_3dof">
 <span id="shipmmg-mmg-3dof-module"></span><h2>shipmmg.mmg_3dof module<a class="headerlink" href="#module-shipmmg.mmg_3dof" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="shipmmg.mmg_3dof.Mmg3DofBasicParams">
-<em class="property">class </em><code class="sig-prename descclassname">shipmmg.mmg_3dof.</code><code class="sig-name descname">Mmg3DofBasicParams</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">L_pp</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">B</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">d</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">x_G</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">D_p</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">m</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">I_zG</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">A_R</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">η</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">m_x</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">m_y</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">J_z</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">f_α</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">ε</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">t_R</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">a_H</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">x_H</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">γ_R</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">l_R</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">κ</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">t_P</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">w_P0</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shipmmg/mmg_3dof.html#Mmg3DofBasicParams"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.mmg_3dof.Mmg3DofBasicParams" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">shipmmg.mmg_3dof.</code><code class="sig-name descname">Mmg3DofBasicParams</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">L_pp</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">B</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">d</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">x_G</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">D_p</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">m</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">I_zG</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">A_R</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">η</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">m_x</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">m_y</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">J_z</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">f_α</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">ε</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">t_R</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">a_H</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">x_H</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">γ_R_minus</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">γ_R_plus</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">l_R</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">κ</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">t_P</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">w_P0</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">x_P</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shipmmg/mmg_3dof.html#Mmg3DofBasicParams"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.mmg_3dof.Mmg3DofBasicParams" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Dataclass for setting basic parameters of MMG 3DOF.</p>
 <dl class="py attribute">
@@ -664,8 +758,8 @@ None if events was None.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="id5">
-<span id="shipmmg.mmg_3dof.Mmg3DofBasicParams.ϵ"></span><code class="sig-name descname">ϵ</code><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dt id="id7">
+<span id="shipmmg.mmg_3dof.Mmg3DofBasicParams.ϵ"></span><code class="sig-name descname">ϵ</code><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ratio of wake fraction at propeller and rudder positions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -708,9 +802,20 @@ None if events was None.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shipmmg.mmg_3dof.Mmg3DofBasicParams._R">
-<span id="shipmmg.mmg_3dof.Mmg3DofBasicParams.γ_R"></span><code class="sig-name descname">γ_R</code><a class="headerlink" href="#shipmmg.mmg_3dof.Mmg3DofBasicParams._R" title="Permalink to this definition">¶</a></dt>
-<dd><p>Flow straightening coefficient</p>
+<dt id="shipmmg.mmg_3dof.Mmg3DofBasicParams._R_minus">
+<span id="shipmmg.mmg_3dof.Mmg3DofBasicParams.γ_R_minus"></span><code class="sig-name descname">γ_R_minus</code><a class="headerlink" href="#shipmmg.mmg_3dof.Mmg3DofBasicParams._R_minus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flow straightening coefficient if βR &lt; 0</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shipmmg.mmg_3dof.Mmg3DofBasicParams._R_plus">
+<span id="shipmmg.mmg_3dof.Mmg3DofBasicParams.γ_R_plus"></span><code class="sig-name descname">γ_R_plus</code><a class="headerlink" href="#shipmmg.mmg_3dof.Mmg3DofBasicParams._R_plus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flow straightening coefficient if βR &gt; 0</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>float</p>
@@ -730,8 +835,8 @@ None if events was None.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="id6">
-<span id="shipmmg.mmg_3dof.Mmg3DofBasicParams.κ"></span><code class="sig-name descname">κ</code><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<dt id="id8">
+<span id="shipmmg.mmg_3dof.Mmg3DofBasicParams.κ"></span><code class="sig-name descname">κ</code><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
 <dd><p>An experimental constant for　expressing uR</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -762,6 +867,17 @@ None if events was None.</p>
 </dl>
 </dd></dl>
 
+<dl class="py attribute">
+<dt id="shipmmg.mmg_3dof.Mmg3DofBasicParams.x_P">
+<code class="sig-name descname">x_P</code><a class="headerlink" href="#shipmmg.mmg_3dof.Mmg3DofBasicParams.x_P" title="Permalink to this definition">¶</a></dt>
+<dd><p>Effective Longitudinal coordinate of propeller position in formula of βP</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>For more information, please see the following articles.</p>
@@ -771,113 +887,123 @@ J Mar Sci Technol 20, 37–52 <a class="reference external" href="https://doi.or
 </ul>
 </div>
 <dl class="py attribute">
-<dt id="id7">
-<code class="sig-name descname">A_R</code><em class="property">: float</em><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="id8">
-<code class="sig-name descname">B</code><em class="property">: float</em><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt id="id9">
-<code class="sig-name descname">D_p</code><em class="property">: float</em><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">A_R</code><em class="property">: float</em><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id10">
-<code class="sig-name descname">I_zG</code><em class="property">: float</em><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">B</code><em class="property">: float</em><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id11">
-<code class="sig-name descname">J_z</code><em class="property">: float</em><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">D_p</code><em class="property">: float</em><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id12">
-<code class="sig-name descname">L_pp</code><em class="property">: float</em><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">I_zG</code><em class="property">: float</em><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id13">
-<code class="sig-name descname">a_H</code><em class="property">: float</em><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">J_z</code><em class="property">: float</em><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id14">
-<code class="sig-name descname">d</code><em class="property">: float</em><a class="headerlink" href="#id14" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">L_pp</code><em class="property">: float</em><a class="headerlink" href="#id14" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id15">
-<code class="sig-name descname">f_α</code><em class="property">: float</em><a class="headerlink" href="#id15" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">a_H</code><em class="property">: float</em><a class="headerlink" href="#id15" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id16">
-<code class="sig-name descname">l_R</code><em class="property">: float</em><a class="headerlink" href="#id16" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">d</code><em class="property">: float</em><a class="headerlink" href="#id16" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id17">
-<code class="sig-name descname">m</code><em class="property">: float</em><a class="headerlink" href="#id17" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">f_α</code><em class="property">: float</em><a class="headerlink" href="#id17" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id18">
-<code class="sig-name descname">m_x</code><em class="property">: float</em><a class="headerlink" href="#id18" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">l_R</code><em class="property">: float</em><a class="headerlink" href="#id18" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id19">
-<code class="sig-name descname">m_y</code><em class="property">: float</em><a class="headerlink" href="#id19" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">m</code><em class="property">: float</em><a class="headerlink" href="#id19" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id20">
-<code class="sig-name descname">t_P</code><em class="property">: float</em><a class="headerlink" href="#id20" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">m_x</code><em class="property">: float</em><a class="headerlink" href="#id20" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id21">
-<code class="sig-name descname">t_R</code><em class="property">: float</em><a class="headerlink" href="#id21" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">m_y</code><em class="property">: float</em><a class="headerlink" href="#id21" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id22">
-<code class="sig-name descname">w_P0</code><em class="property">: float</em><a class="headerlink" href="#id22" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">t_P</code><em class="property">: float</em><a class="headerlink" href="#id22" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id23">
-<code class="sig-name descname">x_G</code><em class="property">: float</em><a class="headerlink" href="#id23" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">t_R</code><em class="property">: float</em><a class="headerlink" href="#id23" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id24">
-<code class="sig-name descname">x_H</code><em class="property">: float</em><a class="headerlink" href="#id24" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">w_P0</code><em class="property">: float</em><a class="headerlink" href="#id24" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id25">
-<code class="sig-name descname">γ_R</code><em class="property">: float</em><a class="headerlink" href="#id25" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">x_G</code><em class="property">: float</em><a class="headerlink" href="#id25" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id26">
-<span id="shipmmg.mmg_3dof.Mmg3DofBasicParams.ε"></span><code class="sig-name descname">ε</code><em class="property">: float</em><a class="headerlink" href="#id26" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">x_H</code><em class="property">: float</em><a class="headerlink" href="#id26" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id27">
-<code class="sig-name descname">η</code><em class="property">: float</em><a class="headerlink" href="#id27" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">x_P</code><em class="property">: float</em><a class="headerlink" href="#id27" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id28">
-<code class="sig-name descname">κ</code><em class="property">: float</em><a class="headerlink" href="#id28" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">γ_R_minus</code><em class="property">: float</em><a class="headerlink" href="#id28" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id29">
+<code class="sig-name descname">γ_R_plus</code><em class="property">: float</em><a class="headerlink" href="#id29" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id30">
+<span id="shipmmg.mmg_3dof.Mmg3DofBasicParams.ε"></span><code class="sig-name descname">ε</code><em class="property">: float</em><a class="headerlink" href="#id30" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id31">
+<code class="sig-name descname">η</code><em class="property">: float</em><a class="headerlink" href="#id31" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id32">
+<code class="sig-name descname">κ</code><em class="property">: float</em><a class="headerlink" href="#id32" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1116,110 +1242,157 @@ J Mar Sci Technol 20, 37–52 <a class="reference external" href="https://doi.or
 </ul>
 </div>
 <dl class="py attribute">
-<dt id="id29">
-<code class="sig-name descname">N_r_dash</code><em class="property">: float</em><a class="headerlink" href="#id29" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="id30">
-<code class="sig-name descname">N_rrr_dash</code><em class="property">: float</em><a class="headerlink" href="#id30" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="id31">
-<code class="sig-name descname">N_v_dash</code><em class="property">: float</em><a class="headerlink" href="#id31" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="id32">
-<code class="sig-name descname">N_vrr_dash</code><em class="property">: float</em><a class="headerlink" href="#id32" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt id="id33">
-<code class="sig-name descname">N_vvr_dash</code><em class="property">: float</em><a class="headerlink" href="#id33" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">N_r_dash</code><em class="property">: float</em><a class="headerlink" href="#id33" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id34">
-<code class="sig-name descname">N_vvv_dash</code><em class="property">: float</em><a class="headerlink" href="#id34" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">N_rrr_dash</code><em class="property">: float</em><a class="headerlink" href="#id34" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id35">
-<code class="sig-name descname">R_0_dash</code><em class="property">: float</em><a class="headerlink" href="#id35" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">N_v_dash</code><em class="property">: float</em><a class="headerlink" href="#id35" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id36">
-<code class="sig-name descname">X_rr_dash</code><em class="property">: float</em><a class="headerlink" href="#id36" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">N_vrr_dash</code><em class="property">: float</em><a class="headerlink" href="#id36" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id37">
-<code class="sig-name descname">X_vr_dash</code><em class="property">: float</em><a class="headerlink" href="#id37" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">N_vvr_dash</code><em class="property">: float</em><a class="headerlink" href="#id37" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id38">
-<code class="sig-name descname">X_vv_dash</code><em class="property">: float</em><a class="headerlink" href="#id38" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">N_vvv_dash</code><em class="property">: float</em><a class="headerlink" href="#id38" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id39">
-<code class="sig-name descname">X_vvvv_dash</code><em class="property">: float</em><a class="headerlink" href="#id39" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">R_0_dash</code><em class="property">: float</em><a class="headerlink" href="#id39" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id40">
-<code class="sig-name descname">Y_r_dash</code><em class="property">: float</em><a class="headerlink" href="#id40" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">X_rr_dash</code><em class="property">: float</em><a class="headerlink" href="#id40" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id41">
-<code class="sig-name descname">Y_rrr_dash</code><em class="property">: float</em><a class="headerlink" href="#id41" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">X_vr_dash</code><em class="property">: float</em><a class="headerlink" href="#id41" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id42">
-<code class="sig-name descname">Y_v_dash</code><em class="property">: float</em><a class="headerlink" href="#id42" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">X_vv_dash</code><em class="property">: float</em><a class="headerlink" href="#id42" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id43">
-<code class="sig-name descname">Y_vrr_dash</code><em class="property">: float</em><a class="headerlink" href="#id43" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">X_vvvv_dash</code><em class="property">: float</em><a class="headerlink" href="#id43" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id44">
-<code class="sig-name descname">Y_vvr_dash</code><em class="property">: float</em><a class="headerlink" href="#id44" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Y_r_dash</code><em class="property">: float</em><a class="headerlink" href="#id44" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id45">
-<code class="sig-name descname">Y_vvv_dash</code><em class="property">: float</em><a class="headerlink" href="#id45" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Y_rrr_dash</code><em class="property">: float</em><a class="headerlink" href="#id45" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id46">
-<code class="sig-name descname">k_0</code><em class="property">: float</em><a class="headerlink" href="#id46" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Y_v_dash</code><em class="property">: float</em><a class="headerlink" href="#id46" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id47">
-<code class="sig-name descname">k_1</code><em class="property">: float</em><a class="headerlink" href="#id47" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Y_vrr_dash</code><em class="property">: float</em><a class="headerlink" href="#id47" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id48">
-<code class="sig-name descname">k_2</code><em class="property">: float</em><a class="headerlink" href="#id48" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Y_vvr_dash</code><em class="property">: float</em><a class="headerlink" href="#id48" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id49">
+<code class="sig-name descname">Y_vvv_dash</code><em class="property">: float</em><a class="headerlink" href="#id49" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id50">
+<code class="sig-name descname">k_0</code><em class="property">: float</em><a class="headerlink" href="#id50" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id51">
+<code class="sig-name descname">k_1</code><em class="property">: float</em><a class="headerlink" href="#id51" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id52">
+<code class="sig-name descname">k_2</code><em class="property">: float</em><a class="headerlink" href="#id52" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
+<dt id="shipmmg.mmg_3dof.get_sub_values_from_simulation_result">
+<code class="sig-prename descclassname">shipmmg.mmg_3dof.</code><code class="sig-name descname">get_sub_values_from_simulation_result</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">u_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">v_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">r_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">δ_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">npm_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">basic_params</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#shipmmg.mmg_3dof.Mmg3DofBasicParams" title="shipmmg.mmg_3dof.Mmg3DofBasicParams">shipmmg.mmg_3dof.Mmg3DofBasicParams</a></span></em>, <em class="sig-param"><span class="n">maneuvering_params</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#shipmmg.mmg_3dof.Mmg3DofManeuveringParams" title="shipmmg.mmg_3dof.Mmg3DofManeuveringParams">shipmmg.mmg_3dof.Mmg3DofManeuveringParams</a></span></em>, <em class="sig-param"><span class="n">ρ</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.025</span></em>, <em class="sig-param"><span class="n">return_all_vals</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shipmmg/mmg_3dof.html#get_sub_values_from_simulation_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.mmg_3dof.get_sub_values_from_simulation_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get sub values of MMG calculation from simulation result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u_list</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – u list of MMG simulation result.</p></li>
+<li><p><strong>v_list</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – v list of MMG simulation result.</p></li>
+<li><p><strong>r_list</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – r list of MMG simulation result.</p></li>
+<li><p><strong>δ_list</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – δ list of MMG simulation result.</p></li>
+<li><p><strong>npm_list</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – npm list of MMG simulation result.</p></li>
+<li><p><strong>basic_params</strong> (<a class="reference internal" href="#shipmmg.mmg_3dof.Mmg3DofBasicParams" title="shipmmg.mmg_3dof.Mmg3DofBasicParams"><em>Mmg3DofBasicParams</em></a>) – u of MMG simulation result.</p></li>
+<li><p><strong>maneuvering_params</strong> (<a class="reference internal" href="#shipmmg.mmg_3dof.Mmg3DofManeuveringParams" title="shipmmg.mmg_3dof.Mmg3DofManeuveringParams"><em>Mmg3DofManeuveringParams</em></a>) – u of MMG simulation result.</p></li>
+<li><p><strong>ρ</strong> (<em>float</em><em>, </em><em>optional</em>) – seawater density [kg/m^3]
+Defaults to 1.025.</p></li>
+<li><p><strong>return_all_vals</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether all sub values are returned or not.
+Defaults to false.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of X_H
+X_R_list (List[float]): List of X_R
+X_P_list (List[float]): List of X_P
+Y_H_list (List[float]): List of Y_H
+Y_R_list (List[float]): List of Y_R
+N_H_list (List[float]): List of N_H
+N_R_list (List[float]): List of N_R
+U_list (List[float], optional): List of U if return_all_vals is True
+β_list (List[float], optional): List of β if return_all_vals is True
+v_dash_list (List[float], optional): List of v_dash if return_all_vals is True
+r_dash_list (List[float], optional): List of r_dash if return_all_vals is True
+w_P_list (List[float], optional): List of w_P if return_all_vals is True
+J_list (List[float], optional): List of J if return_all_vals is True
+K_T_list (List[float], optional): List of K_T if return_all_vals is True
+v_R_list (List[float], optional): List of v_R if return_all_vals is True
+u_R_list (List[float], optional): List of u_R if return_all_vals is True
+U_R_list (List[float], optional): List of U_R if return_all_vals is True
+α_R_list (List[float], optional): List of α_R if return_all_vals is True
+F_N_list (List[float], optional): List of F_N if return_all_vals is True</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>X_H_list (List[float])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="shipmmg.mmg_3dof.simulate">
-<code class="sig-prename descclassname">shipmmg.mmg_3dof.</code><code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">L_pp</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">B</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">d</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">x_G</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">D_p</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">m</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">I_zG</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">A_R</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">η</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">m_x</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">m_y</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">J_z</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">f_α</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">ε</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">t_R</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">a_H</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">x_H</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">γ_R</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">l_R</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">κ</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">t_P</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">w_P0</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">k_0</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">k_1</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">k_2</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">R_0_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">X_vv_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">X_vr_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">X_rr_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">X_vvvv_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">Y_v_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">Y_r_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">Y_vvv_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">Y_vvr_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">Y_vrr_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">Y_rrr_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">N_v_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">N_r_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">N_vvv_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">N_vvr_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">N_vrr_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">N_rrr_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">time_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">δ_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">npm_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">u0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">v0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">r0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">ρ</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.025</span></em>, <em class="sig-param"><span class="n">method</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'RK45'</span></em>, <em class="sig-param"><span class="n">t_eval</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">events</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">vectorized</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">options</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shipmmg/mmg_3dof.html#simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.mmg_3dof.simulate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">shipmmg.mmg_3dof.</code><code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">L_pp</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">B</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">d</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">x_G</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">D_p</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">m</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">I_zG</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">A_R</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">η</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">m_x</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">m_y</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">J_z</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">f_α</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">ε</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">t_R</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">a_H</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">x_H</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">γ_R_minus</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">γ_R_plus</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">l_R</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">κ</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">t_P</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">w_P0</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">x_P</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">k_0</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">k_1</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">k_2</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">R_0_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">X_vv_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">X_vr_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">X_rr_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">X_vvvv_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">Y_v_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">Y_r_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">Y_vvv_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">Y_vvr_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">Y_vrr_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">Y_rrr_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">N_v_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">N_r_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">N_vvv_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">N_vvr_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">N_vrr_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">N_rrr_dash</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">time_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">δ_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">npm_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">u0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">v0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">r0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">ρ</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.025</span></em>, <em class="sig-param"><span class="n">method</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'RK45'</span></em>, <em class="sig-param"><span class="n">t_eval</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">events</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">vectorized</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">options</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shipmmg/mmg_3dof.html#simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.mmg_3dof.simulate" title="Permalink to this definition">¶</a></dt>
 <dd><p>MMG 3DOF simulation
 MMG 3DOF simulation by follwoing equation of motion.</p>
 <div class="math notranslate nohighlight">
@@ -1244,11 +1417,13 @@ MMG 3DOF simulation by follwoing equation of motion.</p>
 <li><p><strong>t_R</strong> (<em>float</em>) – Steering resistance deduction factor</p></li>
 <li><p><strong>a_H</strong> (<em>float</em>) – Rudder force increase factor</p></li>
 <li><p><strong>x_H</strong> (<em>float</em>) – Longitudinal coordinate of acting point of the additional lateral force component induced by steering</p></li>
-<li><p><strong>γ_R</strong> (<em>float</em>) – Flow straightening coefficient</p></li>
+<li><p><strong>γ_R_minus</strong> (<em>float</em>) – Flow straightening coefficient if βR &lt; 0</p></li>
+<li><p><strong>γ_R_plus</strong> (<em>float</em>) – Flow straightening coefficient if βR &gt; 0</p></li>
 <li><p><strong>l_R</strong> (<em>float</em>) – Effective longitudinal coordinate of rudder position in formula of βR</p></li>
 <li><p><strong>κ</strong> (<em>float</em>) – An experimental constant for　expressing uR</p></li>
 <li><p><strong>t_P</strong> (<em>float</em>) – Thrust deduction factor</p></li>
 <li><p><strong>w_P0</strong> (<em>float</em>) – Wake coefficient at propeller position in straight moving</p></li>
+<li><p><strong>x_P</strong> (<em>float</em>) – Effective Longitudinal coordinate of propeller position in formula of βP</p></li>
 <li><p><strong>k_0</strong> (<em>float</em>) – One of manuevering parameters of coefficients representing K_T</p></li>
 <li><p><strong>k_1</strong> (<em>float</em>) – One of manuevering parameters of coefficients representing K_T</p></li>
 <li><p><strong>k_2</strong> (<em>float</em>) – One of manuevering parameters of coefficients representing K_T</p></li>
@@ -1413,6 +1588,7 @@ None if events was None.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">κ</span><span class="o">=</span><span class="mf">0.50</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">t_P</span><span class="o">=</span><span class="mf">0.220</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">w_P0</span><span class="o">=</span><span class="mf">0.40</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x_P</span><span class="o">=-</span><span class="mf">0.650</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">k_0</span> <span class="o">=</span> <span class="mf">0.2931</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">k_1</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.2753</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">k_2</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.1385</span>
@@ -1456,6 +1632,7 @@ None if events was None.</p>
 <span class="gp">&gt;&gt;&gt; </span>                   <span class="n">κ</span><span class="o">=</span><span class="n">κ</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                   <span class="n">t_P</span><span class="o">=</span><span class="n">t_P</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                   <span class="n">w_P0</span><span class="o">=</span><span class="n">w_P0</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>                   <span class="n">x_P</span><span class="o">=</span><span class="n">x_P</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                   <span class="n">k_0</span><span class="o">=</span><span class="n">k_0</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                   <span class="n">k_1</span><span class="o">=</span><span class="n">k_1</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                   <span class="n">k_2</span><span class="o">=</span><span class="n">k_2</span><span class="p">,</span>
@@ -1646,11 +1823,13 @@ None if events was None.</p>
 <span class="gp">&gt;&gt;&gt; </span>                    <span class="n">t_R</span><span class="o">=</span><span class="mf">0.387</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                    <span class="n">a_H</span><span class="o">=</span><span class="mf">0.312</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                    <span class="n">x_H</span><span class="o">=-</span><span class="mf">0.464</span><span class="o">*</span><span class="n">L_pp</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>                    <span class="n">γ_R</span><span class="o">=</span><span class="mf">0.395</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>                    <span class="n">γ_R_minus</span><span class="o">=</span><span class="mf">0.395</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>                    <span class="n">γ_R_plus</span><span class="o">=</span><span class="mf">0.640</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                    <span class="n">l_R</span><span class="o">=-</span><span class="mf">0.710</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                    <span class="n">κ</span><span class="o">=</span><span class="mf">0.50</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                    <span class="n">t_P</span><span class="o">=</span><span class="mf">0.220</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                    <span class="n">w_P0</span><span class="o">=</span><span class="mf">0.40</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>                    <span class="n">x_P</span><span class="o">=-</span><span class="mf">0.650</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                <span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">maneuvering_params</span> <span class="o">=</span> <span class="n">Mmg3DofManeuveringParams</span><span class="p">(</span>
 <span class="gp">&gt;&gt;&gt; </span>                    <span class="n">k_0</span> <span class="o">=</span> <span class="mf">0.2931</span><span class="p">,</span>
@@ -1695,12 +1874,116 @@ J Mar Sci Technol 20, 37–52 <a class="reference external" href="https://doi.or
 </div>
 </dd></dl>
 
+<dl class="py function">
+<dt id="shipmmg.mmg_3dof.zigzag_test_mmg_3dof">
+<code class="sig-prename descclassname">shipmmg.mmg_3dof.</code><code class="sig-name descname">zigzag_test_mmg_3dof</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">basic_params</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#shipmmg.mmg_3dof.Mmg3DofBasicParams" title="shipmmg.mmg_3dof.Mmg3DofBasicParams">shipmmg.mmg_3dof.Mmg3DofBasicParams</a></span></em>, <em class="sig-param"><span class="n">maneuvering_params</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#shipmmg.mmg_3dof.Mmg3DofManeuveringParams" title="shipmmg.mmg_3dof.Mmg3DofManeuveringParams">shipmmg.mmg_3dof.Mmg3DofManeuveringParams</a></span></em>, <em class="sig-param"><span class="n">target_δ_rad</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">target_ψ_rad_deviation</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">time_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">npm_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">δ0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">δ_rad_rate</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.017453292519943295</span></em>, <em class="sig-param"><span class="n">u0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">v0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">r0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">ψ0</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">ρ</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.025</span></em>, <em class="sig-param"><span class="n">method</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'RK45'</span></em>, <em class="sig-param"><span class="n">t_eval</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">events</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">vectorized</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">options</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shipmmg/mmg_3dof.html#zigzag_test_mmg_3dof"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.mmg_3dof.zigzag_test_mmg_3dof" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zig-zag test simulation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>basic_params</strong> (<a class="reference internal" href="#shipmmg.mmg_3dof.Mmg3DofBasicParams" title="shipmmg.mmg_3dof.Mmg3DofBasicParams"><em>Mmg3DofBasicParams</em></a>) – Basic paramters for MMG 3DOF simulation.</p></li>
+<li><p><strong>maneuvering_params</strong> (<a class="reference internal" href="#shipmmg.mmg_3dof.Mmg3DofManeuveringParams" title="shipmmg.mmg_3dof.Mmg3DofManeuveringParams"><em>Mmg3DofManeuveringParams</em></a>) – Maneuvering parameters for MMG 3DOF simulation.</p></li>
+<li><p><strong>target_δ_rad</strong> (<em>float</em>) – target absolute value of rudder angle.</p></li>
+<li><p><strong>target_ψ_rad_deviation</strong> (<em>float</em>) – target absolute value of psi deviation from ψ0[rad].</p></li>
+<li><p><strong>time_list</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – time list of simulation.</p></li>
+<li><p><strong>npm_list</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – npm list of simulation.</p></li>
+<li><p><strong>δ0</strong> (<em>float</em>) – Initial rudder angle [rad].
+Defaults to 0.0.</p></li>
+<li><p><strong>δ_rad_rate</strong> (<em>float</em>) – Initial rudder angle rate [rad/s].
+Defaults to 1.0.</p></li>
+<li><p><strong>u0</strong> (<em>float</em><em>, </em><em>optional</em>) – axial velocity [m/s] in initial condition (<cite>time_list[0]</cite>).
+Defaults to 0.0.</p></li>
+<li><p><strong>v0</strong> (<em>float</em><em>, </em><em>optional</em>) – lateral velocity [m/s] in initial condition (<cite>time_list[0]</cite>).
+Defaults to 0.0.</p></li>
+<li><p><strong>r0</strong> (<em>float</em><em>, </em><em>optional</em>) – rate of turn [rad/s] in initial condition (<cite>time_list[0]</cite>).
+Defaults to 0.0.</p></li>
+<li><p><strong>ψ0</strong> (<em>float</em><em>, </em><em>optional</em>) – Inital azimuth [rad] in initial condition (<cite>time_list[0]</cite>)..
+Defaults to 0.0.</p></li>
+<li><p><strong>ρ</strong> (<em>float</em><em>, </em><em>optional</em>) – seawater density [kg/m^3]
+Defaults to 1.025.</p></li>
+<li><p><strong>method</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Integration method to use in
+<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html">scipy.integrate.solve_ivp()</a>:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>”RK45” (default):</dt><dd><p>Explicit Runge-Kutta method of order 5(4).
+The error is controlled assuming accuracy of the fourth-order method,
+but steps are taken using the fifth-order accurate formula (local extrapolation is done).
+A quartic interpolation polynomial is used for the dense output.
+Can be applied in the complex domain.</p>
+</dd>
+<dt>”RK23”:</dt><dd><p>Explicit Runge-Kutta method of order 3(2).
+The error is controlled assuming accuracy of the second-order method,
+but steps are taken using the third-order accurate formula (local extrapolation is done).
+A cubic Hermite polynomial is used for the dense output.
+Can be applied in the complex domain.</p>
+</dd>
+<dt>”DOP853”:</dt><dd><p>Explicit Runge-Kutta method of order 8.
+Python implementation of the “DOP853” algorithm originally written in Fortran.
+A 7-th order interpolation polynomial accurate to 7-th order is used for the dense output.
+Can be applied in the complex domain.</p>
+</dd>
+<dt>”Radau”:</dt><dd><p>Implicit Runge-Kutta method of the Radau IIA family of order 5.
+The error is controlled with a third-order accurate embedded formula.
+A cubic polynomial which satisfies the collocation conditions is used for the dense output.</p>
+</dd>
+<dt>”BDF”:</dt><dd><p>Implicit multi-step variable-order (1 to 5) method
+based on a backward differentiation formula for the derivative approximation.
+A quasi-constant step scheme is used and accuracy is enhanced using the NDF modification.
+Can be applied in the complex domain.</p>
+</dd>
+<dt>”LSODA”:</dt><dd><p>Adams/BDF method with automatic stiffness detection and switching.
+This is a wrapper of the Fortran solver from ODEPACK.</p>
+</dd>
+</dl>
+</div></blockquote>
+</p></li>
+<li><p><strong>t_eval</strong> (<em>array_like</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Times at which to store the computed solution, must be sorted and lie within t_span.
+If None (default), use points selected by the solver.</p></li>
+<li><p><strong>events</strong> (<em>callable</em><em>, or </em><em>list of callables</em><em>, </em><em>optional</em>) – <p>Events to track. If None (default), no events will be tracked.
+Each event occurs at the zeros of a continuous function of time and state.
+Each function must have the signature event(t, y) and return a float.
+The solver will find an accurate value of t at which event(t, y(t)) = 0 using a root-finding algorithm.
+By default, all zeros will be found. The solver looks for a sign change over each step,
+so if multiple zero crossings occur within one step, events may be missed.
+Additionally each event function might have the following attributes:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>terminal (bool, optional):</dt><dd><p>Whether to terminate integration if this event occurs. Implicitly False if not assigned.</p>
+</dd>
+<dt>direction (float, optional):</dt><dd><p>Direction of a zero crossing.
+If direction is positive, event will only trigger when going from negative to positive,
+and vice versa if direction is negative.
+If 0, then either direction will trigger event. Implicitly 0 if not assigned.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>You can assign attributes like <cite>event.terminal = True</cite> to any function in Python.</p>
+</p></li>
+<li><p><strong>vectorized</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether <cite>fun</cite> is implemented in a vectorized fashion. Default is False.</p></li>
+<li><p><strong>options</strong> – <p>Options passed to a chosen solver.
+All options available for already implemented solvers are listed in
+<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html">scipy.integrate.solve_ivp()</a>:</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of rudder angle.
+final_u_list (list[float])) : list of surge velocity.
+final_v_list (list[float])) : list of sway velocity.
+final_r_list (list[float])) : list of rate of turn.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>final_δ_list (list[float]))</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-shipmmg.ship_obj_3dof">
 <span id="shipmmg-ship-obj-3dof-module"></span><h2>shipmmg.ship_obj_3dof module<a class="headerlink" href="#module-shipmmg.ship_obj_3dof" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="shipmmg.ship_obj_3dof.ShipObj3dof">
-<em class="property">class </em><code class="sig-prename descclassname">shipmmg.ship_obj_3dof.</code><code class="sig-name descname">ShipObj3dof</code><span class="sig-paren">(</span><em class="sig-param">L: float</em>, <em class="sig-param">B: float</em>, <em class="sig-param">time: List[float] = &lt;factory&gt;</em>, <em class="sig-param">u: List[float] = &lt;factory&gt;</em>, <em class="sig-param">v: List[float] = &lt;factory&gt;</em>, <em class="sig-param">r: List[float] = &lt;factory&gt;</em>, <em class="sig-param">x: List[float] = &lt;factory&gt;</em>, <em class="sig-param">y: List[float] = &lt;factory&gt;</em>, <em class="sig-param">psi: List[float] = &lt;factory&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shipmmg/ship_obj_3dof.html#ShipObj3dof"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">shipmmg.ship_obj_3dof.</code><code class="sig-name descname">ShipObj3dof</code><span class="sig-paren">(</span><em class="sig-param">L: float</em>, <em class="sig-param">B: float</em>, <em class="sig-param">time: List[float] = &lt;factory&gt;</em>, <em class="sig-param">u: List[float] = &lt;factory&gt;</em>, <em class="sig-param">v: List[float] = &lt;factory&gt;</em>, <em class="sig-param">r: List[float] = &lt;factory&gt;</em>, <em class="sig-param">x: List[float] = &lt;factory&gt;</em>, <em class="sig-param">y: List[float] = &lt;factory&gt;</em>, <em class="sig-param">psi: List[float] = &lt;factory&gt;</em>, <em class="sig-param">δ: List[float] = &lt;factory&gt;</em>, <em class="sig-param">npm: List[float] = &lt;factory&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shipmmg/ship_obj_3dof.html#ShipObj3dof"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Ship 3DOF class just for drawing.</p>
 <dl class="py attribute">
@@ -1803,13 +2086,35 @@ J Mar Sci Technol 20, 37–52 <a class="reference external" href="https://doi.or
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="id53">
-<code class="sig-name descname">B</code><em class="property">: float</em><a class="headerlink" href="#id53" title="Permalink to this definition">¶</a></dt>
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof.">
+<span id="shipmmg.ship_obj_3dof.ShipObj3dof.δ"></span><code class="sig-name descname">δ</code><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof." title="Permalink to this definition">¶</a></dt>
+<dd><p>rudder angle list of simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof.npm">
+<code class="sig-name descname">npm</code><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof.npm" title="Permalink to this definition">¶</a></dt>
+<dd><p>npm list of simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="id59">
+<code class="sig-name descname">B</code><em class="property">: float</em><a class="headerlink" href="#id59" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id54">
-<code class="sig-name descname">L</code><em class="property">: float</em><a class="headerlink" href="#id54" title="Permalink to this definition">¶</a></dt>
+<dt id="id60">
+<code class="sig-name descname">L</code><em class="property">: float</em><a class="headerlink" href="#id60" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1866,7 +2171,7 @@ Defaults to None.</p></li>
 Defaults to None.</p></li>
 <li><p><strong>**kwargs</strong> (<em>matplotlib.lines.Line2D properties</em><em>, </em><em>optional</em>) – <p>kwargs are used to specify properties
 like a line label (for auto legends), linewidth, antialiasing, marker face color.
-You can show the detailed information at <a href="#id55"><span class="problematic" id="id56">`</span></a>matplotlib.lines.Line2D</p>
+You can show the detailed information at <a href="#id61"><span class="problematic" id="id62">`</span></a>matplotlib.lines.Line2D</p>
 <blockquote>
 <div><p>&lt;<a class="reference external" href="https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D">https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D</a>&gt;`_</p>
 </div></blockquote>
@@ -1946,7 +2251,7 @@ Defaults to “–k”.</p></li>
 Defaults to None.</p></li>
 <li><p><strong>**kwargs</strong> (<em>matplotlib.lines.Line2D properties</em><em>, </em><em>optional</em>) – <p>kwargs are used to specify properties
 like a line label (for auto legends), linewidth, antialiasing, marker face color.
-You can show the detailed information at <a href="#id57"><span class="problematic" id="id58">`</span></a>matplotlib.lines.Line2D</p>
+You can show the detailed information at <a href="#id63"><span class="problematic" id="id64">`</span></a>matplotlib.lines.Line2D</p>
 <blockquote>
 <div><p>&lt;<a class="reference external" href="https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D">https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D</a>&gt;`_</p>
 </div></blockquote>
@@ -1956,6 +2261,154 @@ You can show the detailed information at <a href="#id57"><span class="problemati
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ship</span><span class="o">.</span><span class="n">draw_gif</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="s1">&#39;test.gif&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof.draw_multi_x_chart">
+<code class="sig-name descname">draw_multi_x_chart</code><span class="sig-paren">(</span><em class="sig-param">x_index_list: List[str], y_index: str, xlabel: str = None, ylabel: str = None, num: int = None, figsize: List[float] = [6.4, 4.8], dpi: float = 100.0, facecolor: str = None, edgecolor: str = None, frameon: bool = True, FigureClass: matplotlib.figure.Figure = &lt;class 'matplotlib.figure.Figure'&gt;, clear: bool = False, tight_layout: bool = False, constrained_layout: bool = False, fmt: str = None, save_fig_path: str = None, **kwargs</em><span class="sig-paren">)</span> &#x2192; matplotlib.figure.Figure<a class="reference internal" href="_modules/shipmmg/ship_obj_3dof.html#ShipObj3dof.draw_multi_x_chart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof.draw_multi_x_chart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw chart of multiple Y variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_index_list</strong> (<em>List</em><em>[</em><em>string</em><em>]</em>) – List of index value of X axis.</p></li>
+<li><p><strong>y_index</strong> (<em>string</em>) – Index value of Y axis.</p></li>
+<li><p><strong>xlabel</strong> (<em>string</em><em>, </em><em>optional</em>) – Label of X axis.
+Defaults to None.</p></li>
+<li><p><strong>ylabel</strong> (<em>string</em><em>, </em><em>optional</em>) – Label of Y axis.
+Defaults to None.</p></li>
+<li><p><strong>num</strong> (<em>int</em><em> or </em><em>str</em><em>, </em><em>optional</em>) – A unique identifier for the figure.
+If a figure with that identifier already exists, this figure is made active and returned.
+An integer refers to the Figure.number attribute, a string refers to the figure label.
+If there is no figure with the identifier or num is not given,
+a new figure is created, made active and returned.
+If num is an int, it will be used for the Figure.number attribute.
+Otherwise, an auto-generated integer value is used (starting at 1 and incremented for each new figure).
+If num is a string, the figure label and the window title is set to this value.
+Default to None.</p></li>
+<li><p><strong>figsize</strong> (<em>(</em><em>float</em><em>, </em><em>float</em><em>)</em><em>, </em><em>optional</em>) – Width, height in inches.
+Default to [6.4, 4.8]</p></li>
+<li><p><strong>dpi</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution of the figure in dots-per-inch.
+Default to 100.0.</p></li>
+<li><p><strong>facecolor</strong> (<em>str</em><em>, </em><em>optional</em>) – The background color.</p></li>
+<li><p><strong>edgecolor</strong> (<em>str</em><em>, </em><em>optional</em>) – The border color.</p></li>
+<li><p><strong>frameon</strong> (<em>bool</em><em>, </em><em>optional</em>) – If False, suppress drawing the figure frame.
+Defaults to True.</p></li>
+<li><p><strong>FigureClass</strong> (<em>subclass of matplotlib.figure.Figure</em><em>, </em><em>optional</em>) – Optionally use a custom Figure instance.
+Defaults to matplotlib.figure.Figure.</p></li>
+<li><p><strong>clear</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True and the figure already exists, then it is cleared.
+Defaults to False.</p></li>
+<li><p><strong>tight_layout</strong> (<em>bool</em><em>, </em><em>optional</em>) – If False use subplotpars.
+If True adjust subplot parameters using tight_layout with default padding.
+When providing a dict containing the keys pad, w_pad, h_pad, and rect,
+the default tight_layout paddings will be overridden.
+Defaults to False.</p></li>
+<li><p><strong>constrained_layout</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True use constrained layout to adjust positioning of plot elements.
+Like tight_layout, but designed to be more flexible.
+See Constrained Layout Guide for examples.
+(Note: does not work with add_subplot or subplot2grid.)
+Defaults to False.</p></li>
+<li><p><strong>fmt</strong> (<em>str</em><em>, </em><em>optional</em>) – A format string, e.g. ‘ro’ for red circles.
+See the Notes section for a full description of the format strings.
+Format strings are just an abbreviation for quickly setting basic line properties.
+All of these and more can also be controlled by keyword arguments.
+This argument cannot be passed as keyword.
+Defaults to None.</p></li>
+<li><p><strong>save_fig_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path of saving figure.
+Defaults to None.</p></li>
+<li><p><strong>**kwargs</strong> (<em>matplotlib.lines.Line2D properties</em><em>, </em><em>optional</em>) – <p>kwargs are used to specify properties
+like a line label (for auto legends), linewidth, antialiasing, marker face color.
+You can show the detailed information at <a href="#id65"><span class="problematic" id="id66">`</span></a>matplotlib.lines.Line2D</p>
+<blockquote>
+<div><p>&lt;<a class="reference external" href="https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D">https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D</a>&gt;`_</p>
+</div></blockquote>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>matplotlib.pyplot.Figure</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ship</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;time [sec]&quot;</span><span class="p">,</span>             <span class="o">&gt;&gt;&gt;</span> <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u$&quot;</span> <span class="o">+</span> <span class="s2">&quot; [rad/s]&quot;</span><span class="p">,</span><span class="n">save_fig_path</span><span class="o">=</span><span class="s1">&#39;test.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shipmmg.ship_obj_3dof.ShipObj3dof.draw_multi_y_chart">
+<code class="sig-name descname">draw_multi_y_chart</code><span class="sig-paren">(</span><em class="sig-param">x_index: str, y_index_list: List[str], xlabel: str = None, ylabel: str = None, num: int = None, figsize: List[float] = [6.4, 4.8], dpi: float = 100.0, facecolor: str = None, edgecolor: str = None, frameon: bool = True, FigureClass: matplotlib.figure.Figure = &lt;class 'matplotlib.figure.Figure'&gt;, clear: bool = False, tight_layout: bool = False, constrained_layout: bool = False, fmt: str = None, save_fig_path: str = None, **kwargs</em><span class="sig-paren">)</span> &#x2192; matplotlib.figure.Figure<a class="reference internal" href="_modules/shipmmg/ship_obj_3dof.html#ShipObj3dof.draw_multi_y_chart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shipmmg.ship_obj_3dof.ShipObj3dof.draw_multi_y_chart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw chart of multiple Y variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_index</strong> (<em>string</em>) – Index value of X axis.</p></li>
+<li><p><strong>y_index_list</strong> (<em>List</em><em>[</em><em>string</em><em>]</em>) – List of index value of Y axis.</p></li>
+<li><p><strong>xlabel</strong> (<em>string</em><em>, </em><em>optional</em>) – Label of X axis.
+Defaults to None.</p></li>
+<li><p><strong>ylabel</strong> (<em>string</em><em>, </em><em>optional</em>) – Label of Y axis.
+Defaults to None.</p></li>
+<li><p><strong>num</strong> (<em>int</em><em> or </em><em>str</em><em>, </em><em>optional</em>) – A unique identifier for the figure.
+If a figure with that identifier already exists, this figure is made active and returned.
+An integer refers to the Figure.number attribute, a string refers to the figure label.
+If there is no figure with the identifier or num is not given,
+a new figure is created, made active and returned.
+If num is an int, it will be used for the Figure.number attribute.
+Otherwise, an auto-generated integer value is used (starting at 1 and incremented for each new figure).
+If num is a string, the figure label and the window title is set to this value.
+Default to None.</p></li>
+<li><p><strong>figsize</strong> (<em>(</em><em>float</em><em>, </em><em>float</em><em>)</em><em>, </em><em>optional</em>) – Width, height in inches.
+Default to [6.4, 4.8]</p></li>
+<li><p><strong>dpi</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution of the figure in dots-per-inch.
+Default to 100.0.</p></li>
+<li><p><strong>facecolor</strong> (<em>str</em><em>, </em><em>optional</em>) – The background color.</p></li>
+<li><p><strong>edgecolor</strong> (<em>str</em><em>, </em><em>optional</em>) – The border color.</p></li>
+<li><p><strong>frameon</strong> (<em>bool</em><em>, </em><em>optional</em>) – If False, suppress drawing the figure frame.
+Defaults to True.</p></li>
+<li><p><strong>FigureClass</strong> (<em>subclass of matplotlib.figure.Figure</em><em>, </em><em>optional</em>) – Optionally use a custom Figure instance.
+Defaults to matplotlib.figure.Figure.</p></li>
+<li><p><strong>clear</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True and the figure already exists, then it is cleared.
+Defaults to False.</p></li>
+<li><p><strong>tight_layout</strong> (<em>bool</em><em>, </em><em>optional</em>) – If False use subplotpars.
+If True adjust subplot parameters using tight_layout with default padding.
+When providing a dict containing the keys pad, w_pad, h_pad, and rect,
+the default tight_layout paddings will be overridden.
+Defaults to False.</p></li>
+<li><p><strong>constrained_layout</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True use constrained layout to adjust positioning of plot elements.
+Like tight_layout, but designed to be more flexible.
+See Constrained Layout Guide for examples.
+(Note: does not work with add_subplot or subplot2grid.)
+Defaults to False.</p></li>
+<li><p><strong>fmt</strong> (<em>str</em><em>, </em><em>optional</em>) – A format string, e.g. ‘ro’ for red circles.
+See the Notes section for a full description of the format strings.
+Format strings are just an abbreviation for quickly setting basic line properties.
+All of these and more can also be controlled by keyword arguments.
+This argument cannot be passed as keyword.
+Defaults to None.</p></li>
+<li><p><strong>save_fig_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path of saving figure.
+Defaults to None.</p></li>
+<li><p><strong>**kwargs</strong> (<em>matplotlib.lines.Line2D properties</em><em>, </em><em>optional</em>) – <p>kwargs are used to specify properties
+like a line label (for auto legends), linewidth, antialiasing, marker face color.
+You can show the detailed information at <a href="#id67"><span class="problematic" id="id68">`</span></a>matplotlib.lines.Line2D</p>
+<blockquote>
+<div><p>&lt;<a class="reference external" href="https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D">https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D</a>&gt;`_</p>
+</div></blockquote>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>matplotlib.pyplot.Figure</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ship</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;time [sec]&quot;</span><span class="p">,</span>             <span class="o">&gt;&gt;&gt;</span> <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u$&quot;</span> <span class="o">+</span> <span class="s2">&quot; [rad/s]&quot;</span><span class="p">,</span><span class="n">save_fig_path</span><span class="o">=</span><span class="s1">&#39;test.png&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -2016,7 +2469,7 @@ Defaults to None.</p></li>
 Defaults to None.</p></li>
 <li><p><strong>**kwargs</strong> (<em>matplotlib.lines.Line2D properties</em><em>, </em><em>optional</em>) – <p>kwargs are used to specify properties
 like a line label (for auto legends), linewidth, antialiasing, marker face color.
-You can show the detailed information at <a href="#id59"><span class="problematic" id="id60">`</span></a>matplotlib.lines.Line2D</p>
+You can show the detailed information at <a href="#id69"><span class="problematic" id="id70">`</span></a>matplotlib.lines.Line2D</p>
 <blockquote>
 <div><p>&lt;<a class="reference external" href="https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D">https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D</a>&gt;`_</p>
 </div></blockquote>
@@ -2073,38 +2526,48 @@ Defaults to 0.0.</p></li>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="id61">
-<code class="sig-name descname">psi</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id61" title="Permalink to this definition">¶</a></dt>
+<dt id="id71">
+<code class="sig-name descname">npm</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id71" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id62">
-<code class="sig-name descname">r</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id62" title="Permalink to this definition">¶</a></dt>
+<dt id="id72">
+<code class="sig-name descname">psi</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id72" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id63">
-<code class="sig-name descname">time</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id63" title="Permalink to this definition">¶</a></dt>
+<dt id="id73">
+<code class="sig-name descname">r</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id73" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id64">
-<code class="sig-name descname">u</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id64" title="Permalink to this definition">¶</a></dt>
+<dt id="id74">
+<code class="sig-name descname">time</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id74" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id65">
-<code class="sig-name descname">v</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id65" title="Permalink to this definition">¶</a></dt>
+<dt id="id75">
+<code class="sig-name descname">u</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id75" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id66">
-<code class="sig-name descname">x</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id66" title="Permalink to this definition">¶</a></dt>
+<dt id="id76">
+<code class="sig-name descname">v</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id76" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id67">
-<code class="sig-name descname">y</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id67" title="Permalink to this definition">¶</a></dt>
+<dt id="id77">
+<code class="sig-name descname">x</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id77" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id78">
+<code class="sig-name descname">y</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id78" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id79">
+<code class="sig-name descname">δ</code><em class="property">: List<span class="p">[</span>float<span class="p">]</span></em><a class="headerlink" href="#id79" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

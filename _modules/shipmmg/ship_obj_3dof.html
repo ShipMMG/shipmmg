@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>shipmmg.ship_obj_3dof &mdash; shipmmg 0.0.5 documentation</title>
+  <title>shipmmg.ship_obj_3dof &mdash; shipmmg 0.0.7 documentation</title>
   
 
   
@@ -189,6 +189,10 @@
 <span class="sd">            List of position of Y axis [m/s] in simulation result.</span>
 <span class="sd">        psi (list[float]):</span>
 <span class="sd">            List of azimuth [rad] in simulation result.</span>
+<span class="sd">        δ (list[float]):</span>
+<span class="sd">            rudder angle list of simulation.</span>
+<span class="sd">        npm (List[float]):</span>
+<span class="sd">            npm list of simulation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Ship overview</span>
@@ -202,6 +206,8 @@
     <span class="n">x</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
     <span class="n">y</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
     <span class="n">psi</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">δ</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">npm</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ShipObj3dof.load_simulation_result"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.ship_obj_3dof.ShipObj3dof.load_simulation_result">[docs]</a>    <span class="k">def</span> <span class="nf">load_simulation_result</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -253,10 +259,8 @@
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">ut</span><span class="p">,</span> <span class="n">vt</span><span class="p">,</span> <span class="n">rt</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">r</span><span class="p">)):</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">dt</span> <span class="o">=</span> <span class="n">time</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">time</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-                <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">ut</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">psi</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span>
-                         <span class="n">vt</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">psi</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span>
-                <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">ut</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">psi</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span>
-                         <span class="n">vt</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">psi</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span>
+                <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">ut</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">psi</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">vt</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">psi</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span>
+                <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">ut</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">psi</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">vt</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">psi</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span>
                 <span class="n">psi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">psi</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">rt</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span>
 
         <span class="c1"># Register</span>
@@ -379,8 +383,7 @@
 
         <span class="k">if</span> <span class="n">dimensionless</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">fmt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span>
-                         <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
                     <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
@@ -509,6 +512,12 @@
             <span class="n">target_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
         <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;psi&quot;</span><span class="p">:</span>
             <span class="n">target_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi</span>
+        <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;delta&quot;</span><span class="p">:</span>
+            <span class="n">target_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">δ</span>
+        <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;δ&quot;</span><span class="p">:</span>
+            <span class="n">target_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">δ</span>
+        <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;npm&quot;</span><span class="p">:</span>
+            <span class="n">target_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">npm</span>
         <span class="k">if</span> <span class="n">target_x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
                 <span class="s2">&quot;`x_index` is not good. Please set `x_index` from [&quot;</span>
@@ -525,6 +534,12 @@
                 <span class="s2">&quot; y&quot;</span>
                 <span class="s2">&quot;, &quot;</span>
                 <span class="s2">&quot; psi&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; delta&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; δ&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; npm&quot;</span>
                 <span class="s2">&quot;]&quot;</span>
             <span class="p">)</span>
 
@@ -543,6 +558,12 @@
             <span class="n">target_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
         <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;psi&quot;</span><span class="p">:</span>
             <span class="n">target_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi</span>
+        <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;delta&quot;</span><span class="p">:</span>
+            <span class="n">target_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">δ</span>
+        <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;δ&quot;</span><span class="p">:</span>
+            <span class="n">target_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">δ</span>
+        <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;npm&quot;</span><span class="p">:</span>
+            <span class="n">target_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">npm</span>
         <span class="k">if</span> <span class="n">target_y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
                 <span class="s2">&quot;`y_index` is not good. Please set `y_index` from [&quot;</span>
@@ -559,6 +580,13 @@
                 <span class="s2">&quot; y&quot;</span>
                 <span class="s2">&quot;, &quot;</span>
                 <span class="s2">&quot; psi&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; delta&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; δ&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; npm&quot;</span>
+                <span class="s2">&quot;]&quot;</span>
                 <span class="s2">&quot;]&quot;</span>
             <span class="p">)</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span>
@@ -581,6 +609,440 @@
             <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">target_x</span><span class="p">,</span> <span class="n">target_y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">target_x</span><span class="p">,</span> <span class="n">target_y</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">save_fig_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">fig</span></div>
+
+<div class="viewcode-block" id="ShipObj3dof.draw_multi_x_chart"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.ship_obj_3dof.ShipObj3dof.draw_multi_x_chart">[docs]</a>    <span class="k">def</span> <span class="nf">draw_multi_x_chart</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">x_index_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">y_index</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">figsize</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">],</span>
+        <span class="n">dpi</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span>
+        <span class="n">facecolor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">edgecolor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">frameon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">FigureClass</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span>
+        <span class="n">clear</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">tight_layout</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">constrained_layout</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">save_fig_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Draw chart of multiple Y variables.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x_index_list (List[string]):</span>
+<span class="sd">                List of index value of X axis.</span>
+<span class="sd">            y_index (string):</span>
+<span class="sd">                Index value of Y axis.</span>
+<span class="sd">            xlabel (string, optional):</span>
+<span class="sd">                Label of X axis.</span>
+<span class="sd">                Defaults to None.</span>
+<span class="sd">            ylabel (string, optional):</span>
+<span class="sd">                Label of Y axis.</span>
+<span class="sd">                Defaults to None.</span>
+<span class="sd">            num (int or str, optional):</span>
+<span class="sd">                A unique identifier for the figure.</span>
+<span class="sd">                If a figure with that identifier already exists, this figure is made active and returned.</span>
+<span class="sd">                An integer refers to the Figure.number attribute, a string refers to the figure label.</span>
+<span class="sd">                If there is no figure with the identifier or num is not given,</span>
+<span class="sd">                a new figure is created, made active and returned.</span>
+<span class="sd">                If num is an int, it will be used for the Figure.number attribute.</span>
+<span class="sd">                Otherwise, an auto-generated integer value is used (starting at 1 and incremented for each new figure).</span>
+<span class="sd">                If num is a string, the figure label and the window title is set to this value.</span>
+<span class="sd">                Default to None.</span>
+<span class="sd">            figsize ((float, float), optional):</span>
+<span class="sd">                Width, height in inches.</span>
+<span class="sd">                Default to [6.4, 4.8]</span>
+<span class="sd">            dpi (float, optional):</span>
+<span class="sd">                The resolution of the figure in dots-per-inch.</span>
+<span class="sd">                Default to 100.0.</span>
+<span class="sd">            facecolor (str, optional):</span>
+<span class="sd">                The background color.</span>
+<span class="sd">            edgecolor (str, optional):</span>
+<span class="sd">                The border color.</span>
+<span class="sd">            frameon (bool, optional):</span>
+<span class="sd">                If False, suppress drawing the figure frame.</span>
+<span class="sd">                Defaults to True.</span>
+<span class="sd">            FigureClass (subclass of matplotlib.figure.Figure, optional):</span>
+<span class="sd">                Optionally use a custom Figure instance.</span>
+<span class="sd">                Defaults to matplotlib.figure.Figure.</span>
+<span class="sd">            clear (bool, optional):</span>
+<span class="sd">                If True and the figure already exists, then it is cleared.</span>
+<span class="sd">                Defaults to False.</span>
+<span class="sd">            tight_layout (bool, optional):</span>
+<span class="sd">                If False use subplotpars.</span>
+<span class="sd">                If True adjust subplot parameters using tight_layout with default padding.</span>
+<span class="sd">                When providing a dict containing the keys pad, w_pad, h_pad, and rect,</span>
+<span class="sd">                the default tight_layout paddings will be overridden.</span>
+<span class="sd">                Defaults to False.</span>
+<span class="sd">            constrained_layout (bool, optional):</span>
+<span class="sd">                If True use constrained layout to adjust positioning of plot elements.</span>
+<span class="sd">                Like tight_layout, but designed to be more flexible.</span>
+<span class="sd">                See Constrained Layout Guide for examples.</span>
+<span class="sd">                (Note: does not work with add_subplot or subplot2grid.)</span>
+<span class="sd">                Defaults to False.</span>
+<span class="sd">            fmt (str, optional):</span>
+<span class="sd">                A format string, e.g. &#39;ro&#39; for red circles.</span>
+<span class="sd">                See the Notes section for a full description of the format strings.</span>
+<span class="sd">                Format strings are just an abbreviation for quickly setting basic line properties.</span>
+<span class="sd">                All of these and more can also be controlled by keyword arguments.</span>
+<span class="sd">                This argument cannot be passed as keyword.</span>
+<span class="sd">                Defaults to None.</span>
+<span class="sd">            save_fig_path (str, optional):</span>
+<span class="sd">                Path of saving figure.</span>
+<span class="sd">                Defaults to None.</span>
+<span class="sd">            **kwargs (matplotlib.lines.Line2D properties, optional):</span>
+<span class="sd">                kwargs are used to specify properties</span>
+<span class="sd">                like a line label (for auto legends), linewidth, antialiasing, marker face color.</span>
+<span class="sd">                You can show the detailed information at `matplotlib.lines.Line2D</span>
+<span class="sd">                 &lt;https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D&gt;`_</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            matplotlib.pyplot.Figure: Figure</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; ship.draw_chart(&quot;time&quot;, &quot;r&quot;, xlabel=&quot;time [sec]&quot;, \</span>
+<span class="sd">            &gt;&gt;&gt; ylabel=r&quot;$u$&quot; + &quot; [rad/s]&quot;,save_fig_path=&#39;test.png&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">target_y</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;time&quot;</span><span class="p">:</span>
+            <span class="n">target_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span>
+        <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;u&quot;</span><span class="p">:</span>
+            <span class="n">target_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span>
+        <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;v&quot;</span><span class="p">:</span>
+            <span class="n">target_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v</span>
+        <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;r&quot;</span><span class="p">:</span>
+            <span class="n">target_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span>
+        <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;x&quot;</span><span class="p">:</span>
+            <span class="n">target_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+        <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
+            <span class="n">target_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+        <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;psi&quot;</span><span class="p">:</span>
+            <span class="n">target_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi</span>
+        <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;delta&quot;</span><span class="p">:</span>
+            <span class="n">target_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">δ</span>
+        <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;δ&quot;</span><span class="p">:</span>
+            <span class="n">target_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">δ</span>
+        <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;npm&quot;</span><span class="p">:</span>
+            <span class="n">target_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">npm</span>
+        <span class="k">if</span> <span class="n">target_y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;`x_index` is not good. Please set `x_index` from [&quot;</span>
+                <span class="s2">&quot;time&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; u&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; v&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; r&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; x&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; y&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; psi&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; delta&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; δ&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; npm&quot;</span>
+                <span class="s2">&quot;]&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">target_x_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">x_index</span> <span class="ow">in</span> <span class="n">x_index_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;time&quot;</span><span class="p">:</span>
+                <span class="n">target_x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;u&quot;</span><span class="p">:</span>
+                <span class="n">target_x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;v&quot;</span><span class="p">:</span>
+                <span class="n">target_x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;r&quot;</span><span class="p">:</span>
+                <span class="n">target_x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;x&quot;</span><span class="p">:</span>
+                <span class="n">target_x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
+                <span class="n">target_x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;psi&quot;</span><span class="p">:</span>
+                <span class="n">target_x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;delta&quot;</span><span class="p">:</span>
+                <span class="n">target_x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">δ</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;δ&quot;</span><span class="p">:</span>
+                <span class="n">target_x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">δ</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;npm&quot;</span><span class="p">:</span>
+                <span class="n">target_x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">npm</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_x_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;`y_index` is not good. Please set `y_index` from [&quot;</span>
+                <span class="s2">&quot;time&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; u&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; v&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; r&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; x&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; y&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; psi&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; delta&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; δ&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; npm&quot;</span>
+                <span class="s2">&quot;]&quot;</span>
+                <span class="s2">&quot;]&quot;</span>
+            <span class="p">)</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span>
+            <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">,</span>
+            <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
+            <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span>
+            <span class="n">facecolor</span><span class="o">=</span><span class="n">facecolor</span><span class="p">,</span>
+            <span class="n">edgecolor</span><span class="o">=</span><span class="n">edgecolor</span><span class="p">,</span>
+            <span class="n">frameon</span><span class="o">=</span><span class="n">frameon</span><span class="p">,</span>
+            <span class="n">FigureClass</span><span class="o">=</span><span class="n">FigureClass</span><span class="p">,</span>
+            <span class="n">clear</span><span class="o">=</span><span class="n">clear</span><span class="p">,</span>
+            <span class="n">tight_layout</span><span class="o">=</span><span class="n">tight_layout</span><span class="p">,</span>
+            <span class="n">constrained_layout</span><span class="o">=</span><span class="n">constrained_layout</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">xlabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ylabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fmt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">target_x</span> <span class="ow">in</span> <span class="n">target_x_list</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">target_x</span><span class="p">,</span> <span class="n">target_y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">target_x</span> <span class="ow">in</span> <span class="n">target_x_list</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">target_x</span><span class="p">,</span> <span class="n">target_y</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">save_fig_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">fig</span></div>
+
+<div class="viewcode-block" id="ShipObj3dof.draw_multi_y_chart"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.ship_obj_3dof.ShipObj3dof.draw_multi_y_chart">[docs]</a>    <span class="k">def</span> <span class="nf">draw_multi_y_chart</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">x_index</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">y_index_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">figsize</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">],</span>
+        <span class="n">dpi</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span>
+        <span class="n">facecolor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">edgecolor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">frameon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">FigureClass</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span>
+        <span class="n">clear</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">tight_layout</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">constrained_layout</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">save_fig_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Draw chart of multiple Y variables.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x_index (string):</span>
+<span class="sd">                Index value of X axis.</span>
+<span class="sd">            y_index_list (List[string]):</span>
+<span class="sd">                List of index value of Y axis.</span>
+<span class="sd">            xlabel (string, optional):</span>
+<span class="sd">                Label of X axis.</span>
+<span class="sd">                Defaults to None.</span>
+<span class="sd">            ylabel (string, optional):</span>
+<span class="sd">                Label of Y axis.</span>
+<span class="sd">                Defaults to None.</span>
+<span class="sd">            num (int or str, optional):</span>
+<span class="sd">                A unique identifier for the figure.</span>
+<span class="sd">                If a figure with that identifier already exists, this figure is made active and returned.</span>
+<span class="sd">                An integer refers to the Figure.number attribute, a string refers to the figure label.</span>
+<span class="sd">                If there is no figure with the identifier or num is not given,</span>
+<span class="sd">                a new figure is created, made active and returned.</span>
+<span class="sd">                If num is an int, it will be used for the Figure.number attribute.</span>
+<span class="sd">                Otherwise, an auto-generated integer value is used (starting at 1 and incremented for each new figure).</span>
+<span class="sd">                If num is a string, the figure label and the window title is set to this value.</span>
+<span class="sd">                Default to None.</span>
+<span class="sd">            figsize ((float, float), optional):</span>
+<span class="sd">                Width, height in inches.</span>
+<span class="sd">                Default to [6.4, 4.8]</span>
+<span class="sd">            dpi (float, optional):</span>
+<span class="sd">                The resolution of the figure in dots-per-inch.</span>
+<span class="sd">                Default to 100.0.</span>
+<span class="sd">            facecolor (str, optional):</span>
+<span class="sd">                The background color.</span>
+<span class="sd">            edgecolor (str, optional):</span>
+<span class="sd">                The border color.</span>
+<span class="sd">            frameon (bool, optional):</span>
+<span class="sd">                If False, suppress drawing the figure frame.</span>
+<span class="sd">                Defaults to True.</span>
+<span class="sd">            FigureClass (subclass of matplotlib.figure.Figure, optional):</span>
+<span class="sd">                Optionally use a custom Figure instance.</span>
+<span class="sd">                Defaults to matplotlib.figure.Figure.</span>
+<span class="sd">            clear (bool, optional):</span>
+<span class="sd">                If True and the figure already exists, then it is cleared.</span>
+<span class="sd">                Defaults to False.</span>
+<span class="sd">            tight_layout (bool, optional):</span>
+<span class="sd">                If False use subplotpars.</span>
+<span class="sd">                If True adjust subplot parameters using tight_layout with default padding.</span>
+<span class="sd">                When providing a dict containing the keys pad, w_pad, h_pad, and rect,</span>
+<span class="sd">                the default tight_layout paddings will be overridden.</span>
+<span class="sd">                Defaults to False.</span>
+<span class="sd">            constrained_layout (bool, optional):</span>
+<span class="sd">                If True use constrained layout to adjust positioning of plot elements.</span>
+<span class="sd">                Like tight_layout, but designed to be more flexible.</span>
+<span class="sd">                See Constrained Layout Guide for examples.</span>
+<span class="sd">                (Note: does not work with add_subplot or subplot2grid.)</span>
+<span class="sd">                Defaults to False.</span>
+<span class="sd">            fmt (str, optional):</span>
+<span class="sd">                A format string, e.g. &#39;ro&#39; for red circles.</span>
+<span class="sd">                See the Notes section for a full description of the format strings.</span>
+<span class="sd">                Format strings are just an abbreviation for quickly setting basic line properties.</span>
+<span class="sd">                All of these and more can also be controlled by keyword arguments.</span>
+<span class="sd">                This argument cannot be passed as keyword.</span>
+<span class="sd">                Defaults to None.</span>
+<span class="sd">            save_fig_path (str, optional):</span>
+<span class="sd">                Path of saving figure.</span>
+<span class="sd">                Defaults to None.</span>
+<span class="sd">            **kwargs (matplotlib.lines.Line2D properties, optional):</span>
+<span class="sd">                kwargs are used to specify properties</span>
+<span class="sd">                like a line label (for auto legends), linewidth, antialiasing, marker face color.</span>
+<span class="sd">                You can show the detailed information at `matplotlib.lines.Line2D</span>
+<span class="sd">                 &lt;https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D&gt;`_</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            matplotlib.pyplot.Figure: Figure</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; ship.draw_chart(&quot;time&quot;, &quot;r&quot;, xlabel=&quot;time [sec]&quot;, \</span>
+<span class="sd">            &gt;&gt;&gt; ylabel=r&quot;$u$&quot; + &quot; [rad/s]&quot;,save_fig_path=&#39;test.png&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">target_x</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;time&quot;</span><span class="p">:</span>
+            <span class="n">target_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span>
+        <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;u&quot;</span><span class="p">:</span>
+            <span class="n">target_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span>
+        <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;v&quot;</span><span class="p">:</span>
+            <span class="n">target_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v</span>
+        <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;r&quot;</span><span class="p">:</span>
+            <span class="n">target_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span>
+        <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;x&quot;</span><span class="p">:</span>
+            <span class="n">target_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+        <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
+            <span class="n">target_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+        <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;psi&quot;</span><span class="p">:</span>
+            <span class="n">target_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi</span>
+        <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;delta&quot;</span><span class="p">:</span>
+            <span class="n">target_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">δ</span>
+        <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;δ&quot;</span><span class="p">:</span>
+            <span class="n">target_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">δ</span>
+        <span class="k">elif</span> <span class="n">x_index</span> <span class="o">==</span> <span class="s2">&quot;npm&quot;</span><span class="p">:</span>
+            <span class="n">target_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">npm</span>
+        <span class="k">if</span> <span class="n">target_x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;`x_index` is not good. Please set `x_index` from [&quot;</span>
+                <span class="s2">&quot;time&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; u&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; v&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; r&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; x&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; y&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; psi&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; delta&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; δ&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; npm&quot;</span>
+                <span class="s2">&quot;]&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">target_y_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">y_index</span> <span class="ow">in</span> <span class="n">y_index_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;time&quot;</span><span class="p">:</span>
+                <span class="n">target_y_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;u&quot;</span><span class="p">:</span>
+                <span class="n">target_y_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;v&quot;</span><span class="p">:</span>
+                <span class="n">target_y_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;r&quot;</span><span class="p">:</span>
+                <span class="n">target_y_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;x&quot;</span><span class="p">:</span>
+                <span class="n">target_y_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
+                <span class="n">target_y_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;psi&quot;</span><span class="p">:</span>
+                <span class="n">target_y_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;delta&quot;</span><span class="p">:</span>
+                <span class="n">target_y_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">δ</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;δ&quot;</span><span class="p">:</span>
+                <span class="n">target_y_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">δ</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">y_index</span> <span class="o">==</span> <span class="s2">&quot;npm&quot;</span><span class="p">:</span>
+                <span class="n">target_y_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">npm</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_y_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;`y_index` is not good. Please set `y_index` from [&quot;</span>
+                <span class="s2">&quot;time&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; u&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; v&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; r&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; x&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; y&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; psi&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; delta&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; δ&quot;</span>
+                <span class="s2">&quot;, &quot;</span>
+                <span class="s2">&quot; npm&quot;</span>
+                <span class="s2">&quot;]&quot;</span>
+                <span class="s2">&quot;]&quot;</span>
+            <span class="p">)</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span>
+            <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">,</span>
+            <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
+            <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span>
+            <span class="n">facecolor</span><span class="o">=</span><span class="n">facecolor</span><span class="p">,</span>
+            <span class="n">edgecolor</span><span class="o">=</span><span class="n">edgecolor</span><span class="p">,</span>
+            <span class="n">frameon</span><span class="o">=</span><span class="n">frameon</span><span class="p">,</span>
+            <span class="n">FigureClass</span><span class="o">=</span><span class="n">FigureClass</span><span class="p">,</span>
+            <span class="n">clear</span><span class="o">=</span><span class="n">clear</span><span class="p">,</span>
+            <span class="n">tight_layout</span><span class="o">=</span><span class="n">tight_layout</span><span class="p">,</span>
+            <span class="n">constrained_layout</span><span class="o">=</span><span class="n">constrained_layout</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">xlabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ylabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fmt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">target_y</span> <span class="ow">in</span> <span class="n">target_y_list</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">target_x</span><span class="p">,</span> <span class="n">target_y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">target_y</span> <span class="ow">in</span> <span class="n">target_y_list</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">target_x</span><span class="p">,</span> <span class="n">target_y</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">save_fig_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>

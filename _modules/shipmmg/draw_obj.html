@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>shipmmg.draw_obj &mdash; shipmmg 0.0.5 documentation</title>
+  <title>shipmmg.draw_obj &mdash; shipmmg 0.0.7 documentation</title>
   
 
   
@@ -170,7 +170,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">))</span>
 
 <div class="viewcode-block" id="DrawObj.draw_obj_with_angle"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.draw_obj.DrawObj.draw_obj_with_angle">[docs]</a>    <span class="k">def</span> <span class="nf">draw_obj_with_angle</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">center_x_list</span><span class="p">,</span> <span class="n">center_y_list</span><span class="p">,</span> <span class="n">shape_list</span><span class="p">,</span> <span class="n">angle_list</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="s1">&#39;ship&#39;</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">center_x_list</span><span class="p">,</span> <span class="n">center_y_list</span><span class="p">,</span> <span class="n">shape_list</span><span class="p">,</span> <span class="n">angle_list</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="s2">&quot;ship&quot;</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Draw square image with angle</span>
 <span class="sd">        Args:</span>
@@ -183,11 +183,11 @@
 <span class="sd">            Image: List of Image</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">shape_list</span><span class="p">)):</span>
-            <span class="k">if</span> <span class="n">obj</span> <span class="o">==</span> <span class="s1">&#39;square&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">obj</span> <span class="o">==</span> <span class="s2">&quot;square&quot;</span><span class="p">:</span>
                 <span class="n">square_x</span><span class="p">,</span> <span class="n">square_y</span><span class="p">,</span> <span class="n">angle_x</span><span class="p">,</span> <span class="n">angle_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__square_with_angle</span><span class="p">(</span>
                     <span class="n">center_x_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">center_y_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">shape_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">angle_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                 <span class="p">)</span>
-            <span class="k">elif</span> <span class="n">obj</span> <span class="o">==</span> <span class="s1">&#39;ship&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">obj</span> <span class="o">==</span> <span class="s2">&quot;ship&quot;</span><span class="p">:</span>
                 <span class="n">square_x</span><span class="p">,</span> <span class="n">square_y</span><span class="p">,</span> <span class="n">angle_x</span><span class="p">,</span> <span class="n">angle_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__ship_with_angle</span><span class="p">(</span>
                     <span class="n">center_x_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">center_y_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">shape_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">angle_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                 <span class="p">)</span>
@@ -255,12 +255,12 @@
         <span class="c1"># create point in counterclockwise, local</span>
         <span class="n">ship_xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
             <span class="p">[</span>
-                <span class="p">[</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                <span class="p">[</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.75</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
                 <span class="p">[</span><span class="o">-</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
                 <span class="p">[</span><span class="o">-</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
-                <span class="p">[</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mf">0.75</span><span class="p">,</span> <span class="o">-</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                <span class="p">[</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.75</span><span class="p">,</span> <span class="o">-</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
                 <span class="p">[</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
-                <span class="p">[</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+                <span class="p">[</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.75</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
             <span class="p">]</span>
         <span class="p">)</span>
         <span class="c1"># translate position to world</span>
