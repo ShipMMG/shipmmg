@@ -49,8 +49,10 @@ class Mmg3DofBasicParams:
             Rudder force increase factor
         x_H (float):
             Longitudinal coordinate of acting point of the additional lateral force component induced by steering
-        γ_R (float):
-            Flow straightening coefficient
+        γ_R_minus (float):
+            Flow straightening coefficient if βR < 0
+        γ_R_plus (float):
+            Flow straightening coefficient if βR > 0
         l_R (float):
             Effective longitudinal coordinate of rudder position in formula of βR
         κ (float):
@@ -86,7 +88,8 @@ class Mmg3DofBasicParams:
     t_R: float
     a_H: float
     x_H: float
-    γ_R: float
+    γ_R_minus: float
+    γ_R_plus: float
     l_R: float
     κ: float
     t_P: float
@@ -315,7 +318,8 @@ def simulate_mmg_3dof(
         >>>                     t_R=0.387,
         >>>                     a_H=0.312,
         >>>                     x_H=-0.464*L_pp,
-        >>>                     γ_R=0.395,
+        >>>                     γ_R_minus=0.395,
+        >>>                     γ_R_plus=0.640,
         >>>                     l_R=-0.710,
         >>>                     κ=0.50,
         >>>                     t_P=0.220,
@@ -380,7 +384,8 @@ def simulate_mmg_3dof(
         t_R=basic_params.t_R,
         a_H=basic_params.a_H,
         x_H=basic_params.x_H,
-        γ_R=basic_params.γ_R,
+        γ_R_minus=basic_params.γ_R_minus,
+        γ_R_plus=basic_params.γ_R_plus,
         l_R=basic_params.l_R,
         κ=basic_params.κ,
         t_P=basic_params.t_P,
@@ -439,7 +444,8 @@ def simulate(
     t_R: float,
     a_H: float,
     x_H: float,
-    γ_R: float,
+    γ_R_minus: float,
+    γ_R_plus: float,
     l_R: float,
     κ: float,
     t_P: float,
@@ -524,8 +530,10 @@ def simulate(
             Rudder force increase factor
         x_H (float):
             Longitudinal coordinate of acting point of the additional lateral force component induced by steering
-        γ_R (float):
-            Flow straightening coefficient
+        γ_R_minus (float):
+            Flow straightening coefficient if βR < 0
+        γ_R_plus (float):
+            Flow straightening coefficient if βR > 0
         l_R (float):
             Effective longitudinal coordinate of rudder position in formula of βR
         κ (float):
@@ -811,7 +819,9 @@ def simulate(
 
         J = 0.0 if npm == 0.0 else (1 - w_P) * u / (npm * D_p)
         K_T = k_0 + k_1 * J + k_2 * J ** 2
-        v_R = U * γ_R * (β - l_R * r_dash)
+        β_R = β - l_R * r_dash
+        γ_R = γ_R_minus if β_R < 0.0 else γ_R_plus
+        v_R = U * γ_R * β_R
         u_R = (
             np.sqrt(η * (κ * ϵ * 8.0 * k_0 * npm ** 2 * D_p ** 4 / np.pi) ** 2)
             if J == 0.0
@@ -977,14 +987,16 @@ def get_sub_values_from_simulation_result(
     r_dash_list = list(
         map(lambda U, r: 0.0 if U == 0.0 else r * basic_params.L_pp / U, U_list, r_list)
     )
-    # w_P_list = [basic_params.w_P0 for i in range(len(r_dash_list))]
-    w_P_list = list(
+    β_P_list = list(
         map(
-            lambda β, r_dash: basic_params.w_P0
-            * np.exp(-4.0 * (β - basic_params.x_P * r_dash) ** 2),
+            lambda β, r_dash: β - basic_params.x_P * r_dash,
             β_list,
             r_dash_list,
         )
+    )
+    # w_P_list = [basic_params.w_P0 for i in range(len(r_dash_list))]
+    w_P_list = list(
+        map(lambda β_P: basic_params.w_P0 * np.exp(-4.0 * β_P ** 2), β_P_list)
     )
     J_list = list(
         map(
@@ -1004,12 +1016,25 @@ def get_sub_values_from_simulation_result(
             J_list,
         )
     )
-    v_R_list = list(
+    β_R_list = list(
         map(
-            lambda U, β, r_dash: U * basic_params.γ_R * (β - basic_params.l_R * r_dash),
-            U_list,
+            lambda β, r_dash: β - basic_params.l_R * r_dash,
             β_list,
             r_dash_list,
+        )
+    )
+    γ_R_list = list(
+        map(
+            lambda β_R: basic_params.γ_R_minus if β_R < 0.0 else basic_params.γ_R_plus,
+            β_R_list,
+        )
+    )
+    v_R_list = list(
+        map(
+            lambda U, γ_R, β_R: U * γ_R * β_R,
+            U_list,
+            γ_R_list,
+            β_R_list,
         )
     )
     u_R_list = list(
@@ -1163,9 +1188,12 @@ def get_sub_values_from_simulation_result(
             β_list,
             v_dash_list,
             r_dash_list,
+            β_P_list,
             w_P_list,
             J_list,
             K_T_list,
+            β_R_list,
+            γ_R_list,
             v_R_list,
             u_R_list,
             U_R_list,

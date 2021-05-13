@@ -37,10 +37,10 @@ def ship_KVLCC2_L7_model():
     t_R = 0.387  # 操縦抵抗減少率
     a_H = 0.312  # 舵力増加係数
     x_H_dash = -0.464  # 舵力増分作用位置
-    γ_R = 0.395  # 整流係数
-    # γ_R = 0.640  # 整流係数
+    γ_R_minus = 0.395  # 整流係数
+    γ_R_plus = 0.640  # 整流係数
     l_r_dash = -0.710  # 船長に対する舵位置
-    x_P_dash = -0.650  # 船長に対するプロペラ位置
+    x_P_dash = -0.690  # 船長に対するプロペラ位置
     ϵ = 1.09  # プロペラ・舵位置伴流係数比
     κ = 0.50  # 修正係数
     f_α = 2.747  # 直圧力勾配係数
@@ -63,7 +63,8 @@ def ship_KVLCC2_L7_model():
         t_R=t_R,  # 操縦抵抗減少率
         a_H=a_H,  # 舵力増加係数
         x_H=x_H_dash * L_pp,  # 舵力増分作用位置
-        γ_R=γ_R,  # 整流係数
+        γ_R_minus=γ_R_minus,  # 整流係数
+        γ_R_plus=γ_R_plus,  # 整流係数
         l_R=l_r_dash,  # 船長に対する舵位置
         κ=κ,  # 修正係数
         t_P=t_P,  # 推力減少率
@@ -183,9 +184,12 @@ def test_get_sub_values_from_simulation_result(
         β_list,
         v_dash_list,
         r_dash_list,
+        β_P_list,
         w_P_list,
         J_list,
         K_T_list,
+        β_R_list,
+        γ_R_list,
         v_R_list,
         u_R_list,
         U_R_list,
@@ -326,9 +330,9 @@ def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model):
 def test_zigzag_test_mmg(ship_KVLCC2_L7_model):
 
     basic_params, maneuvering_params = ship_KVLCC2_L7_model
-    target_δ_rad = 10.0 * np.pi / 180.0
-    target_ψ_rad_deviation = -10.0 * np.pi / 180.0
-    duration = 100
+    target_δ_rad = 20.0 * np.pi / 180.0
+    target_ψ_rad_deviation = 20.0 * np.pi / 180.0
+    duration = 80
     num_of_sampling = 10000
     time_list = np.linspace(0.00, duration, num_of_sampling)
     n_const = 17.95  # [rpm]
@@ -341,7 +345,6 @@ def test_zigzag_test_mmg(ship_KVLCC2_L7_model):
         target_ψ_rad_deviation,
         time_list,
         npm_list,
-        u0=1.18,
         δ_rad_rate=15.0 * np.pi / 180,
     )
 
@@ -371,9 +374,12 @@ def test_zigzag_test_mmg(ship_KVLCC2_L7_model):
         β_list,
         v_dash_list,
         r_dash_list,
+        β_P_list,
         w_P_list,
         J_list,
         K_T_list,
+        β_R_list,
+        γ_R_list,
         v_R_list,
         u_R_list,
         U_R_list,
@@ -438,9 +444,9 @@ def test_zigzag_test_mmg(ship_KVLCC2_L7_model):
     if os.path.exists(save_fig_path):
         os.remove(save_fig_path)
 
-    save_fig_path = "F_N.png"
+    save_fig_path = "gamma_R.png"
     fig = plt.figure()
-    plt.plot(time_list, F_N_list)
+    plt.plot(time_list, γ_R_list)
     fig.savefig(save_fig_path)
     plt.close()
     if os.path.exists(save_fig_path):
