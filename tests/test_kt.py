@@ -38,18 +38,16 @@ def ship_kt(sim_result):
     return ship
 
 
-def test_Ship3DOF_drawing_function(ship_kt):
+def test_Ship3DOF_drawing_function(ship_kt, tmpdir):
     """Check drawing functions of Ship3DOF class by using KT simulation results"""
 
     # Ship3DOF.draw_xy_trajectory()
-    save_fig_path = "test.png"
+    save_fig_path = os.path.join(str(tmpdir),"test.png")
     ship_kt.draw_xy_trajectory(dimensionless=True, fmt="ro")
     ship_kt.draw_xy_trajectory(save_fig_path=save_fig_path)
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
-
+    
     # Ship3DOF.draw_chart()
-    save_fig_path = "test.png"
+    save_fig_path = os.path.join(str(tmpdir),"test.png")
     ship_kt.draw_chart(
         "time",
         "u",
@@ -65,8 +63,7 @@ def test_Ship3DOF_drawing_function(ship_kt):
         fmt="ro",
         save_fig_path=save_fig_path,
     )
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
+
 
     x_index_list = ["time", "u", "v", "r", "x", "y", "psi"]
     y_index_list = ["time", "u", "v", "r", "x", "y", "psi"]
@@ -81,14 +78,11 @@ def test_Ship3DOF_drawing_function(ship_kt):
 
     # Ship3DOF.draw_gif()
     ship_kt.draw_gif(fmt=None, save_fig_path=save_fig_path)
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
     ship_kt.draw_gif(dimensionless=True, save_fig_path=save_fig_path)
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
 
 
-def test_zigzag_test_kt():
+
+def test_zigzag_test_kt(tmpdir):
     K = 0.155
     T = 80.5
     kt_params = KTParams(K=K, T=T)
@@ -111,7 +105,7 @@ def test_zigzag_test_kt():
     ship.load_simulation_result(time_list, u_list, v_list, r_list)
     ship.δ = δ_list
 
-    save_fig_path = "test.png"
+    save_fig_path = os.path.join(str(tmpdir),"test.png")
     ship.draw_xy_trajectory(save_fig_path=save_fig_path)
     ship.draw_chart(
         "time",
@@ -134,10 +128,8 @@ def test_zigzag_test_kt():
         ylabel=r"$\delta$" + " [rad]",
         save_fig_path=save_fig_path,
     )
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
-
-    save_fig_path = "test_delta_psi.png"
+    
+    save_fig_path = os.path.join(str(tmpdir),"test_delta_psi.png")
     ship.draw_multi_y_chart(
         "time",
         ["delta", "psi"],
@@ -145,5 +137,4 @@ def test_zigzag_test_kt():
         ylabel="[rad]",
         save_fig_path=save_fig_path,
     )
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
+
