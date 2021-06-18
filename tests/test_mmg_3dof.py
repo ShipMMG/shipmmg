@@ -152,7 +152,7 @@ def kvlcc2_L7_35_turning(ship_KVLCC2_L7_model):
 
 
 def test_get_sub_values_from_simulation_result(
-    kvlcc2_L7_35_turning, ship_KVLCC2_L7_model
+    kvlcc2_L7_35_turning, ship_KVLCC2_L7_model, tmpdir
 ):
     basic_params, maneuvering_params = ship_KVLCC2_L7_model
     (
@@ -206,25 +206,26 @@ def test_get_sub_values_from_simulation_result(
         return_all_vals=True,
     )
 
-    save_fig_path = "testFN.png"
+    save_fig_path = os.path.join(str(tmpdir),"testFN.png")
+
     fig = plt.figure()
     plt.plot(kvlcc2_L7_35_turning.time, F_N_list)
     fig.savefig(save_fig_path)
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
 
 
-def test_Ship3DOF_drawing_function(kvlcc2_L7_35_turning):
+def test_Ship3DOF_drawing_function(kvlcc2_L7_35_turning,tmpdir):
     """Check drawing functions of Ship3DOF class by using MMG 3DOF simulation results."""
     # Ship3DOF.draw_xy_trajectory()
-    save_fig_path = "trajectory.png"
+    save_fig_path = os.path.join(str(tmpdir),"trajectory.png") 
+    
+
     kvlcc2_L7_35_turning.draw_xy_trajectory(dimensionless=True)
     kvlcc2_L7_35_turning.draw_xy_trajectory(save_fig_path=save_fig_path)
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
+
 
     # Ship3DOF.draw_chart()
-    save_fig_path = "param.png"
+    save_fig_path = os.path.join(str(tmpdir),"param.png")  
+
     kvlcc2_L7_35_turning.draw_chart(
         "time",
         "u",
@@ -232,8 +233,6 @@ def test_Ship3DOF_drawing_function(kvlcc2_L7_35_turning):
         ylabel=r"$u$" + " [m/s]",
         save_fig_path=save_fig_path,
     )
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
 
     x_index_list = ["time", "u", "v", "r", "x", "y", "psi"]
     y_index_list = ["time", "u", "v", "r", "x", "y", "psi"]
@@ -247,16 +246,14 @@ def test_Ship3DOF_drawing_function(kvlcc2_L7_35_turning):
         kvlcc2_L7_35_turning.draw_chart("hogehoge", "y")
 
     # Ship3DOF.draw_gif()
-    save_fig_path = "test.gif"
+    save_fig_path = os.path.join(str(tmpdir),"test.gif")
+    
     kvlcc2_L7_35_turning.draw_gif(save_fig_path=save_fig_path)
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
+    
     kvlcc2_L7_35_turning.draw_gif(dimensionless=True, save_fig_path=save_fig_path)
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
+    
 
-
-def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model):
+def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model,tmpdir):
     basic_params, maneuvering_params = ship_KVLCC2_L7_model
     target_δ_rad = 20.0 * np.pi / 180.0
     target_ψ_rad_deviation = -20.0 * np.pi / 180.0
@@ -280,7 +277,8 @@ def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model):
     ship.load_simulation_result(time_list, u_list, v_list, r_list)
     ship.δ = δ_list
 
-    save_fig_path = "test_psi.png"
+    save_fig_path = os.path.join(str(tmpdir),"test_psi.png")
+
     ship.draw_xy_trajectory(save_fig_path=save_fig_path)
     ship.draw_chart(
         "time",
@@ -289,10 +287,8 @@ def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model):
         ylabel=r"$\psi$" + " [rad]",
         save_fig_path=save_fig_path,
     )
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
 
-    save_fig_path = "test_delta.png"
+    save_fig_path = os.path.join(str(tmpdir),"test_delta.png")
     ship.draw_xy_trajectory(save_fig_path=save_fig_path)
     ship.draw_chart(
         "time",
@@ -301,10 +297,9 @@ def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model):
         ylabel=r"$\delta$" + " [rad]",
         save_fig_path=save_fig_path,
     )
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
 
-    save_fig_path = "test_delta_psi.png"
+    save_fig_path = os.path.join(str(tmpdir),"test_delta_psi.png")
+
     ship.draw_multi_y_chart(
         "time",
         ["delta", "psi"],
@@ -312,10 +307,9 @@ def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model):
         ylabel="[rad]",
         save_fig_path=save_fig_path,
     )
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
 
-    save_fig_path = "test_delta_psi.png"
+    save_fig_path = os.path.join(str(tmpdir),"test_delta_psi.png")
+
     ship.draw_multi_x_chart(
         ["delta", "psi"],
         "time",
@@ -323,11 +317,9 @@ def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model):
         xlabel="[rad]",
         save_fig_path=save_fig_path,
     )
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
 
 
-def test_zigzag_test_mmg(ship_KVLCC2_L7_model):
+def test_zigzag_test_mmg(ship_KVLCC2_L7_model, tmpdir):
 
     basic_params, maneuvering_params = ship_KVLCC2_L7_model
     target_δ_rad = 20.0 * np.pi / 180.0
@@ -353,14 +345,14 @@ def test_zigzag_test_mmg(ship_KVLCC2_L7_model):
     ship.δ = δ_list
     ship.npm = npm_list
 
-    save_fig_path = "delta_psi.png"
+    save_fig_path = os.path.join(str(tmpdir),"delta_psi.png")
+
     fig = plt.figure()
     plt.plot(time_list, list(map(lambda δ: δ * 180 / np.pi, ship.δ)))
     plt.plot(time_list, list(map(lambda psi: psi * 180 / np.pi, ship.psi)))
     fig.savefig(save_fig_path)
     plt.close()
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
+    
 
     (
         X_H_list,
@@ -396,58 +388,49 @@ def test_zigzag_test_mmg(ship_KVLCC2_L7_model):
         return_all_vals=True,
     )
 
-    save_fig_path = "w_P.png"
+    save_fig_path = os.path.join(str(tmpdir),"w_P.png")
     fig = plt.figure()
     plt.plot(time_list, w_P_list)
     fig.savefig(save_fig_path)
     plt.close()
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
 
-    save_fig_path = "J.png"
+    save_fig_path = os.path.join(str(tmpdir),"J.png")
     fig = plt.figure()
     plt.plot(time_list, J_list)
     fig.savefig(save_fig_path)
     plt.close()
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
 
-    save_fig_path = "K_T.png"
+
+    save_fig_path = os.path.join(str(tmpdir),"K_T.png")
+
     fig = plt.figure()
     plt.plot(time_list, K_T_list)
     fig.savefig(save_fig_path)
     plt.close()
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
 
-    save_fig_path = "U_R.png"
+
+    save_fig_path = os.path.join(str(tmpdir),"U_R.png")
     fig = plt.figure()
     plt.plot(time_list, U_R_list)
     fig.savefig(save_fig_path)
     plt.close()
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
 
-    save_fig_path = "α_R.png"
+    save_fig_path = os.path.join(str(tmpdir),"α_R.png")
     fig = plt.figure()
     plt.plot(time_list, α_R_list)
     fig.savefig(save_fig_path)
     plt.close()
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
 
-    save_fig_path = "F_N.png"
+
+    save_fig_path = os.path.join(str(tmpdir),"F_N.png")
     fig = plt.figure()
     plt.plot(time_list, F_N_list)
     fig.savefig(save_fig_path)
     plt.close()
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
 
-    save_fig_path = "gamma_R.png"
+    save_fig_path = os.path.join(str(tmpdir),"gamma_R.png")
     fig = plt.figure()
     plt.plot(time_list, γ_R_list)
     fig.savefig(save_fig_path)
     plt.close()
-    if os.path.exists(save_fig_path):
-        os.remove(save_fig_path)
+
