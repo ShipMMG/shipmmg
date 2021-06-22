@@ -308,7 +308,7 @@
 
 
 <div class="viewcode-block" id="test_get_sub_values_from_simulation_result"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_get_sub_values_from_simulation_result">[docs]</a><span class="k">def</span> <span class="nf">test_get_sub_values_from_simulation_result</span><span class="p">(</span>
-    <span class="n">kvlcc2_L7_35_turning</span><span class="p">,</span> <span class="n">ship_KVLCC2_L7_model</span>
+    <span class="n">kvlcc2_L7_35_turning</span><span class="p">,</span> <span class="n">ship_KVLCC2_L7_model</span><span class="p">,</span> <span class="n">tmpdir</span>
 <span class="p">):</span>
     <span class="n">basic_params</span><span class="p">,</span> <span class="n">maneuvering_params</span> <span class="o">=</span> <span class="n">ship_KVLCC2_L7_model</span>
     <span class="p">(</span>
@@ -362,25 +362,26 @@
         <span class="n">return_all_vals</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;testFN.png&quot;</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;testFN.png&quot;</span><span class="p">)</span>
+
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">F_N_list</span><span class="p">)</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span></div>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="test_Ship3DOF_drawing_function"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_Ship3DOF_drawing_function">[docs]</a><span class="k">def</span> <span class="nf">test_Ship3DOF_drawing_function</span><span class="p">(</span><span class="n">kvlcc2_L7_35_turning</span><span class="p">):</span>
+<div class="viewcode-block" id="test_Ship3DOF_drawing_function"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_Ship3DOF_drawing_function">[docs]</a><span class="k">def</span> <span class="nf">test_Ship3DOF_drawing_function</span><span class="p">(</span><span class="n">kvlcc2_L7_35_turning</span><span class="p">,</span><span class="n">tmpdir</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Check drawing functions of Ship3DOF class by using MMG 3DOF simulation results.&quot;&quot;&quot;</span>
     <span class="c1"># Ship3DOF.draw_xy_trajectory()</span>
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;trajectory.png&quot;</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;trajectory.png&quot;</span><span class="p">)</span> 
+    
+
     <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">dimensionless</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+
 
     <span class="c1"># Ship3DOF.draw_chart()</span>
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;param.png&quot;</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;param.png&quot;</span><span class="p">)</span>  
+
     <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span>
         <span class="s2">&quot;time&quot;</span><span class="p">,</span>
         <span class="s2">&quot;u&quot;</span><span class="p">,</span>
@@ -388,8 +389,6 @@
         <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u$&quot;</span> <span class="o">+</span> <span class="s2">&quot; [m/s]&quot;</span><span class="p">,</span>
         <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
 
     <span class="n">x_index_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;u&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;psi&quot;</span><span class="p">]</span>
     <span class="n">y_index_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;u&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;psi&quot;</span><span class="p">]</span>
@@ -403,16 +402,14 @@
         <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span><span class="s2">&quot;hogehoge&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">)</span>
 
     <span class="c1"># Ship3DOF.draw_gif()</span>
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;test.gif&quot;</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;test.gif&quot;</span><span class="p">)</span>
+    
     <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">draw_gif</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
-    <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">draw_gif</span><span class="p">(</span><span class="n">dimensionless</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span></div>
+    
+    <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">draw_gif</span><span class="p">(</span><span class="n">dimensionless</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span></div>
+    
 
-
-<div class="viewcode-block" id="test_zigzag_test_mmg_before"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_zigzag_test_mmg_before">[docs]</a><span class="k">def</span> <span class="nf">test_zigzag_test_mmg_before</span><span class="p">(</span><span class="n">ship_KVLCC2_L7_model</span><span class="p">):</span>
+<div class="viewcode-block" id="test_zigzag_test_mmg_before"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_zigzag_test_mmg_before">[docs]</a><span class="k">def</span> <span class="nf">test_zigzag_test_mmg_before</span><span class="p">(</span><span class="n">ship_KVLCC2_L7_model</span><span class="p">,</span><span class="n">tmpdir</span><span class="p">):</span>
     <span class="n">basic_params</span><span class="p">,</span> <span class="n">maneuvering_params</span> <span class="o">=</span> <span class="n">ship_KVLCC2_L7_model</span>
     <span class="n">target_δ_rad</span> <span class="o">=</span> <span class="mf">20.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
     <span class="n">target_ψ_rad_deviation</span> <span class="o">=</span> <span class="o">-</span><span class="mf">20.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
@@ -436,7 +433,8 @@
     <span class="n">ship</span><span class="o">.</span><span class="n">load_simulation_result</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">u_list</span><span class="p">,</span> <span class="n">v_list</span><span class="p">,</span> <span class="n">r_list</span><span class="p">)</span>
     <span class="n">ship</span><span class="o">.</span><span class="n">δ</span> <span class="o">=</span> <span class="n">δ_list</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;test_psi.png&quot;</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;test_psi.png&quot;</span><span class="p">)</span>
+
     <span class="n">ship</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">ship</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span>
         <span class="s2">&quot;time&quot;</span><span class="p">,</span>
@@ -445,10 +443,8 @@
         <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi$&quot;</span> <span class="o">+</span> <span class="s2">&quot; [rad]&quot;</span><span class="p">,</span>
         <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;test_delta.png&quot;</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;test_delta.png&quot;</span><span class="p">)</span>
     <span class="n">ship</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">ship</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span>
         <span class="s2">&quot;time&quot;</span><span class="p">,</span>
@@ -457,10 +453,9 @@
         <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\delta$&quot;</span> <span class="o">+</span> <span class="s2">&quot; [rad]&quot;</span><span class="p">,</span>
         <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;test_delta_psi.png&quot;</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;test_delta_psi.png&quot;</span><span class="p">)</span>
+
     <span class="n">ship</span><span class="o">.</span><span class="n">draw_multi_y_chart</span><span class="p">(</span>
         <span class="s2">&quot;time&quot;</span><span class="p">,</span>
         <span class="p">[</span><span class="s2">&quot;delta&quot;</span><span class="p">,</span> <span class="s2">&quot;psi&quot;</span><span class="p">],</span>
@@ -468,22 +463,19 @@
         <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;[rad]&quot;</span><span class="p">,</span>
         <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;test_delta_psi.png&quot;</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;test_delta_psi.png&quot;</span><span class="p">)</span>
+
     <span class="n">ship</span><span class="o">.</span><span class="n">draw_multi_x_chart</span><span class="p">(</span>
         <span class="p">[</span><span class="s2">&quot;delta&quot;</span><span class="p">,</span> <span class="s2">&quot;psi&quot;</span><span class="p">],</span>
         <span class="s2">&quot;time&quot;</span><span class="p">,</span>
         <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;time [sec]&quot;</span><span class="p">,</span>
         <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;[rad]&quot;</span><span class="p">,</span>
         <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span></div>
+    <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="test_zigzag_test_mmg"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_zigzag_test_mmg">[docs]</a><span class="k">def</span> <span class="nf">test_zigzag_test_mmg</span><span class="p">(</span><span class="n">ship_KVLCC2_L7_model</span><span class="p">):</span>
+<div class="viewcode-block" id="test_zigzag_test_mmg"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_zigzag_test_mmg">[docs]</a><span class="k">def</span> <span class="nf">test_zigzag_test_mmg</span><span class="p">(</span><span class="n">ship_KVLCC2_L7_model</span><span class="p">,</span> <span class="n">tmpdir</span><span class="p">):</span>
 
     <span class="n">basic_params</span><span class="p">,</span> <span class="n">maneuvering_params</span> <span class="o">=</span> <span class="n">ship_KVLCC2_L7_model</span>
     <span class="n">target_δ_rad</span> <span class="o">=</span> <span class="mf">20.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
@@ -509,14 +501,14 @@
     <span class="n">ship</span><span class="o">.</span><span class="n">δ</span> <span class="o">=</span> <span class="n">δ_list</span>
     <span class="n">ship</span><span class="o">.</span><span class="n">npm</span> <span class="o">=</span> <span class="n">npm_list</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;delta_psi.png&quot;</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;delta_psi.png&quot;</span><span class="p">)</span>
+
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">δ</span><span class="p">:</span> <span class="n">δ</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">ship</span><span class="o">.</span><span class="n">δ</span><span class="p">)))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">psi</span><span class="p">:</span> <span class="n">psi</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">ship</span><span class="o">.</span><span class="n">psi</span><span class="p">)))</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
+    
 
     <span class="p">(</span>
         <span class="n">X_H_list</span><span class="p">,</span>
@@ -552,61 +544,52 @@
         <span class="n">return_all_vals</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;w_P.png&quot;</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;w_P.png&quot;</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">w_P_list</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;J.png&quot;</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;J.png&quot;</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">J_list</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;K_T.png&quot;</span>
+
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;K_T.png&quot;</span><span class="p">)</span>
+
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">K_T_list</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;U_R.png&quot;</span>
+
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;U_R.png&quot;</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">U_R_list</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;α_R.png&quot;</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;α_R.png&quot;</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">α_R_list</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;F_N.png&quot;</span>
+
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;F_N.png&quot;</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">F_N_list</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="s2">&quot;gamma_R.png&quot;</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;gamma_R.png&quot;</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">γ_R_list</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span></div>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
 </pre></div>
 
            </div>
