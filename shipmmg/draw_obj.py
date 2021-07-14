@@ -1,13 +1,23 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""draw_obj.
+
+* Base class for drawing object not only for shipmmg.
+
+"""
+
 import numpy as np
 
 
 class DrawObj:
-    """
+    """DrawObj class.
+
     General class for drawing object by using matplotlib.animation.
     Multiple ships can be drawn by using this class.
     """
 
     def __init__(self, ax):
+        """init."""
         self.ax = ax
         self.img = []
         self.img.append(ax.plot([], [], color="b"))
@@ -16,7 +26,8 @@ class DrawObj:
     def draw_obj_with_angle(
         self, center_x_list, center_y_list, shape_list, angle_list, obj="ship"
     ):
-        """Draw square image with angle
+        """Draw square image with angle.
+
         Args:
             center_x_list (List[float]): list of the center x position of the square
             center_y_list (List[float]): list of the center y position of the square
@@ -40,7 +51,7 @@ class DrawObj:
         return self.img
 
     def __rotate_pos(self, pos, angle):
-        """Transformation the coordinate in the angle
+        """Transform the coordinate in the angle.
 
         Args:
             pos (numpy.ndarray): local state, shape(data_size, 2)
@@ -55,7 +66,8 @@ class DrawObj:
         return np.dot(pos, rot_mat.T)
 
     def __square(self, center_x, center_y, shape, angle):
-        """Create square
+        """Create square.
+
         Args:
             center_x (float): the center x position of the square
             center_y (float): the center y position of the square
@@ -85,7 +97,8 @@ class DrawObj:
         return trans_points[:, 0], trans_points[:, 1]
 
     def __ship(self, center_x, center_y, shape, angle):
-        """Create ship
+        """Create ship.
+
         Args:
             center_x (float): the center x position of the ship
             center_y (float): the center y position of the ship
@@ -116,7 +129,8 @@ class DrawObj:
         return trans_points[:, 0], trans_points[:, 1]
 
     def __square_with_angle(self, center_x, center_y, shape, angle):
-        """Create square with angle line
+        """Create square with angle line.
+
         Args:
             center_x (float): the center x position of the square
             center_y (float): the center y position of the square
@@ -136,7 +150,8 @@ class DrawObj:
         return square_x, square_y, angle_x, angle_y
 
     def __ship_with_angle(self, center_x, center_y, shape, angle):
-        """Create ship with angle line
+        """Create ship with angle line.
+
         Args:
             center_x (float): the center x position of the ship
             center_y (float): the center y position of the ship

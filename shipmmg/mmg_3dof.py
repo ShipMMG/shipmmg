@@ -1,12 +1,28 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""mmg_3dof.
+
+* MMG (3DOF) simulation code
+
+.. math::
+
+        m (\\dot{u}-vr)&=-m_x\\dot{u}+m_yvr+X_H+X_P+X_R
+
+        m (\\dot{v}+ur)&=-m_y\\dot{v}+m_xur+Y_H+Y_R
+
+        I_{zG}\\dot{r}&=-J_Z\\dot{r}+N_H+N_R
+
+"""
 
 import dataclasses
 from typing import List
+
 import numpy as np
-from scipy.misc import derivative
-from scipy.interpolate import interp1d
+
 from scipy.integrate import solve_ivp
+from scipy.interpolate import interp1d
+from scipy.misc import derivative
+
 from .ship_obj_3dof import ShipObj3dof
 
 
@@ -168,7 +184,8 @@ def simulate_mmg_3dof(
     vectorized=False,
     **options
 ):
-    """MMG 3DOF simulation
+    """MMG 3DOF simulation.
+
     MMG 3DOF simulation by follwoing equation of motion.
 
     .. math::
@@ -484,7 +501,8 @@ def simulate(
     vectorized=False,
     **options
 ):
-    """MMG 3DOF simulation
+    """MMG 3DOF simulation.
+
     MMG 3DOF simulation by follwoing equation of motion.
 
     .. math::
@@ -1232,7 +1250,7 @@ def zigzag_test_mmg_3dof(
     vectorized=False,
     **options
 ):
-    """Zig-zag test simulation
+    """Zig-zag test simulation.
 
     Args:
         basic_params (Mmg3DofBasicParams):
