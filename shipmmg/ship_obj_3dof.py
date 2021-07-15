@@ -931,6 +931,7 @@ class ShipObj3dof:
 
     def draw_gif(
         self,
+        obj: str = "ship",
         dimensionless: bool = False,
         aspect_equal: bool = True,
         frate: int = 10,
@@ -952,8 +953,11 @@ class ShipObj3dof:
         """Draw GIF of ship trajectory.
 
         Args:
+            obj (str, optional):
+                Drawing object is "ship" or "square".
+                Defaults to "ship".
             dimensionless (bool, optional):
-                drawing with dimensionless by using L or not.
+                Drawing with dimensionless by using L or not.
                 Defaults to False
             aspect_equal (bool, optional):
                 Set equal of figure aspect or not.
@@ -1074,7 +1078,7 @@ class ShipObj3dof:
             _ψ_list_j = list(ψT[j].T)
 
             return drawer.draw_obj_with_angle(
-                _x_list_j, _y_list_j, shape_list, _ψ_list_j
+                _x_list_j, _y_list_j, shape_list, _ψ_list_j, obj=obj
             )
 
         ani = FuncAnimation(
