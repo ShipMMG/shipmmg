@@ -74,6 +74,8 @@ class ShipObj3dof:
         u: List[float],
         v: List[float],
         r: List[float],
+        δ: List[float] = None,
+        npm: List[float] = None,
         x0: float = 0.0,
         y0: float = 0.0,
         psi0: float = 0.0,
@@ -91,6 +93,12 @@ class ShipObj3dof:
                 List of lateral velocity [m/s] in simulation result.
             r (list[float]):
                 List of rate of turn [rad/s] in simulation result.
+            δ (list[float]):
+                List of radder angle [rad] using simulation.
+                Defaults to None.
+            npm (list[float]):
+                List of engine revolution [rpm] using simulation.
+                Defaults to None.
             x0 (float, optional):
                 Inital position of X axis [m].
                 Defaults to 0.0.
@@ -128,19 +136,29 @@ class ShipObj3dof:
         self.u = u
         self.v = v
         self.r = r
+        self.δ = δ if δ is not None else None
+        self.npm = npm if npm is not None else None
         self.x = x
         self.y = y
         self.psi = psi
 
     def estimate_KT_LSM(self):
+        """Estimate KT by least square method.
+
+        Returns:
+            (K, T): KT params
+        """
+        return self.__estimate_KT_LSM(self.time, self.δ, self.r)
+
+    def __estimate_KT_LSM(self, time_list, δ_list, r_list):
         """Estimate KT by least square method."""
-        A = np.c_[self.δ, self.r]
-        spl_r = scipy.interpolate.interp1d(self.time, self.r, fill_value="extrapolate")
-        B = np.array([derivative(spl_r, t) for t in self.time])
+        A = np.c_[δ_list, r_list]
+        spl_r = scipy.interpolate.interp1d(time_list, r_list, fill_value="extrapolate")
+        B = np.array([derivative(spl_r, t) for t in time_list])
         THETA = np.linalg.pinv(A).dot(B.T)
         T = -1.0 / THETA[1]
         K = THETA[0] * T
-        return K, T
+        return (K, T)
 
     def draw_xy_trajectory(
         self,
@@ -382,9 +400,7 @@ class ShipObj3dof:
             target_x = self.y
         elif x_index == "psi":
             target_x = self.psi
-        elif x_index == "delta":
-            target_x = self.δ
-        elif x_index == "δ":
+        elif x_index == "delta" or x_index == "δ":
             target_x = self.δ
         elif x_index == "npm":
             target_x = self.npm
@@ -428,9 +444,7 @@ class ShipObj3dof:
             target_y = self.y
         elif y_index == "psi":
             target_y = self.psi
-        elif y_index == "delta":
-            target_y = self.δ
-        elif y_index == "δ":
+        elif y_index == "delta" or y_index == "δ":
             target_y = self.δ
         elif y_index == "npm":
             target_y = self.npm
@@ -485,439 +499,435 @@ class ShipObj3dof:
 
         return fig
 
-    def draw_multi_x_chart(
-        self,
-        x_index_list: List[str],
-        y_index: str,
-        xlabel: str = None,
-        ylabel: str = None,
-        num: int or str = None,
-        figsize: List[float] = [6.4, 4.8],
-        dpi: float = 100.0,
-        facecolor: str = None,
-        edgecolor: str = None,
-        frameon: bool = True,
-        FigureClass: matplotlib.figure.Figure = matplotlib.figure.Figure,
-        clear: bool = False,
-        tight_layout: bool = False,
-        constrained_layout: bool = False,
-        fmt: str = None,
-        save_fig_path: str = None,
-        **kwargs
-    ) -> plt.Figure:
-        """Draw chart of multiple Y variables.
+    # def draw_multi_x_chart(
+    #     self,
+    #     x_index_list: List[str],
+    #     y_index: str,
+    #     xlabel: str = None,
+    #     ylabel: str = None,
+    #     num: int or str = None,
+    #     figsize: List[float] = [6.4, 4.8],
+    #     dpi: float = 100.0,
+    #     facecolor: str = None,
+    #     edgecolor: str = None,
+    #     frameon: bool = True,
+    #     FigureClass: matplotlib.figure.Figure = matplotlib.figure.Figure,
+    #     clear: bool = False,
+    #     tight_layout: bool = False,
+    #     constrained_layout: bool = False,
+    #     fmt: str = None,
+    #     save_fig_path: str = None,
+    #     **kwargs
+    # ) -> plt.Figure:
+    #     """Draw chart of multiple Y variables.
 
-        Args:
-            x_index_list (List[string]):
-                List of index value of X axis.
-            y_index (string):
-                Index value of Y axis.
-            xlabel (string, optional):
-                Label of X axis.
-                Defaults to None.
-            ylabel (string, optional):
-                Label of Y axis.
-                Defaults to None.
-            num (int or str, optional):
-                A unique identifier for the figure.
-                If a figure with that identifier already exists, this figure is made active and returned.
-                An integer refers to the Figure.number attribute, a string refers to the figure label.
-                If there is no figure with the identifier or num is not given,
-                a new figure is created, made active and returned.
-                If num is an int, it will be used for the Figure.number attribute.
-                Otherwise, an auto-generated integer value is used (starting at 1 and incremented for each new figure).
-                If num is a string, the figure label and the window title is set to this value.
-                Default to None.
-            figsize ((float, float), optional):
-                Width, height in inches.
-                Default to [6.4, 4.8]
-            dpi (float, optional):
-                The resolution of the figure in dots-per-inch.
-                Default to 100.0.
-            facecolor (str, optional):
-                The background color.
-            edgecolor (str, optional):
-                The border color.
-            frameon (bool, optional):
-                If False, suppress drawing the figure frame.
-                Defaults to True.
-            FigureClass (subclass of matplotlib.figure.Figure, optional):
-                Optionally use a custom Figure instance.
-                Defaults to matplotlib.figure.Figure.
-            clear (bool, optional):
-                If True and the figure already exists, then it is cleared.
-                Defaults to False.
-            tight_layout (bool, optional):
-                If False use subplotpars.
-                If True adjust subplot parameters using tight_layout with default padding.
-                When providing a dict containing the keys pad, w_pad, h_pad, and rect,
-                the default tight_layout paddings will be overridden.
-                Defaults to False.
-            constrained_layout (bool, optional):
-                If True use constrained layout to adjust positioning of plot elements.
-                Like tight_layout, but designed to be more flexible.
-                See Constrained Layout Guide for examples.
-                (Note: does not work with add_subplot or subplot2grid.)
-                Defaults to False.
-            fmt (str, optional):
-                A format string, e.g. 'ro' for red circles.
-                See the Notes section for a full description of the format strings.
-                Format strings are just an abbreviation for quickly setting basic line properties.
-                All of these and more can also be controlled by keyword arguments.
-                This argument cannot be passed as keyword.
-                Defaults to None.
-            save_fig_path (str, optional):
-                Path of saving figure.
-                Defaults to None.
-            **kwargs (matplotlib.lines.Line2D properties, optional):
-                kwargs are used to specify properties
-                like a line label (for auto legends), linewidth, antialiasing, marker face color.
-                You can show the detailed information at `matplotlib.lines.Line2D
-                 <https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D>`_
-        Returns:
-            matplotlib.pyplot.Figure: Figure
+    #     Args:
+    #         x_index_list (List[string]):
+    #             List of index value of X axis.
+    #         y_index (string):
+    #             Index value of Y axis.
+    #         xlabel (string, optional):
+    #             Label of X axis.
+    #             Defaults to None.
+    #         ylabel (string, optional):
+    #             Label of Y axis.
+    #             Defaults to None.
+    #         num (int or str, optional):
+    #             A unique identifier for the figure.
+    #             If a figure with that identifier already exists, this figure is made active and returned.
+    #             An integer refers to the Figure.number attribute, a string refers to the figure label.
+    #             If there is no figure with the identifier or num is not given,
+    #             a new figure is created, made active and returned.
+    #             If num is an int, it will be used for the Figure.number attribute.
+    #             Otherwise, an auto-generated integer value is used (starting at 1 & incremented for each new figure).
+    #             If num is a string, the figure label and the window title is set to this value.
+    #             Default to None.
+    #         figsize ((float, float), optional):
+    #             Width, height in inches.
+    #             Default to [6.4, 4.8]
+    #         dpi (float, optional):
+    #             The resolution of the figure in dots-per-inch.
+    #             Default to 100.0.
+    #         facecolor (str, optional):
+    #             The background color.
+    #         edgecolor (str, optional):
+    #             The border color.
+    #         frameon (bool, optional):
+    #             If False, suppress drawing the figure frame.
+    #             Defaults to True.
+    #         FigureClass (subclass of matplotlib.figure.Figure, optional):
+    #             Optionally use a custom Figure instance.
+    #             Defaults to matplotlib.figure.Figure.
+    #         clear (bool, optional):
+    #             If True and the figure already exists, then it is cleared.
+    #             Defaults to False.
+    #         tight_layout (bool, optional):
+    #             If False use subplotpars.
+    #             If True adjust subplot parameters using tight_layout with default padding.
+    #             When providing a dict containing the keys pad, w_pad, h_pad, and rect,
+    #             the default tight_layout paddings will be overridden.
+    #             Defaults to False.
+    #         constrained_layout (bool, optional):
+    #             If True use constrained layout to adjust positioning of plot elements.
+    #             Like tight_layout, but designed to be more flexible.
+    #             See Constrained Layout Guide for examples.
+    #             (Note: does not work with add_subplot or subplot2grid.)
+    #             Defaults to False.
+    #         fmt (str, optional):
+    #             A format string, e.g. 'ro' for red circles.
+    #             See the Notes section for a full description of the format strings.
+    #             Format strings are just an abbreviation for quickly setting basic line properties.
+    #             All of these and more can also be controlled by keyword arguments.
+    #             This argument cannot be passed as keyword.
+    #             Defaults to None.
+    #         save_fig_path (str, optional):
+    #             Path of saving figure.
+    #             Defaults to None.
+    #         **kwargs (matplotlib.lines.Line2D properties, optional):
+    #             kwargs are used to specify properties
+    #             like a line label (for auto legends), linewidth, antialiasing, marker face color.
+    #             You can show the detailed information at `matplotlib.lines.Line2D
+    #              <https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D>`_
+    #     Returns:
+    #         matplotlib.pyplot.Figure: Figure
 
-        Examples:
-            >>> ship.draw_chart("time", "r", xlabel="time [sec]", \
-            >>> ylabel=r"$u$" + " [rad/s]",save_fig_path='test.png')
-        """
-        target_y = None
-        if y_index == "time":
-            target_y = self.time
-        elif y_index == "u":
-            target_y = self.u
-        elif y_index == "v":
-            target_y = self.v
-        elif y_index == "r":
-            target_y = self.r
-        elif y_index == "x":
-            target_y = self.x
-        elif y_index == "y":
-            target_y = self.y
-        elif y_index == "psi":
-            target_y = self.psi
-        elif y_index == "delta":
-            target_y = self.δ
-        elif y_index == "δ":
-            target_y = self.δ
-        elif y_index == "npm":
-            target_y = self.npm
-        if target_y is None:
-            raise Exception(
-                "`x_index` is not good. Please set `x_index` from ["
-                "time"
-                ", "
-                " u"
-                ", "
-                " v"
-                ", "
-                " r"
-                ", "
-                " x"
-                ", "
-                " y"
-                ", "
-                " psi"
-                ", "
-                " delta"
-                ", "
-                " δ"
-                ", "
-                " npm"
-                "]"
-            )
+    #     Examples:
+    #         >>> ship.draw_chart("time", "r", xlabel="time [sec]", \
+    #         >>> ylabel=r"$u$" + " [rad/s]",save_fig_path='test.png')
+    #     """
+    #     target_y = None
+    #     if y_index == "time":
+    #         target_y = self.time
+    #     elif y_index == "u":
+    #         target_y = self.u
+    #     elif y_index == "v":
+    #         target_y = self.v
+    #     elif y_index == "r":
+    #         target_y = self.r
+    #     elif y_index == "x":
+    #         target_y = self.x
+    #     elif y_index == "y":
+    #         target_y = self.y
+    #     elif y_index == "psi":
+    #         target_y = self.psi
+    #     elif y_index == "delta":
+    #         target_y = self.δ
+    #     elif y_index == "δ":
+    #         target_y = self.δ
+    #     elif y_index == "npm":
+    #         target_y = self.npm
+    #     if target_y is None:
+    #         raise Exception(
+    #             "`x_index` is not good. Please set `x_index` from ["
+    #             "time"
+    #             ", "
+    #             " u"
+    #             ", "
+    #             " v"
+    #             ", "
+    #             " r"
+    #             ", "
+    #             " x"
+    #             ", "
+    #             " y"
+    #             ", "
+    #             " psi"
+    #             ", "
+    #             " delta"
+    #             ", "
+    #             " δ"
+    #             ", "
+    #             " npm"
+    #             "]"
+    #         )
 
-        target_x_list = []
-        for x_index in x_index_list:
-            if x_index == "time":
-                target_x_list.append(self.time)
-            elif x_index == "u":
-                target_x_list.append(self.u)
-            elif x_index == "v":
-                target_x_list.append(self.v)
-            elif x_index == "r":
-                target_x_list.append(self.r)
-            elif x_index == "x":
-                target_x_list.append(self.x)
-            elif x_index == "y":
-                target_x_list.append(self.y)
-            elif x_index == "psi":
-                target_x_list.append(self.psi)
-            elif x_index == "delta":
-                target_x_list.append(self.δ)
-            elif x_index == "δ":
-                target_x_list.append(self.δ)
-            elif x_index == "npm":
-                target_x_list.append(self.npm)
-        if len(target_x_list) == 0:
-            raise Exception(
-                "`y_index` is not good. Please set `y_index` from ["
-                "time"
-                ", "
-                " u"
-                ", "
-                " v"
-                ", "
-                " r"
-                ", "
-                " x"
-                ", "
-                " y"
-                ", "
-                " psi"
-                ", "
-                " delta"
-                ", "
-                " δ"
-                ", "
-                " npm"
-                "]"
-                "]"
-            )
-        fig = plt.figure(
-            num=num,
-            figsize=figsize,
-            dpi=dpi,
-            facecolor=facecolor,
-            edgecolor=edgecolor,
-            frameon=frameon,
-            FigureClass=FigureClass,
-            clear=clear,
-            tight_layout=tight_layout,
-            constrained_layout=constrained_layout,
-        )
-        if xlabel is not None:
-            plt.xlabel(xlabel)
-        if ylabel is not None:
-            plt.ylabel(ylabel)
-        if fmt is None:
-            for target_x in target_x_list:
-                plt.plot(target_x, target_y, **kwargs)
-        else:
-            for target_x in target_x_list:
-                plt.plot(target_x, target_y, fmt, **kwargs)
-        if save_fig_path is not None:
-            plt.savefig(save_fig_path)
-        plt.close()
+    #     target_x_list = []
+    #     for x_index in x_index_list:
+    #         if x_index == "time":
+    #             target_x_list.append(self.time)
+    #         elif x_index == "u":
+    #             target_x_list.append(self.u)
+    #         elif x_index == "v":
+    #             target_x_list.append(self.v)
+    #         elif x_index == "r":
+    #             target_x_list.append(self.r)
+    #         elif x_index == "x":
+    #             target_x_list.append(self.x)
+    #         elif x_index == "y":
+    #             target_x_list.append(self.y)
+    #         elif x_index == "psi":
+    #             target_x_list.append(self.psi)
+    #         elif x_index == "delta":
+    #             target_x_list.append(self.δ)
+    #         elif x_index == "δ":
+    #             target_x_list.append(self.δ)
+    #         elif x_index == "npm":
+    #             target_x_list.append(self.npm)
+    #     if len(target_x_list) == 0:
+    #         raise Exception(
+    #             "`y_index` is not good. Please set `y_index` from ["
+    #             "time"
+    #             ", "
+    #             " u"
+    #             ", "
+    #             " v"
+    #             ", "
+    #             " r"
+    #             ", "
+    #             " x"
+    #             ", "
+    #             " y"
+    #             ", "
+    #             " psi"
+    #             ", "
+    #             " delta"
+    #             ", "
+    #             " δ"
+    #             ", "
+    #             " npm"
+    #             "]"
+    #             "]"
+    #         )
+    #     fig = plt.figure(
+    #         num=num,
+    #         figsize=figsize,
+    #         dpi=dpi,
+    #         facecolor=facecolor,
+    #         edgecolor=edgecolor,
+    #         frameon=frameon,
+    #         FigureClass=FigureClass,
+    #         clear=clear,
+    #         tight_layout=tight_layout,
+    #         constrained_layout=constrained_layout,
+    #     )
+    #     if xlabel is not None:
+    #         plt.xlabel(xlabel)
+    #     if ylabel is not None:
+    #         plt.ylabel(ylabel)
+    #     if fmt is None:
+    #         for target_x in target_x_list:
+    #             plt.plot(target_x, target_y, **kwargs)
+    #     else:
+    #         for target_x in target_x_list:
+    #             plt.plot(target_x, target_y, fmt, **kwargs)
+    #     if save_fig_path is not None:
+    #         plt.savefig(save_fig_path)
+    #     plt.close()
 
-        return fig
+    #     return fig
 
-    def draw_multi_y_chart(
-        self,
-        x_index: str,
-        y_index_list: List[str],
-        xlabel: str = None,
-        ylabel: str = None,
-        num: int or str = None,
-        figsize: List[float] = [6.4, 4.8],
-        dpi: float = 100.0,
-        facecolor: str = None,
-        edgecolor: str = None,
-        frameon: bool = True,
-        FigureClass: matplotlib.figure.Figure = matplotlib.figure.Figure,
-        clear: bool = False,
-        tight_layout: bool = False,
-        constrained_layout: bool = False,
-        fmt: str = None,
-        save_fig_path: str = None,
-        **kwargs
-    ) -> plt.Figure:
-        """Draw chart of multiple Y variables.
+    # def draw_multi_y_chart(
+    #     self,
+    #     x_index: str,
+    #     y_index_list: List[str],
+    #     xlabel: str = None,
+    #     ylabel: str = None,
+    #     num: int or str = None,
+    #     figsize: List[float] = [6.4, 4.8],
+    #     dpi: float = 100.0,
+    #     facecolor: str = None,
+    #     edgecolor: str = None,
+    #     frameon: bool = True,
+    #     FigureClass: matplotlib.figure.Figure = matplotlib.figure.Figure,
+    #     clear: bool = False,
+    #     tight_layout: bool = False,
+    #     constrained_layout: bool = False,
+    #     fmt: str = None,
+    #     save_fig_path: str = None,
+    #     **kwargs
+    # ) -> plt.Figure:
+    #     """Draw chart of multiple Y variables.
 
-        Args:
-            x_index (string):
-                Index value of X axis.
-            y_index_list (List[string]):
-                List of index value of Y axis.
-            xlabel (string, optional):
-                Label of X axis.
-                Defaults to None.
-            ylabel (string, optional):
-                Label of Y axis.
-                Defaults to None.
-            num (int or str, optional):
-                A unique identifier for the figure.
-                If a figure with that identifier already exists, this figure is made active and returned.
-                An integer refers to the Figure.number attribute, a string refers to the figure label.
-                If there is no figure with the identifier or num is not given,
-                a new figure is created, made active and returned.
-                If num is an int, it will be used for the Figure.number attribute.
-                Otherwise, an auto-generated integer value is used (starting at 1 and incremented for each new figure).
-                If num is a string, the figure label and the window title is set to this value.
-                Default to None.
-            figsize ((float, float), optional):
-                Width, height in inches.
-                Default to [6.4, 4.8]
-            dpi (float, optional):
-                The resolution of the figure in dots-per-inch.
-                Default to 100.0.
-            facecolor (str, optional):
-                The background color.
-            edgecolor (str, optional):
-                The border color.
-            frameon (bool, optional):
-                If False, suppress drawing the figure frame.
-                Defaults to True.
-            FigureClass (subclass of matplotlib.figure.Figure, optional):
-                Optionally use a custom Figure instance.
-                Defaults to matplotlib.figure.Figure.
-            clear (bool, optional):
-                If True and the figure already exists, then it is cleared.
-                Defaults to False.
-            tight_layout (bool, optional):
-                If False use subplotpars.
-                If True adjust subplot parameters using tight_layout with default padding.
-                When providing a dict containing the keys pad, w_pad, h_pad, and rect,
-                the default tight_layout paddings will be overridden.
-                Defaults to False.
-            constrained_layout (bool, optional):
-                If True use constrained layout to adjust positioning of plot elements.
-                Like tight_layout, but designed to be more flexible.
-                See Constrained Layout Guide for examples.
-                (Note: does not work with add_subplot or subplot2grid.)
-                Defaults to False.
-            fmt (str, optional):
-                A format string, e.g. 'ro' for red circles.
-                See the Notes section for a full description of the format strings.
-                Format strings are just an abbreviation for quickly setting basic line properties.
-                All of these and more can also be controlled by keyword arguments.
-                This argument cannot be passed as keyword.
-                Defaults to None.
-            save_fig_path (str, optional):
-                Path of saving figure.
-                Defaults to None.
-            **kwargs (matplotlib.lines.Line2D properties, optional):
-                kwargs are used to specify properties
-                like a line label (for auto legends), linewidth, antialiasing, marker face color.
-                You can show the detailed information at `matplotlib.lines.Line2D
-                 <https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D>`_
-        Returns:
-            matplotlib.pyplot.Figure: Figure
+    #     Args:
+    #         x_index (string):
+    #             Index value of X axis.
+    #         y_index_list (List[string]):
+    #             List of index value of Y axis.
+    #         xlabel (string, optional):
+    #             Label of X axis.
+    #             Defaults to None.
+    #         ylabel (string, optional):
+    #             Label of Y axis.
+    #             Defaults to None.
+    #         num (int or str, optional):
+    #             A unique identifier for the figure.
+    #             If a figure with that identifier already exists, this figure is made active and returned.
+    #             An integer refers to the Figure.number attribute, a string refers to the figure label.
+    #             If there is no figure with the identifier or num is not given,
+    #             a new figure is created, made active and returned.
+    #             If num is an int, it will be used for the Figure.number attribute.
+    #             Otherwise, an auto-generated integer value is used (starting at 1 & incremented for each new figure).
+    #             If num is a string, the figure label and the window title is set to this value.
+    #             Default to None.
+    #         figsize ((float, float), optional):
+    #             Width, height in inches.
+    #             Default to [6.4, 4.8]
+    #         dpi (float, optional):
+    #             The resolution of the figure in dots-per-inch.
+    #             Default to 100.0.
+    #         facecolor (str, optional):
+    #             The background color.
+    #         edgecolor (str, optional):
+    #             The border color.
+    #         frameon (bool, optional):
+    #             If False, suppress drawing the figure frame.
+    #             Defaults to True.
+    #         FigureClass (subclass of matplotlib.figure.Figure, optional):
+    #             Optionally use a custom Figure instance.
+    #             Defaults to matplotlib.figure.Figure.
+    #         clear (bool, optional):
+    #             If True and the figure already exists, then it is cleared.
+    #             Defaults to False.
+    #         tight_layout (bool, optional):
+    #             If False use subplotpars.
+    #             If True adjust subplot parameters using tight_layout with default padding.
+    #             When providing a dict containing the keys pad, w_pad, h_pad, and rect,
+    #             the default tight_layout paddings will be overridden.
+    #             Defaults to False.
+    #         constrained_layout (bool, optional):
+    #             If True use constrained layout to adjust positioning of plot elements.
+    #             Like tight_layout, but designed to be more flexible.
+    #             See Constrained Layout Guide for examples.
+    #             (Note: does not work with add_subplot or subplot2grid.)
+    #             Defaults to False.
+    #         fmt (str, optional):
+    #             A format string, e.g. 'ro' for red circles.
+    #             See the Notes section for a full description of the format strings.
+    #             Format strings are just an abbreviation for quickly setting basic line properties.
+    #             All of these and more can also be controlled by keyword arguments.
+    #             This argument cannot be passed as keyword.
+    #             Defaults to None.
+    #         save_fig_path (str, optional):
+    #             Path of saving figure.
+    #             Defaults to None.
+    #         **kwargs (matplotlib.lines.Line2D properties, optional):
+    #             kwargs are used to specify properties
+    #             like a line label (for auto legends), linewidth, antialiasing, marker face color.
+    #             You can show the detailed information at `matplotlib.lines.Line2D
+    #              <https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D>`_
+    #     Returns:
+    #         matplotlib.pyplot.Figure: Figure
 
-        Examples:
-            >>> ship.draw_chart("time", "r", xlabel="time [sec]", \
-            >>> ylabel=r"$u$" + " [rad/s]",save_fig_path='test.png')
-        """
-        target_x = None
-        if x_index == "time":
-            target_x = self.time
-        elif x_index == "u":
-            target_x = self.u
-        elif x_index == "v":
-            target_x = self.v
-        elif x_index == "r":
-            target_x = self.r
-        elif x_index == "x":
-            target_x = self.x
-        elif x_index == "y":
-            target_x = self.y
-        elif x_index == "psi":
-            target_x = self.psi
-        elif x_index == "delta":
-            target_x = self.δ
-        elif x_index == "δ":
-            target_x = self.δ
-        elif x_index == "npm":
-            target_x = self.npm
-        if target_x is None:
-            raise Exception(
-                "`x_index` is not good. Please set `x_index` from ["
-                "time"
-                ", "
-                " u"
-                ", "
-                " v"
-                ", "
-                " r"
-                ", "
-                " x"
-                ", "
-                " y"
-                ", "
-                " psi"
-                ", "
-                " delta"
-                ", "
-                " δ"
-                ", "
-                " npm"
-                "]"
-            )
+    #     Examples:
+    #         >>> ship.draw_chart("time", "r", xlabel="time [sec]", \
+    #         >>> ylabel=r"$u$" + " [rad/s]",save_fig_path='test.png')
+    #     """
+    #     target_x = None
+    #     if x_index == "time":
+    #         target_x = self.time
+    #     elif x_index == "u":
+    #         target_x = self.u
+    #     elif x_index == "v":
+    #         target_x = self.v
+    #     elif x_index == "r":
+    #         target_x = self.r
+    #     elif x_index == "x":
+    #         target_x = self.x
+    #     elif x_index == "y":
+    #         target_x = self.y
+    #     elif x_index == "psi":
+    #         target_x = self.psi
+    #     elif x_index == "delta" or x_index == "δ":
+    #         target_x = self.δ
+    #     elif x_index == "npm":
+    #         target_x = self.npm
+    #     if target_x is None:
+    #         raise Exception(
+    #             "`x_index` is not good. Please set `x_index` from ["
+    #             "time"
+    #             ", "
+    #             " u"
+    #             ", "
+    #             " v"
+    #             ", "
+    #             " r"
+    #             ", "
+    #             " x"
+    #             ", "
+    #             " y"
+    #             ", "
+    #             " psi"
+    #             ", "
+    #             " delta"
+    #             ", "
+    #             " δ"
+    #             ", "
+    #             " npm"
+    #             "]"
+    #         )
 
-        target_y_list = []
-        for y_index in y_index_list:
-            if y_index == "time":
-                target_y_list.append(self.time)
-            elif y_index == "u":
-                target_y_list.append(self.u)
-            elif y_index == "v":
-                target_y_list.append(self.v)
-            elif y_index == "r":
-                target_y_list.append(self.r)
-            elif y_index == "x":
-                target_y_list.append(self.x)
-            elif y_index == "y":
-                target_y_list.append(self.y)
-            elif y_index == "psi":
-                target_y_list.append(self.psi)
-            elif y_index == "delta":
-                target_y_list.append(self.δ)
-            elif y_index == "δ":
-                target_y_list.append(self.δ)
-            elif y_index == "npm":
-                target_y_list.append(self.npm)
-        if len(target_y_list) == 0:
-            raise Exception(
-                "`y_index` is not good. Please set `y_index` from ["
-                "time"
-                ", "
-                " u"
-                ", "
-                " v"
-                ", "
-                " r"
-                ", "
-                " x"
-                ", "
-                " y"
-                ", "
-                " psi"
-                ", "
-                " delta"
-                ", "
-                " δ"
-                ", "
-                " npm"
-                "]"
-                "]"
-            )
-        fig = plt.figure(
-            num=num,
-            figsize=figsize,
-            dpi=dpi,
-            facecolor=facecolor,
-            edgecolor=edgecolor,
-            frameon=frameon,
-            FigureClass=FigureClass,
-            clear=clear,
-            tight_layout=tight_layout,
-            constrained_layout=constrained_layout,
-        )
-        if xlabel is not None:
-            plt.xlabel(xlabel)
-        if ylabel is not None:
-            plt.ylabel(ylabel)
-        if fmt is None:
-            for target_y in target_y_list:
-                plt.plot(target_x, target_y, **kwargs)
-        else:
-            for target_y in target_y_list:
-                plt.plot(target_x, target_y, fmt, **kwargs)
-        if save_fig_path is not None:
-            plt.savefig(save_fig_path)
-        plt.close()
+    #     target_y_list = []
+    #     for y_index in y_index_list:
+    #         if y_index == "time":
+    #             target_y_list.append(self.time)
+    #         elif y_index == "u":
+    #             target_y_list.append(self.u)
+    #         elif y_index == "v":
+    #             target_y_list.append(self.v)
+    #         elif y_index == "r":
+    #             target_y_list.append(self.r)
+    #         elif y_index == "x":
+    #             target_y_list.append(self.x)
+    #         elif y_index == "y":
+    #             target_y_list.append(self.y)
+    #         elif y_index == "psi":
+    #             target_y_list.append(self.psi)
+    #         elif y_index == "delta" or y_index == "δ":
+    #             target_y_list.append(self.δ)
+    #         elif y_index == "npm":
+    #             target_y_list.append(self.npm)
+    #     if len(target_y_list) == 0:
+    #         raise Exception(
+    #             "`y_index` is not good. Please set `y_index` from ["
+    #             "time"
+    #             ", "
+    #             " u"
+    #             ", "
+    #             " v"
+    #             ", "
+    #             " r"
+    #             ", "
+    #             " x"
+    #             ", "
+    #             " y"
+    #             ", "
+    #             " psi"
+    #             ", "
+    #             " delta"
+    #             ", "
+    #             " δ"
+    #             ", "
+    #             " npm"
+    #             "]"
+    #             "]"
+    #         )
+    #     fig = plt.figure(
+    #         num=num,
+    #         figsize=figsize,
+    #         dpi=dpi,
+    #         facecolor=facecolor,
+    #         edgecolor=edgecolor,
+    #         frameon=frameon,
+    #         FigureClass=FigureClass,
+    #         clear=clear,
+    #         tight_layout=tight_layout,
+    #         constrained_layout=constrained_layout,
+    #     )
+    #     if xlabel is not None:
+    #         plt.xlabel(xlabel)
+    #     if ylabel is not None:
+    #         plt.ylabel(ylabel)
+    #     if fmt is None:
+    #         for target_y in target_y_list:
+    #             plt.plot(target_x, target_y, **kwargs)
+    #     else:
+    #         for target_y in target_y_list:
+    #             plt.plot(target_x, target_y, fmt, **kwargs)
+    #     if save_fig_path is not None:
+    #         plt.savefig(save_fig_path)
+    #     plt.close()
 
-        return fig
+    #     return fig
 
     def draw_gif(
         self,
