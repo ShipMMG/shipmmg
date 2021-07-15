@@ -13,6 +13,9 @@ Todo:
 import dataclasses
 from typing import List
 
+import random
+
+
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
@@ -142,19 +145,61 @@ class ShipObj3dof:
         self.y = y
         self.psi = psi
 
-    def estimate_KT_LSM(self):
+    def estimate_KT_by_LSM(self):
         """Estimate KT by least square method.
 
         Returns:
             (K, T): KT params
         """
-        return self.__estimate_KT_LSM(self.time, self.δ, self.r)
+        spl_r = scipy.interpolate.interp1d(self.time, self.r, fill_value="extrapolate")
+        A = np.c_[self.δ, self.r]
+        B = np.array([derivative(spl_r, t) for t in self.time])
+        return self.__estimate_KT_by_LSM(A, B)
 
-    def __estimate_KT_LSM(self, time_list, δ_list, r_list):
-        """Estimate KT by least square method."""
-        A = np.c_[δ_list, r_list]
-        spl_r = scipy.interpolate.interp1d(time_list, r_list, fill_value="extrapolate")
-        B = np.array([derivative(spl_r, t) for t in time_list])
+    def estimate_KT_by_LSM_RSR(self, num_of_sampling, k):
+        """Estimate KT by least square method and random sampling with replacement.
+
+        Args:
+            num_of_sampling (int):
+                Number of random sampling.
+            k (int):
+                Length of one random sampling.
+
+        Returns:
+            K_list: List of K.
+            T_list: List of T.
+        """
+        spl_r = scipy.interpolate.interp1d(self.time, self.r, fill_value="extrapolate")
+        index_list = [t for t in range(len(self.time))]
+        K_list = []
+        T_list = []
+        for sampling in range(num_of_sampling):
+            random_sampling_index_list = random.sample(index_list, k)
+
+            random_sampling_binary_list = [0] * len(self.time)
+            for sampling_index in random_sampling_index_list:
+                random_sampling_binary_list[sampling_index] = 1
+            random_sampling_binary_array = np.array(random_sampling_binary_list)
+
+            ex_time_list = np.array(self.time)[random_sampling_binary_array == 1]
+            ex_δ_list = np.array(self.δ)[random_sampling_binary_array == 1]
+            ex_r_list = np.array(self.r)[random_sampling_binary_array == 1]
+            A = np.c_[ex_δ_list, ex_r_list]
+            B = np.array([derivative(spl_r, t) for t in ex_time_list])
+            K, T = self.__estimate_KT_by_LSM(A, B)
+            K_list.append(K)
+            T_list.append(T)
+        return K_list, T_list
+
+    def __estimate_KT_by_LSM(self, A, B):
+        """Estimate KT by least square method.
+
+        Example code in this function.
+        >>> spl_r = scipy.interpolate.interp1d(time_list, r_list, fill_value="extrapolate")
+        >>> A = np.c_[δ_list, r_list]
+        >>> B = np.array([derivative(spl_r, t) for t in time_list])
+        >>> K, T = self.__estimate_KT_LSM(A, B)
+        """
         THETA = np.linalg.pinv(A).dot(B.T)
         T = -1.0 / THETA[1]
         K = THETA[0] * T

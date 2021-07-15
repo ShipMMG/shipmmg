@@ -35,6 +35,16 @@ def ship_kt(test_kt_params):
     return ship
 
 
+def test_estimate_KT_by_LSM(ship_kt):
+    """Check shipmmg.ship_obj_3dof.estimate_KT_LSM()."""
+    K, T = ship_kt.estimate_KT_by_LSM()
+
+
+def test_estimate_KT_by_LSM_RSR(ship_kt):
+    """Check shipmmg.ship_obj_3dof.estimate_KT_LSM_RSR()."""
+    K_list, T_list = ship_kt.estimate_KT_by_LSM_RSR(5, 10)
+
+
 def test_Ship3DOF_drawing_function_kt(ship_kt, tmpdir):
     """Check drawing functions of Ship3DOF class by using KT simulation results."""
     # Ship3DOF.draw_xy_trajectory()
