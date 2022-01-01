@@ -161,7 +161,7 @@ def simulate_mmg_3dof(
     u0: float = 0.0,
     v0: float = 0.0,
     r0: float = 0.0,
-    ρ: float = 1.025,
+    ρ: float = 1025.0,
     method: str = "RK45",
     t_eval=None,
     events=None,
@@ -201,7 +201,7 @@ def simulate_mmg_3dof(
             Defaults to 0.0.
         ρ (float, optional):
             seawater density [kg/m^3]
-            Defaults to 1.025.
+            Defaults to 1025.0.
         method (str, optional):
             Integration method to use in
             `scipy.integrate.solve_ivp()
@@ -477,7 +477,7 @@ def simulate(
     u0: float = 0.0,
     v0: float = 0.0,
     r0: float = 0.0,
-    ρ: float = 1.025,
+    ρ: float = 1025.0,
     method: str = "RK45",
     t_eval=None,
     events=None,
@@ -601,7 +601,7 @@ def simulate(
             Defaults to 0.0.
         ρ (float, optional):
             seawater density [kg/m^3]
-            Defaults to 1.025.
+            Defaults to 1025.0.
         method (str, optional):
             Integration method to use in
             `scipy.integrate.solve_ivp()
@@ -918,7 +918,7 @@ def get_sub_values_from_simulation_result(
     npm_list: List[float],
     basic_params: Mmg3DofBasicParams,
     maneuvering_params: Mmg3DofManeuveringParams,
-    ρ: float = 1.025,
+    ρ: float = 1025.0,
     return_all_vals: bool = False,
 ):
     """Get sub values of MMG calculation from simulation result.
@@ -940,7 +940,7 @@ def get_sub_values_from_simulation_result(
             u of MMG simulation result.
         ρ (float, optional):
             seawater density [kg/m^3]
-            Defaults to 1.025.
+            Defaults to 1025.0.
         return_all_vals (bool, optional):
             Whether all sub values are returned or not.
             Defaults to false.
@@ -1225,7 +1225,7 @@ def zigzag_test_mmg_3dof(
     v0: float = 0.0,
     r0: float = 0.0,
     ψ0: float = 0.0,
-    ρ: float = 1.025,
+    ρ: float = 1025.0,
     method: str = "RK45",
     t_eval=None,
     events=None,
@@ -1267,7 +1267,7 @@ def zigzag_test_mmg_3dof(
             Defaults to 0.0.
         ρ (float, optional):
             seawater density [kg/m^3]
-            Defaults to 1.025.
+            Defaults to 1025.0.
         method (str, optional):
             Integration method to use in
             `scipy.integrate.solve_ivp()
