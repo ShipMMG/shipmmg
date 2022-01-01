@@ -25,8 +25,7 @@ from shipmmg.ship_obj_3dof import ShipObj3dof
 
 @pytest.fixture
 def ship_KVLCC2_L7_model():
-    """KVLCC2 L7 model."""
-    ρ = 1.025  # 海水密度
+    ρ = 1025.0  # 海水密度[kg/m^3]
 
     L_pp = 7.00  # 船長Lpp[m]
     B = 1.27  # 船幅[m]
@@ -262,71 +261,62 @@ def test_Ship3DOF_drawing_function(kvlcc2_L7_35_turning, tmpdir):
     kvlcc2_L7_35_turning.draw_gif(dimensionless=True, save_fig_path=save_fig_path)
 
 
-# def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model, tmpdir):
-#     """KVLCC2 L7 model."""
-#     basic_params, maneuvering_params = ship_KVLCC2_L7_model
-#     target_δ_rad = 20.0 * np.pi / 180.0
-#     target_ψ_rad_deviation = -20.0 * np.pi / 180.0
-#     duration = 100
-#     num_of_sampling = 10000
-#     time_list = np.linspace(0.00, duration, num_of_sampling)
-#     n_const = 17.95  # [rpm]
-#     npm_list = np.array([n_const for i in range(num_of_sampling)])
+def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model, tmpdir):
+    basic_params, maneuvering_params = ship_KVLCC2_L7_model
+    target_δ_rad = 20.0 * np.pi / 180.0
+    target_ψ_rad_deviation = -20.0 * np.pi / 180.0
+    duration = 100
+    num_of_sampling = 10000
+    time_list = np.linspace(0.00, duration, num_of_sampling)
+    n_const = 17.95  # [rpm]
+    npm_list = np.array([n_const for i in range(num_of_sampling)])
 
-#     δ_list, u_list, v_list, r_list = zigzag_test_mmg_3dof(
-#         basic_params,
-#         maneuvering_params,
-#         target_δ_rad,
-#         target_ψ_rad_deviation,
-#         time_list,
-#         npm_list,
-#         δ_rad_rate=10.0 * np.pi / 180,
-#     )
+    δ_list, u_list, v_list, r_list = zigzag_test_mmg_3dof(
+        basic_params,
+        maneuvering_params,
+        target_δ_rad,
+        target_ψ_rad_deviation,
+        time_list,
+        npm_list,
+        δ_rad_rate=10.0 * np.pi / 180,
+    )
 
-#     ship = ShipObj3dof(L=100, B=10)
-#     ship.load_simulation_result(time_list, u_list, v_list, r_list)
-#     ship.δ = δ_list
+    ship = ShipObj3dof(L=100, B=10)
+    ship.load_simulation_result(time_list, u_list, v_list, r_list)
+    ship.δ = δ_list
 
-#     save_fig_path = os.path.join(str(tmpdir), "test_psi.png")
+    save_fig_path = os.path.join(str(tmpdir), "test_psi.png")
 
-#     ship.draw_xy_trajectory(save_fig_path=save_fig_path)
-#     ship.draw_chart(
-#         "time",
-#         "psi",
-#         xlabel="time [sec]",
-#         ylabel=r"$\psi$" + " [rad]",
-#         save_fig_path=save_fig_path,
-#     )
+    ship.draw_xy_trajectory(save_fig_path=save_fig_path)
+    ship.draw_chart(
+        "time",
+        "psi",
+        xlabel="time [sec]",
+        ylabel=r"$\psi$" + " [rad]",
+        save_fig_path=save_fig_path,
+    )
 
-#     save_fig_path = os.path.join(str(tmpdir), "test_delta.png")
-#     ship.draw_xy_trajectory(save_fig_path=save_fig_path)
-#     ship.draw_chart(
-#         "time",
-#         "delta",
-#         xlabel="time [sec]",
-#         ylabel=r"$\delta$" + " [rad]",
-#         save_fig_path=save_fig_path,
-#     )
+    save_fig_path = os.path.join(str(tmpdir), "test_delta.png")
+    ship.draw_xy_trajectory(save_fig_path=save_fig_path)
+    ship.draw_chart(
+        "time",
+        "delta",
+        xlabel="time [sec]",
+        ylabel=r"$\delta$" + " [rad]",
+        save_fig_path=save_fig_path,
+    )
 
-#     save_fig_path = os.path.join(str(tmpdir), "test_delta_psi.png")
+    save_fig_path = os.path.join(str(tmpdir), "test_delta_psi.png")
 
-#     ship.draw_multi_y_chart(
-#         "time",
-#         ["delta", "psi"],
-#         xlabel="time [sec]",
-#         ylabel="[rad]",
-#         save_fig_path=save_fig_path,
-#     )
+    # save_fig_path = os.path.join(str(tmpdir), "test_delta_psi.png")
 
-#     save_fig_path = os.path.join(str(tmpdir), "test_delta_psi.png")
-
-#     ship.draw_multi_x_chart(
-#         ["delta", "psi"],
-#         "time",
-#         ylabel="time [sec]",
-#         xlabel="[rad]",
-#         save_fig_path=save_fig_path,
-#     )
+    ship.draw_multi_x_chart(
+        ["delta", "psi"],
+        "time",
+        ylabel="time [sec]",
+        xlabel="[rad]",
+        save_fig_path=save_fig_path,
+    )
 
 
 def test_zigzag_test_mmg(ship_KVLCC2_L7_model, tmpdir):
