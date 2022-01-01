@@ -1386,6 +1386,7 @@ def zigzag_test_mmg_3dof(
             u0=u0,
             v0=v0,
             r0=r0,
+            ρ=ρ,
         )
         sim_result = sol.sol(time_list[start_index:])
         u_list = sim_result[0]
