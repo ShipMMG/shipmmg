@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>tests.test_kt &mdash; shipmmg 0.0.7 documentation</title>
+  <title>tests.test_kt &mdash; shipmmg 0.0.8 documentation</title>
   
 
   
@@ -156,12 +156,19 @@
   <h1>Source code for tests.test_kt</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;test_kt.</span>
+
+<span class="sd">- pytest code of shipmmg/kt.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
 
 <span class="kn">from</span> <span class="nn">shipmmg.kt</span> <span class="kn">import</span> <span class="n">KTParams</span><span class="p">,</span> <span class="n">simulate_kt</span><span class="p">,</span> <span class="n">zigzag_test_kt</span>
 <span class="kn">from</span> <span class="nn">shipmmg.ship_obj_3dof</span> <span class="kn">import</span> <span class="n">ShipObj3dof</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pytest</span>
-<span class="kn">import</span> <span class="nn">os</span>
 
 
 <div class="viewcode-block" id="sim_result"><a class="viewcode-back" href="../../tests.html#tests.test_kt.sim_result">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
@@ -181,9 +188,7 @@
 
 <div class="viewcode-block" id="ship_kt"><a class="viewcode-back" href="../../tests.html#tests.test_kt.ship_kt">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span> <span class="nf">ship_kt</span><span class="p">(</span><span class="n">sim_result</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Fixture for testing in this file.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Fixture for testing in this file.&quot;&quot;&quot;</span>
     <span class="n">time_list</span><span class="p">,</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">sim_result</span>
     <span class="n">simulation_result</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">sol</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
     <span class="n">u_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_list</span><span class="p">),</span> <span class="mi">20</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1852.0</span> <span class="o">/</span> <span class="mi">3600</span><span class="p">))</span>
@@ -195,15 +200,14 @@
 
 
 <div class="viewcode-block" id="test_Ship3DOF_drawing_function"><a class="viewcode-back" href="../../tests.html#tests.test_kt.test_Ship3DOF_drawing_function">[docs]</a><span class="k">def</span> <span class="nf">test_Ship3DOF_drawing_function</span><span class="p">(</span><span class="n">ship_kt</span><span class="p">,</span> <span class="n">tmpdir</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Check drawing functions of Ship3DOF class by using KT simulation results&quot;&quot;&quot;</span>
-
+    <span class="sd">&quot;&quot;&quot;Check drawing functions of Ship3DOF class by using KT simulation results.&quot;&quot;&quot;</span>
     <span class="c1"># Ship3DOF.draw_xy_trajectory()</span>
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;test.png&quot;</span><span class="p">)</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;test.png&quot;</span><span class="p">)</span>
     <span class="n">ship_kt</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">dimensionless</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;ro&quot;</span><span class="p">)</span>
     <span class="n">ship_kt</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
-    
+
     <span class="c1"># Ship3DOF.draw_chart()</span>
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;test.png&quot;</span><span class="p">)</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;test.png&quot;</span><span class="p">)</span>
     <span class="n">ship_kt</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span>
         <span class="s2">&quot;time&quot;</span><span class="p">,</span>
         <span class="s2">&quot;u&quot;</span><span class="p">,</span>
@@ -219,7 +223,6 @@
         <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;ro&quot;</span><span class="p">,</span>
         <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
     <span class="p">)</span>
-
 
     <span class="n">x_index_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;u&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;psi&quot;</span><span class="p">]</span>
     <span class="n">y_index_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;u&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;psi&quot;</span><span class="p">]</span>
@@ -237,8 +240,8 @@
     <span class="n">ship_kt</span><span class="o">.</span><span class="n">draw_gif</span><span class="p">(</span><span class="n">dimensionless</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span></div>
 
 
-
 <div class="viewcode-block" id="test_zigzag_test_kt"><a class="viewcode-back" href="../../tests.html#tests.test_kt.test_zigzag_test_kt">[docs]</a><span class="k">def</span> <span class="nf">test_zigzag_test_kt</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Just check shimmg.kt.zigzag_test_kt().&quot;&quot;&quot;</span>
     <span class="n">K</span> <span class="o">=</span> <span class="mf">0.155</span>
     <span class="n">T</span> <span class="o">=</span> <span class="mf">80.5</span>
     <span class="n">kt_params</span> <span class="o">=</span> <span class="n">KTParams</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
@@ -261,7 +264,7 @@
     <span class="n">ship</span><span class="o">.</span><span class="n">load_simulation_result</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">u_list</span><span class="p">,</span> <span class="n">v_list</span><span class="p">,</span> <span class="n">r_list</span><span class="p">)</span>
     <span class="n">ship</span><span class="o">.</span><span class="n">δ</span> <span class="o">=</span> <span class="n">δ_list</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;test.png&quot;</span><span class="p">)</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;test.png&quot;</span><span class="p">)</span>
     <span class="n">ship</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">ship</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span>
         <span class="s2">&quot;time&quot;</span><span class="p">,</span>
@@ -284,8 +287,8 @@
         <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\delta$&quot;</span> <span class="o">+</span> <span class="s2">&quot; [rad]&quot;</span><span class="p">,</span>
         <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
     <span class="p">)</span>
-    
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;test_delta_psi.png&quot;</span><span class="p">)</span>
+
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;test_delta_psi.png&quot;</span><span class="p">)</span>
     <span class="n">ship</span><span class="o">.</span><span class="n">draw_multi_y_chart</span><span class="p">(</span>
         <span class="s2">&quot;time&quot;</span><span class="p">,</span>
         <span class="p">[</span><span class="s2">&quot;delta&quot;</span><span class="p">,</span> <span class="s2">&quot;psi&quot;</span><span class="p">],</span>
@@ -293,7 +296,6 @@
         <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;[rad]&quot;</span><span class="p">,</span>
         <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
     <span class="p">)</span></div>
-
 </pre></div>
 
            </div>

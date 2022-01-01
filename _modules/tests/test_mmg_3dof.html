@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>tests.test_mmg_3dof &mdash; shipmmg 0.0.7 documentation</title>
+  <title>tests.test_mmg_3dof &mdash; shipmmg 0.0.8 documentation</title>
   
 
   
@@ -156,24 +156,32 @@
   <h1>Source code for tests.test_mmg_3dof</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;test_mmg_3dof.</span>
+
+<span class="sd">- pytest code of shipmmg/mmg_3dof.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
 
 <span class="kn">from</span> <span class="nn">shipmmg.mmg_3dof</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Mmg3DofBasicParams</span><span class="p">,</span>
     <span class="n">Mmg3DofManeuveringParams</span><span class="p">,</span>
-    <span class="n">simulate_mmg_3dof</span><span class="p">,</span>
     <span class="n">get_sub_values_from_simulation_result</span><span class="p">,</span>
+    <span class="n">simulate_mmg_3dof</span><span class="p">,</span>
     <span class="n">zigzag_test_mmg_3dof</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">shipmmg.ship_obj_3dof</span> <span class="kn">import</span> <span class="n">ShipObj3dof</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pytest</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 
 <div class="viewcode-block" id="ship_KVLCC2_L7_model"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.ship_KVLCC2_L7_model">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span> <span class="nf">ship_KVLCC2_L7_model</span><span class="p">():</span>
-    <span class="n">ρ</span> <span class="o">=</span> <span class="mf">1.025</span>  <span class="c1"># 海水密度</span>
+    <span class="n">ρ</span> <span class="o">=</span> <span class="mf">1025.0</span>  <span class="c1"># 海水密度[kg/m^3]</span>
 
     <span class="n">L_pp</span> <span class="o">=</span> <span class="mf">7.00</span>  <span class="c1"># 船長Lpp[m]</span>
     <span class="n">B</span> <span class="o">=</span> <span class="mf">1.27</span>  <span class="c1"># 船幅[m]</span>
@@ -275,6 +283,7 @@
 
 <div class="viewcode-block" id="kvlcc2_L7_35_turning"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.kvlcc2_L7_35_turning">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span> <span class="nf">kvlcc2_L7_35_turning</span><span class="p">(</span><span class="n">ship_KVLCC2_L7_model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Do turning test using KVLCC2 L7 model.&quot;&quot;&quot;</span>
     <span class="n">basic_params</span><span class="p">,</span> <span class="n">maneuvering_params</span> <span class="o">=</span> <span class="n">ship_KVLCC2_L7_model</span>
     <span class="n">duration</span> <span class="o">=</span> <span class="mi">200</span>  <span class="c1"># [s]</span>
     <span class="c1"># steering_rate = 1.76 * 4  # [°/s]</span>
@@ -310,6 +319,7 @@
 <div class="viewcode-block" id="test_get_sub_values_from_simulation_result"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_get_sub_values_from_simulation_result">[docs]</a><span class="k">def</span> <span class="nf">test_get_sub_values_from_simulation_result</span><span class="p">(</span>
     <span class="n">kvlcc2_L7_35_turning</span><span class="p">,</span> <span class="n">ship_KVLCC2_L7_model</span><span class="p">,</span> <span class="n">tmpdir</span>
 <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Test get_sub_values_from_simulation_result() using KVLCC2 L7 model.&quot;&quot;&quot;</span>
     <span class="n">basic_params</span><span class="p">,</span> <span class="n">maneuvering_params</span> <span class="o">=</span> <span class="n">ship_KVLCC2_L7_model</span>
     <span class="p">(</span>
         <span class="n">X_H_list</span><span class="p">,</span>
@@ -362,25 +372,23 @@
         <span class="n">return_all_vals</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;testFN.png&quot;</span><span class="p">)</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;testFN.png&quot;</span><span class="p">)</span>
 
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">F_N_list</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="test_Ship3DOF_drawing_function"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_Ship3DOF_drawing_function">[docs]</a><span class="k">def</span> <span class="nf">test_Ship3DOF_drawing_function</span><span class="p">(</span><span class="n">kvlcc2_L7_35_turning</span><span class="p">,</span><span class="n">tmpdir</span><span class="p">):</span>
+<div class="viewcode-block" id="test_Ship3DOF_drawing_function"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_Ship3DOF_drawing_function">[docs]</a><span class="k">def</span> <span class="nf">test_Ship3DOF_drawing_function</span><span class="p">(</span><span class="n">kvlcc2_L7_35_turning</span><span class="p">,</span> <span class="n">tmpdir</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Check drawing functions of Ship3DOF class by using MMG 3DOF simulation results.&quot;&quot;&quot;</span>
     <span class="c1"># Ship3DOF.draw_xy_trajectory()</span>
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;trajectory.png&quot;</span><span class="p">)</span> 
-    
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;trajectory.png&quot;</span><span class="p">)</span>
 
     <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">dimensionless</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
 
-
     <span class="c1"># Ship3DOF.draw_chart()</span>
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;param.png&quot;</span><span class="p">)</span>  
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;param.png&quot;</span><span class="p">)</span>
 
     <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span>
         <span class="s2">&quot;time&quot;</span><span class="p">,</span>
@@ -402,14 +410,14 @@
         <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span><span class="s2">&quot;hogehoge&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">)</span>
 
     <span class="c1"># Ship3DOF.draw_gif()</span>
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;test.gif&quot;</span><span class="p">)</span>
-    
-    <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">draw_gif</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
-    
-    <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">draw_gif</span><span class="p">(</span><span class="n">dimensionless</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span></div>
-    
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;test.gif&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="test_zigzag_test_mmg_before"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_zigzag_test_mmg_before">[docs]</a><span class="k">def</span> <span class="nf">test_zigzag_test_mmg_before</span><span class="p">(</span><span class="n">ship_KVLCC2_L7_model</span><span class="p">,</span><span class="n">tmpdir</span><span class="p">):</span>
+    <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">draw_gif</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
+
+    <span class="n">kvlcc2_L7_35_turning</span><span class="o">.</span><span class="n">draw_gif</span><span class="p">(</span><span class="n">dimensionless</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="test_zigzag_test_mmg_before"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_zigzag_test_mmg_before">[docs]</a><span class="k">def</span> <span class="nf">test_zigzag_test_mmg_before</span><span class="p">(</span><span class="n">ship_KVLCC2_L7_model</span><span class="p">,</span> <span class="n">tmpdir</span><span class="p">):</span>
     <span class="n">basic_params</span><span class="p">,</span> <span class="n">maneuvering_params</span> <span class="o">=</span> <span class="n">ship_KVLCC2_L7_model</span>
     <span class="n">target_δ_rad</span> <span class="o">=</span> <span class="mf">20.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
     <span class="n">target_ψ_rad_deviation</span> <span class="o">=</span> <span class="o">-</span><span class="mf">20.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
@@ -433,7 +441,7 @@
     <span class="n">ship</span><span class="o">.</span><span class="n">load_simulation_result</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">u_list</span><span class="p">,</span> <span class="n">v_list</span><span class="p">,</span> <span class="n">r_list</span><span class="p">)</span>
     <span class="n">ship</span><span class="o">.</span><span class="n">δ</span> <span class="o">=</span> <span class="n">δ_list</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;test_psi.png&quot;</span><span class="p">)</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;test_psi.png&quot;</span><span class="p">)</span>
 
     <span class="n">ship</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">ship</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span>
@@ -444,7 +452,7 @@
         <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;test_delta.png&quot;</span><span class="p">)</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;test_delta.png&quot;</span><span class="p">)</span>
     <span class="n">ship</span><span class="o">.</span><span class="n">draw_xy_trajectory</span><span class="p">(</span><span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">ship</span><span class="o">.</span><span class="n">draw_chart</span><span class="p">(</span>
         <span class="s2">&quot;time&quot;</span><span class="p">,</span>
@@ -454,17 +462,9 @@
         <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;test_delta_psi.png&quot;</span><span class="p">)</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;test_delta_psi.png&quot;</span><span class="p">)</span>
 
-    <span class="n">ship</span><span class="o">.</span><span class="n">draw_multi_y_chart</span><span class="p">(</span>
-        <span class="s2">&quot;time&quot;</span><span class="p">,</span>
-        <span class="p">[</span><span class="s2">&quot;delta&quot;</span><span class="p">,</span> <span class="s2">&quot;psi&quot;</span><span class="p">],</span>
-        <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;time [sec]&quot;</span><span class="p">,</span>
-        <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;[rad]&quot;</span><span class="p">,</span>
-        <span class="n">save_fig_path</span><span class="o">=</span><span class="n">save_fig_path</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;test_delta_psi.png&quot;</span><span class="p">)</span>
+    <span class="c1"># save_fig_path = os.path.join(str(tmpdir), &quot;test_delta_psi.png&quot;)</span>
 
     <span class="n">ship</span><span class="o">.</span><span class="n">draw_multi_x_chart</span><span class="p">(</span>
         <span class="p">[</span><span class="s2">&quot;delta&quot;</span><span class="p">,</span> <span class="s2">&quot;psi&quot;</span><span class="p">],</span>
@@ -476,7 +476,7 @@
 
 
 <div class="viewcode-block" id="test_zigzag_test_mmg"><a class="viewcode-back" href="../../tests.html#tests.test_mmg_3dof.test_zigzag_test_mmg">[docs]</a><span class="k">def</span> <span class="nf">test_zigzag_test_mmg</span><span class="p">(</span><span class="n">ship_KVLCC2_L7_model</span><span class="p">,</span> <span class="n">tmpdir</span><span class="p">):</span>
-
+    <span class="sd">&quot;&quot;&quot;Test zigzag test mmg simulation using KVLCC2 L7 model.&quot;&quot;&quot;</span>
     <span class="n">basic_params</span><span class="p">,</span> <span class="n">maneuvering_params</span> <span class="o">=</span> <span class="n">ship_KVLCC2_L7_model</span>
     <span class="n">target_δ_rad</span> <span class="o">=</span> <span class="mf">20.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
     <span class="n">target_ψ_rad_deviation</span> <span class="o">=</span> <span class="mf">20.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
@@ -501,14 +501,13 @@
     <span class="n">ship</span><span class="o">.</span><span class="n">δ</span> <span class="o">=</span> <span class="n">δ_list</span>
     <span class="n">ship</span><span class="o">.</span><span class="n">npm</span> <span class="o">=</span> <span class="n">npm_list</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;delta_psi.png&quot;</span><span class="p">)</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;delta_psi.png&quot;</span><span class="p">)</span>
 
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">δ</span><span class="p">:</span> <span class="n">δ</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">ship</span><span class="o">.</span><span class="n">δ</span><span class="p">)))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">psi</span><span class="p">:</span> <span class="n">psi</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">ship</span><span class="o">.</span><span class="n">psi</span><span class="p">)))</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    
 
     <span class="p">(</span>
         <span class="n">X_H_list</span><span class="p">,</span>
@@ -544,52 +543,48 @@
         <span class="n">return_all_vals</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;w_P.png&quot;</span><span class="p">)</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;w_P.png&quot;</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">w_P_list</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;J.png&quot;</span><span class="p">)</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;J.png&quot;</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">J_list</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;K_T.png&quot;</span><span class="p">)</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;K_T.png&quot;</span><span class="p">)</span>
 
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">K_T_list</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;U_R.png&quot;</span><span class="p">)</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;U_R.png&quot;</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">U_R_list</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;α_R.png&quot;</span><span class="p">)</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;α_R.png&quot;</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">α_R_list</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;F_N.png&quot;</span><span class="p">)</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;F_N.png&quot;</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">F_N_list</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span><span class="s2">&quot;gamma_R.png&quot;</span><span class="p">)</span>
+    <span class="n">save_fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">),</span> <span class="s2">&quot;gamma_R.png&quot;</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">γ_R_list</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_fig_path</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-
 </pre></div>
 
            </div>

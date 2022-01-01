@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>shipmmg.draw_obj &mdash; shipmmg 0.0.7 documentation</title>
+  <title>shipmmg.draw_obj &mdash; shipmmg 0.0.8 documentation</title>
   
 
   
@@ -154,16 +154,26 @@
            <div itemprop="articleBody">
             
   <h1>Source code for shipmmg.draw_obj</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;draw_obj.</span>
+
+<span class="sd">* Base class for drawing object not only for shipmmg.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
 <div class="viewcode-block" id="DrawObj"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.draw_obj.DrawObj">[docs]</a><span class="k">class</span> <span class="nc">DrawObj</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;DrawObj class.</span>
+
 <span class="sd">    General class for drawing object by using matplotlib.animation.</span>
 <span class="sd">    Multiple ships can be drawn by using this class.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;init.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">img</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">))</span>
@@ -172,7 +182,8 @@
 <div class="viewcode-block" id="DrawObj.draw_obj_with_angle"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.draw_obj.DrawObj.draw_obj_with_angle">[docs]</a>    <span class="k">def</span> <span class="nf">draw_obj_with_angle</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">center_x_list</span><span class="p">,</span> <span class="n">center_y_list</span><span class="p">,</span> <span class="n">shape_list</span><span class="p">,</span> <span class="n">angle_list</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="s2">&quot;ship&quot;</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Draw square image with angle</span>
+        <span class="sd">&quot;&quot;&quot;Draw square image with angle.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            center_x_list (List[float]): list of the center x position of the square</span>
 <span class="sd">            center_y_list (List[float]): list of the center y position of the square</span>
@@ -196,7 +207,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">img</span></div>
 
     <span class="k">def</span> <span class="nf">__rotate_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Transformation the coordinate in the angle</span>
+        <span class="sd">&quot;&quot;&quot;Transform the coordinate in the angle.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            pos (numpy.ndarray): local state, shape(data_size, 2)</span>
@@ -211,7 +222,8 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">rot_mat</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__square</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center_x</span><span class="p">,</span> <span class="n">center_y</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create square</span>
+        <span class="sd">&quot;&quot;&quot;Create square.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            center_x (float): the center x position of the square</span>
 <span class="sd">            center_y (float): the center y position of the square</span>
@@ -241,7 +253,8 @@
         <span class="k">return</span> <span class="n">trans_points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">trans_points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">__ship</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center_x</span><span class="p">,</span> <span class="n">center_y</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create ship</span>
+        <span class="sd">&quot;&quot;&quot;Create ship.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            center_x (float): the center x position of the ship</span>
 <span class="sd">            center_y (float): the center y position of the ship</span>
@@ -272,7 +285,8 @@
         <span class="k">return</span> <span class="n">trans_points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">trans_points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">__square_with_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center_x</span><span class="p">,</span> <span class="n">center_y</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create square with angle line</span>
+        <span class="sd">&quot;&quot;&quot;Create square with angle line.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            center_x (float): the center x position of the square</span>
 <span class="sd">            center_y (float): the center y position of the square</span>
@@ -292,7 +306,8 @@
         <span class="k">return</span> <span class="n">square_x</span><span class="p">,</span> <span class="n">square_y</span><span class="p">,</span> <span class="n">angle_x</span><span class="p">,</span> <span class="n">angle_y</span>
 
     <span class="k">def</span> <span class="nf">__ship_with_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center_x</span><span class="p">,</span> <span class="n">center_y</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create ship with angle line</span>
+        <span class="sd">&quot;&quot;&quot;Create ship with angle line.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            center_x (float): the center x position of the ship</span>
 <span class="sd">            center_y (float): the center y position of the ship</span>

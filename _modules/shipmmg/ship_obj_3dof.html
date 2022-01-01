@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>shipmmg.ship_obj_3dof &mdash; shipmmg 0.0.7 documentation</title>
+  <title>shipmmg.ship_obj_3dof &mdash; shipmmg 0.0.8 documentation</title>
   
 
   
@@ -156,13 +156,28 @@
   <h1>Source code for shipmmg.ship_obj_3dof</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;ship_obj_3dof.</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="sd">* Ship class for drawing the simulation results and estimating maneuvering parameters.</span>
+
+<span class="sd">Todo:</span>
+<span class="sd">    Developing the function of estimating maneuvering parameters.</span>
+<span class="sd">    * KT</span>
+<span class="sd">    * MMG3DOF</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">dataclasses</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
 <span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">FuncAnimation</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">scipy.interpolate</span>
+<span class="kn">from</span> <span class="nn">scipy.misc</span> <span class="kn">import</span> <span class="n">derivative</span>
+
 <span class="kn">from</span> <span class="nn">.draw_obj</span> <span class="kn">import</span> <span class="n">DrawObj</span>
 
 
@@ -220,6 +235,7 @@
         <span class="n">psi0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load simulation result (time, u, v, r).</span>
+
 <span class="sd">        By running this, `x`, `y` and `psi` of this class are registered automatically.</span>
 
 <span class="sd">        Args:</span>
@@ -271,6 +287,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi</span> <span class="o">=</span> <span class="n">psi</span></div>
+
+<div class="viewcode-block" id="ShipObj3dof.estimate_KT_LSM"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.ship_obj_3dof.ShipObj3dof.estimate_KT_LSM">[docs]</a>    <span class="k">def</span> <span class="nf">estimate_KT_LSM</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Estimate KT by least square method.&quot;&quot;&quot;</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">δ</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">]</span>
+        <span class="n">spl_r</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">interpolate</span><span class="o">.</span><span class="n">interp1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s2">&quot;extrapolate&quot;</span><span class="p">)</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">derivative</span><span class="p">(</span><span class="n">spl_r</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">])</span>
+        <span class="n">THETA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">A</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">THETA</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">K</span> <span class="o">=</span> <span class="n">THETA</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">T</span>
+        <span class="k">return</span> <span class="n">K</span><span class="p">,</span> <span class="n">T</span></div>
 
 <div class="viewcode-block" id="ShipObj3dof.draw_xy_trajectory"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.ship_obj_3dof.ShipObj3dof.draw_xy_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">draw_xy_trajectory</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1069,7 +1095,8 @@
         <span class="n">save_fig_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Draw GIF of ship trajectory</span>
+        <span class="sd">&quot;&quot;&quot;Draw GIF of ship trajectory.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            dimensionless (bool, optional):</span>
 <span class="sd">                drawing with dimensionless by using L or not.</span>
@@ -1145,7 +1172,6 @@
 <span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; ship.draw_gif(save_fig_path=&#39;test.gif&#39;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span>
             <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">,</span>
             <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
