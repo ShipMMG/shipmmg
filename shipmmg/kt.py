@@ -1,12 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""kt.
+
+* KT (1DOF) simulation code
+
+:math:`T dr =  -r + K \\delta`
+
+"""
 
 import dataclasses
 from typing import List
+
 import numpy as np
-from scipy.misc import derivative
-from scipy.interpolate import interp1d
+
 from scipy.integrate import solve_ivp
+from scipy.interpolate import interp1d
+from scipy.misc import derivative
+
 from .ship_obj_3dof import ShipObj3dof
 
 
@@ -34,7 +44,8 @@ def simulate_kt(
     vectorized=False,
     **options
 ):
-    """KT simulation
+    """KT simulation.
+
     KT simulation by following equation of motion.
 
     :math:`T dr =  -r + K \\delta`
@@ -177,7 +188,8 @@ def simulate(
     vectorized=False,
     **options
 ):
-    """KT simulation
+    """KT simulation.
+
     KT simulation by following equation of motion.
 
     :math:`T dr =  -r + K \\delta`
@@ -336,7 +348,7 @@ def zigzag_test_kt(
     vectorized=False,
     **options
 ):
-    """Zig-zag test simulation
+    """Zig-zag test simulation.
 
     Args:
         kt_params (KTParams):

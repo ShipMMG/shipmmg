@@ -1,12 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""ship_obj_3dof.
 
-from typing import List
+* Ship class for drawing the simulation results and estimating maneuvering parameters.
+
+Todo:
+    Developing the function of estimating maneuvering parameters.
+    * KT
+    * MMG3DOF
+"""
+
 import dataclasses
-import numpy as np
-import matplotlib.pyplot as plt
+from typing import List
+
 import matplotlib
+import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+
+import numpy as np
+
+import scipy.interpolate
+from scipy.misc import derivative
+
 from .draw_obj import DrawObj
 
 
@@ -64,6 +79,7 @@ class ShipObj3dof:
         psi0: float = 0.0,
     ):
         """Load simulation result (time, u, v, r).
+
         By running this, `x`, `y` and `psi` of this class are registered automatically.
 
         Args:
@@ -115,6 +131,16 @@ class ShipObj3dof:
         self.x = x
         self.y = y
         self.psi = psi
+
+    def estimate_KT_LSM(self):
+        """Estimate KT by least square method."""
+        A = np.c_[self.δ, self.r]
+        spl_r = scipy.interpolate.interp1d(self.time, self.r, fill_value="extrapolate")
+        B = np.array([derivative(spl_r, t) for t in self.time])
+        THETA = np.linalg.pinv(A).dot(B.T)
+        T = -1.0 / THETA[1]
+        K = THETA[0] * T
+        return K, T
 
     def draw_xy_trajectory(
         self,
@@ -913,7 +939,8 @@ class ShipObj3dof:
         save_fig_path: str = None,
         **kwargs
     ) -> plt.Figure:
-        """Draw GIF of ship trajectory
+        """Draw GIF of ship trajectory.
+
         Args:
             dimensionless (bool, optional):
                 drawing with dimensionless by using L or not.
@@ -989,7 +1016,6 @@ class ShipObj3dof:
         Examples:
             >>> ship.draw_gif(save_fig_path='test.gif')
         """
-
         fig = plt.figure(
             num=num,
             figsize=figsize,

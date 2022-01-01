@@ -1,11 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""test_kt.
+
+- pytest code of shipmmg/kt.py
+"""
+
+import os
+
+import numpy as np
+
+import pytest
 
 from shipmmg.kt import KTParams, simulate_kt, zigzag_test_kt
 from shipmmg.ship_obj_3dof import ShipObj3dof
-import numpy as np
-import pytest
-import os
 
 
 @pytest.fixture
@@ -25,9 +32,7 @@ def sim_result():
 
 @pytest.fixture
 def ship_kt(sim_result):
-    """
-    Fixture for testing in this file.
-    """
+    """Fixture for testing in this file."""
     time_list, sol = sim_result
     simulation_result = sol.sol(time_list)
     u_list = np.full(len(time_list), 20 * (1852.0 / 3600))
@@ -39,15 +44,14 @@ def ship_kt(sim_result):
 
 
 def test_Ship3DOF_drawing_function(ship_kt, tmpdir):
-    """Check drawing functions of Ship3DOF class by using KT simulation results"""
-
+    """Check drawing functions of Ship3DOF class by using KT simulation results."""
     # Ship3DOF.draw_xy_trajectory()
-    save_fig_path = os.path.join(str(tmpdir),"test.png")
+    save_fig_path = os.path.join(str(tmpdir), "test.png")
     ship_kt.draw_xy_trajectory(dimensionless=True, fmt="ro")
     ship_kt.draw_xy_trajectory(save_fig_path=save_fig_path)
-    
+
     # Ship3DOF.draw_chart()
-    save_fig_path = os.path.join(str(tmpdir),"test.png")
+    save_fig_path = os.path.join(str(tmpdir), "test.png")
     ship_kt.draw_chart(
         "time",
         "u",
@@ -63,7 +67,6 @@ def test_Ship3DOF_drawing_function(ship_kt, tmpdir):
         fmt="ro",
         save_fig_path=save_fig_path,
     )
-
 
     x_index_list = ["time", "u", "v", "r", "x", "y", "psi"]
     y_index_list = ["time", "u", "v", "r", "x", "y", "psi"]
@@ -81,8 +84,8 @@ def test_Ship3DOF_drawing_function(ship_kt, tmpdir):
     ship_kt.draw_gif(dimensionless=True, save_fig_path=save_fig_path)
 
 
-
 def test_zigzag_test_kt(tmpdir):
+    """Just check shimmg.kt.zigzag_test_kt()."""
     K = 0.155
     T = 80.5
     kt_params = KTParams(K=K, T=T)
@@ -105,7 +108,7 @@ def test_zigzag_test_kt(tmpdir):
     ship.load_simulation_result(time_list, u_list, v_list, r_list)
     ship.δ = δ_list
 
-    save_fig_path = os.path.join(str(tmpdir),"test.png")
+    save_fig_path = os.path.join(str(tmpdir), "test.png")
     ship.draw_xy_trajectory(save_fig_path=save_fig_path)
     ship.draw_chart(
         "time",
@@ -128,8 +131,8 @@ def test_zigzag_test_kt(tmpdir):
         ylabel=r"$\delta$" + " [rad]",
         save_fig_path=save_fig_path,
     )
-    
-    save_fig_path = os.path.join(str(tmpdir),"test_delta_psi.png")
+
+    save_fig_path = os.path.join(str(tmpdir), "test_delta_psi.png")
     ship.draw_multi_y_chart(
         "time",
         ["delta", "psi"],
@@ -137,4 +140,3 @@ def test_zigzag_test_kt(tmpdir):
         ylabel="[rad]",
         save_fig_path=save_fig_path,
     )
-

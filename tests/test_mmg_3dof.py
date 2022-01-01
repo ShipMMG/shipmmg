@@ -1,23 +1,31 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""test_mmg_3dof.
+
+- pytest code of shipmmg/mmg_3dof.py
+"""
+
+import os
+
+import matplotlib.pyplot as plt
+
+import numpy as np
+
+import pytest
 
 from shipmmg.mmg_3dof import (
     Mmg3DofBasicParams,
     Mmg3DofManeuveringParams,
-    simulate_mmg_3dof,
     get_sub_values_from_simulation_result,
+    simulate_mmg_3dof,
     zigzag_test_mmg_3dof,
 )
 from shipmmg.ship_obj_3dof import ShipObj3dof
-import numpy as np
-import pytest
-import os
-import matplotlib.pyplot as plt
 
 
 @pytest.fixture
 def ship_KVLCC2_L7_model():
-    ρ = 1.025  # 海水密度
+    ρ = 1025.0  # 海水密度[kg/m^3]
 
     L_pp = 7.00  # 船長Lpp[m]
     B = 1.27  # 船幅[m]
@@ -119,6 +127,7 @@ def ship_KVLCC2_L7_model():
 
 @pytest.fixture
 def kvlcc2_L7_35_turning(ship_KVLCC2_L7_model):
+    """Do turning test using KVLCC2 L7 model."""
     basic_params, maneuvering_params = ship_KVLCC2_L7_model
     duration = 200  # [s]
     # steering_rate = 1.76 * 4  # [°/s]
@@ -154,6 +163,7 @@ def kvlcc2_L7_35_turning(ship_KVLCC2_L7_model):
 def test_get_sub_values_from_simulation_result(
     kvlcc2_L7_35_turning, ship_KVLCC2_L7_model, tmpdir
 ):
+    """Test get_sub_values_from_simulation_result() using KVLCC2 L7 model."""
     basic_params, maneuvering_params = ship_KVLCC2_L7_model
     (
         X_H_list,
@@ -206,25 +216,23 @@ def test_get_sub_values_from_simulation_result(
         return_all_vals=True,
     )
 
-    save_fig_path = os.path.join(str(tmpdir),"testFN.png")
+    save_fig_path = os.path.join(str(tmpdir), "testFN.png")
 
     fig = plt.figure()
     plt.plot(kvlcc2_L7_35_turning.time, F_N_list)
     fig.savefig(save_fig_path)
 
 
-def test_Ship3DOF_drawing_function(kvlcc2_L7_35_turning,tmpdir):
+def test_Ship3DOF_drawing_function(kvlcc2_L7_35_turning, tmpdir):
     """Check drawing functions of Ship3DOF class by using MMG 3DOF simulation results."""
     # Ship3DOF.draw_xy_trajectory()
-    save_fig_path = os.path.join(str(tmpdir),"trajectory.png") 
-    
+    save_fig_path = os.path.join(str(tmpdir), "trajectory.png")
 
     kvlcc2_L7_35_turning.draw_xy_trajectory(dimensionless=True)
     kvlcc2_L7_35_turning.draw_xy_trajectory(save_fig_path=save_fig_path)
 
-
     # Ship3DOF.draw_chart()
-    save_fig_path = os.path.join(str(tmpdir),"param.png")  
+    save_fig_path = os.path.join(str(tmpdir), "param.png")
 
     kvlcc2_L7_35_turning.draw_chart(
         "time",
@@ -246,14 +254,14 @@ def test_Ship3DOF_drawing_function(kvlcc2_L7_35_turning,tmpdir):
         kvlcc2_L7_35_turning.draw_chart("hogehoge", "y")
 
     # Ship3DOF.draw_gif()
-    save_fig_path = os.path.join(str(tmpdir),"test.gif")
-    
-    kvlcc2_L7_35_turning.draw_gif(save_fig_path=save_fig_path)
-    
-    kvlcc2_L7_35_turning.draw_gif(dimensionless=True, save_fig_path=save_fig_path)
-    
+    save_fig_path = os.path.join(str(tmpdir), "test.gif")
 
-def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model,tmpdir):
+    kvlcc2_L7_35_turning.draw_gif(save_fig_path=save_fig_path)
+
+    kvlcc2_L7_35_turning.draw_gif(dimensionless=True, save_fig_path=save_fig_path)
+
+
+def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model, tmpdir):
     basic_params, maneuvering_params = ship_KVLCC2_L7_model
     target_δ_rad = 20.0 * np.pi / 180.0
     target_ψ_rad_deviation = -20.0 * np.pi / 180.0
@@ -277,7 +285,7 @@ def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model,tmpdir):
     ship.load_simulation_result(time_list, u_list, v_list, r_list)
     ship.δ = δ_list
 
-    save_fig_path = os.path.join(str(tmpdir),"test_psi.png")
+    save_fig_path = os.path.join(str(tmpdir), "test_psi.png")
 
     ship.draw_xy_trajectory(save_fig_path=save_fig_path)
     ship.draw_chart(
@@ -288,7 +296,7 @@ def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model,tmpdir):
         save_fig_path=save_fig_path,
     )
 
-    save_fig_path = os.path.join(str(tmpdir),"test_delta.png")
+    save_fig_path = os.path.join(str(tmpdir), "test_delta.png")
     ship.draw_xy_trajectory(save_fig_path=save_fig_path)
     ship.draw_chart(
         "time",
@@ -298,17 +306,9 @@ def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model,tmpdir):
         save_fig_path=save_fig_path,
     )
 
-    save_fig_path = os.path.join(str(tmpdir),"test_delta_psi.png")
+    save_fig_path = os.path.join(str(tmpdir), "test_delta_psi.png")
 
-    ship.draw_multi_y_chart(
-        "time",
-        ["delta", "psi"],
-        xlabel="time [sec]",
-        ylabel="[rad]",
-        save_fig_path=save_fig_path,
-    )
-
-    save_fig_path = os.path.join(str(tmpdir),"test_delta_psi.png")
+    # save_fig_path = os.path.join(str(tmpdir), "test_delta_psi.png")
 
     ship.draw_multi_x_chart(
         ["delta", "psi"],
@@ -320,7 +320,7 @@ def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model,tmpdir):
 
 
 def test_zigzag_test_mmg(ship_KVLCC2_L7_model, tmpdir):
-
+    """Test zigzag test mmg simulation using KVLCC2 L7 model."""
     basic_params, maneuvering_params = ship_KVLCC2_L7_model
     target_δ_rad = 20.0 * np.pi / 180.0
     target_ψ_rad_deviation = 20.0 * np.pi / 180.0
@@ -345,14 +345,13 @@ def test_zigzag_test_mmg(ship_KVLCC2_L7_model, tmpdir):
     ship.δ = δ_list
     ship.npm = npm_list
 
-    save_fig_path = os.path.join(str(tmpdir),"delta_psi.png")
+    save_fig_path = os.path.join(str(tmpdir), "delta_psi.png")
 
     fig = plt.figure()
     plt.plot(time_list, list(map(lambda δ: δ * 180 / np.pi, ship.δ)))
     plt.plot(time_list, list(map(lambda psi: psi * 180 / np.pi, ship.psi)))
     fig.savefig(save_fig_path)
     plt.close()
-    
 
     (
         X_H_list,
@@ -388,49 +387,45 @@ def test_zigzag_test_mmg(ship_KVLCC2_L7_model, tmpdir):
         return_all_vals=True,
     )
 
-    save_fig_path = os.path.join(str(tmpdir),"w_P.png")
+    save_fig_path = os.path.join(str(tmpdir), "w_P.png")
     fig = plt.figure()
     plt.plot(time_list, w_P_list)
     fig.savefig(save_fig_path)
     plt.close()
 
-    save_fig_path = os.path.join(str(tmpdir),"J.png")
+    save_fig_path = os.path.join(str(tmpdir), "J.png")
     fig = plt.figure()
     plt.plot(time_list, J_list)
     fig.savefig(save_fig_path)
     plt.close()
 
-
-    save_fig_path = os.path.join(str(tmpdir),"K_T.png")
+    save_fig_path = os.path.join(str(tmpdir), "K_T.png")
 
     fig = plt.figure()
     plt.plot(time_list, K_T_list)
     fig.savefig(save_fig_path)
     plt.close()
 
-
-    save_fig_path = os.path.join(str(tmpdir),"U_R.png")
+    save_fig_path = os.path.join(str(tmpdir), "U_R.png")
     fig = plt.figure()
     plt.plot(time_list, U_R_list)
     fig.savefig(save_fig_path)
     plt.close()
 
-    save_fig_path = os.path.join(str(tmpdir),"α_R.png")
+    save_fig_path = os.path.join(str(tmpdir), "α_R.png")
     fig = plt.figure()
     plt.plot(time_list, α_R_list)
     fig.savefig(save_fig_path)
     plt.close()
 
-
-    save_fig_path = os.path.join(str(tmpdir),"F_N.png")
+    save_fig_path = os.path.join(str(tmpdir), "F_N.png")
     fig = plt.figure()
     plt.plot(time_list, F_N_list)
     fig.savefig(save_fig_path)
     plt.close()
 
-    save_fig_path = os.path.join(str(tmpdir),"gamma_R.png")
+    save_fig_path = os.path.join(str(tmpdir), "gamma_R.png")
     fig = plt.figure()
     plt.plot(time_list, γ_R_list)
     fig.savefig(save_fig_path)
     plt.close()
-

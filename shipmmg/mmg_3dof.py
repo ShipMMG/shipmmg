@@ -1,12 +1,28 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""mmg_3dof.
+
+* MMG (3DOF) simulation code
+
+.. math::
+
+        m (\\dot{u}-vr)&=-m_x\\dot{u}+m_yvr+X_H+X_P+X_R
+
+        m (\\dot{v}+ur)&=-m_y\\dot{v}+m_xur+Y_H+Y_R
+
+        I_{zG}\\dot{r}&=-J_Z\\dot{r}+N_H+N_R
+
+"""
 
 import dataclasses
 from typing import List
+
 import numpy as np
-from scipy.misc import derivative
-from scipy.interpolate import interp1d
+
 from scipy.integrate import solve_ivp
+from scipy.interpolate import interp1d
+from scipy.misc import derivative
+
 from .ship_obj_3dof import ShipObj3dof
 
 
@@ -161,14 +177,15 @@ def simulate_mmg_3dof(
     u0: float = 0.0,
     v0: float = 0.0,
     r0: float = 0.0,
-    ρ: float = 1.025,
+    ρ: float = 1025.0,
     method: str = "RK45",
     t_eval=None,
     events=None,
     vectorized=False,
     **options
 ):
-    """MMG 3DOF simulation
+    """MMG 3DOF simulation.
+
     MMG 3DOF simulation by follwoing equation of motion.
 
     .. math::
@@ -201,7 +218,7 @@ def simulate_mmg_3dof(
             Defaults to 0.0.
         ρ (float, optional):
             seawater density [kg/m^3]
-            Defaults to 1.025.
+            Defaults to 1025.0.
         method (str, optional):
             Integration method to use in
             `scipy.integrate.solve_ivp()
@@ -477,14 +494,15 @@ def simulate(
     u0: float = 0.0,
     v0: float = 0.0,
     r0: float = 0.0,
-    ρ: float = 1.025,
+    ρ: float = 1025.0,
     method: str = "RK45",
     t_eval=None,
     events=None,
     vectorized=False,
     **options
 ):
-    """MMG 3DOF simulation
+    """MMG 3DOF simulation.
+
     MMG 3DOF simulation by follwoing equation of motion.
 
     .. math::
@@ -601,7 +619,7 @@ def simulate(
             Defaults to 0.0.
         ρ (float, optional):
             seawater density [kg/m^3]
-            Defaults to 1.025.
+            Defaults to 1025.0.
         method (str, optional):
             Integration method to use in
             `scipy.integrate.solve_ivp()
@@ -918,7 +936,7 @@ def get_sub_values_from_simulation_result(
     npm_list: List[float],
     basic_params: Mmg3DofBasicParams,
     maneuvering_params: Mmg3DofManeuveringParams,
-    ρ: float = 1.025,
+    ρ: float = 1025.0,
     return_all_vals: bool = False,
 ):
     """Get sub values of MMG calculation from simulation result.
@@ -940,7 +958,7 @@ def get_sub_values_from_simulation_result(
             u of MMG simulation result.
         ρ (float, optional):
             seawater density [kg/m^3]
-            Defaults to 1.025.
+            Defaults to 1025.0.
         return_all_vals (bool, optional):
             Whether all sub values are returned or not.
             Defaults to false.
@@ -1225,14 +1243,14 @@ def zigzag_test_mmg_3dof(
     v0: float = 0.0,
     r0: float = 0.0,
     ψ0: float = 0.0,
-    ρ: float = 1.025,
+    ρ: float = 1025.0,
     method: str = "RK45",
     t_eval=None,
     events=None,
     vectorized=False,
     **options
 ):
-    """Zig-zag test simulation
+    """Zig-zag test simulation.
 
     Args:
         basic_params (Mmg3DofBasicParams):
@@ -1267,7 +1285,7 @@ def zigzag_test_mmg_3dof(
             Defaults to 0.0.
         ρ (float, optional):
             seawater density [kg/m^3]
-            Defaults to 1.025.
+            Defaults to 1025.0.
         method (str, optional):
             Integration method to use in
             `scipy.integrate.solve_ivp()
@@ -1386,6 +1404,7 @@ def zigzag_test_mmg_3dof(
             u0=u0,
             v0=v0,
             r0=r0,
+            ρ=ρ,
         )
         sim_result = sol.sol(time_list[start_index:])
         u_list = sim_result[0]
