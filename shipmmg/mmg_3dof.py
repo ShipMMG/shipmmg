@@ -61,6 +61,8 @@ class Mmg3DofBasicParams:
             Ratio of wake fraction at propeller and rudder positions
         t_R (float):
             Steering resistance deduction factor
+        x_R (float):
+            Longitudinal coordinate of rudder position.
         a_H (float):
             Rudder force increase factor
         x_H (float):
@@ -102,6 +104,7 @@ class Mmg3DofBasicParams:
     f_α: float
     ϵ: float
     t_R: float
+    x_R: float
     a_H: float
     x_H: float
     γ_R_minus: float
@@ -333,6 +336,7 @@ def simulate_mmg_3dof(
         >>>                     f_α=2.747,
         >>>                     ϵ=1.09,
         >>>                     t_R=0.387,
+        >>>                     x_R=-0.500*L_pp,
         >>>                     a_H=0.312,
         >>>                     x_H=-0.464*L_pp,
         >>>                     γ_R_minus=0.395,
@@ -399,6 +403,7 @@ def simulate_mmg_3dof(
         f_α=basic_params.f_α,
         ϵ=basic_params.ϵ,
         t_R=basic_params.t_R,
+        x_R=basic_params.x_R,
         a_H=basic_params.a_H,
         x_H=basic_params.x_H,
         γ_R_minus=basic_params.γ_R_minus,
@@ -459,6 +464,7 @@ def simulate(
     f_α: float,
     ϵ: float,
     t_R: float,
+    x_R: float,
     a_H: float,
     x_H: float,
     γ_R_minus: float,
@@ -544,6 +550,8 @@ def simulate(
             Ratio of wake fraction at propeller and rudder positions
         t_R (float):
             Steering resistance deduction factor
+        x_R (float):
+            Longitudinal coordinate of rudder position
         a_H (float):
             Rudder force increase factor
         x_H (float):
@@ -733,6 +741,7 @@ def simulate(
         >>> f_α=2.747
         >>> ϵ=1.09
         >>> t_R=0.387
+        >>> x_R=-0.500*L_pp
         >>> a_H=0.312
         >>> x_H=-0.464*L_pp
         >>> γ_R=0.395
@@ -777,6 +786,7 @@ def simulate(
         >>>                    f_α=f_α,
         >>>                    ϵ=ϵ,
         >>>                    t_R=t_R,
+        >>>                    x_R=x_R,
         >>>                    a_H=a_H,
         >>>                    x_H=x_H,
         >>>                    γ_R=γ_R,
@@ -902,7 +912,7 @@ def simulate(
                 + N_rrr_dash * (r_dash ** 3)
             )
         )
-        N_R = -(-0.5 + a_H * x_H) * F_N * np.cos(δ)
+        N_R = -(x_R + a_H * x_H) * F_N * np.cos(δ)
         d_u = ((X_H + X_R + X_P) + (m + m_y) * v * r + x_G * m * (r ** 2)) / (m + m_x)
         d_v = (
             (x_G ** 2) * (m ** 2) * u * r
@@ -1186,7 +1196,7 @@ def get_sub_values_from_simulation_result(
     )
     N_R_list = list(
         map(
-            lambda F_N, δ: -(-0.5 + basic_params.a_H * basic_params.x_H)
+            lambda F_N, δ: -(basic_params.x_R + basic_params.a_H * basic_params.x_H)
             * F_N
             * np.cos(δ),
             F_N_list,
