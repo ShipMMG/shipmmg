@@ -32,7 +32,7 @@ pip install shipmmg
 Here is an example of constructing a developing environment.
 
 ```sh
-docker build shipmmg-dev-env .
+docker build -t shipmmg-dev-env .
 docker run --rm --name shipmmg-dev -v `pwd`:/code -w /code -it shipmmg-dev-env /bin/bash
 ```
 
