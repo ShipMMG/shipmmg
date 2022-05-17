@@ -43,6 +43,7 @@ def ship_KVLCC2_L7_model():
     m_y_dash = 0.223  # 付加質量y(無次元)
     J_z_dash = 0.011  # 付加質量Izz(無次元)
     t_R = 0.387  # 操縦抵抗減少率
+    x_R_dash = -0.500  # 舵の相対位置
     a_H = 0.312  # 舵力増加係数
     x_H_dash = -0.464  # 舵力増分作用位置
     γ_R_minus = 0.395  # 整流係数
@@ -69,6 +70,7 @@ def ship_KVLCC2_L7_model():
         f_α=f_α,
         ϵ=ϵ,  # プロペラ・舵位置伴流係数比
         t_R=t_R,  # 操縦抵抗減少率
+        x_R=x_R_dash * L_pp,  # 舵の相対位置
         a_H=a_H,  # 舵力増加係数
         x_H=x_H_dash * L_pp,  # 舵力増分作用位置
         γ_R_minus=γ_R_minus,  # 整流係数

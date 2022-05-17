@@ -144,3 +144,7 @@ static
 
 # vscode project settings
 .vscode
+
+# figure
+*.gif
+*.png
