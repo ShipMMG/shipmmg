@@ -68,6 +68,42 @@ class ShipObj3dof:
     δ: List[float] = dataclasses.field(default_factory=list)
     npm: List[float] = dataclasses.field(default_factory=list)
 
+    def register_simulation_result(
+        self,
+        time: List[float],
+        u: List[float],
+        v: List[float],
+        r: List[float],
+        x: List[float],
+        y: List[float],
+        psi: List[float],
+    ):
+        """register simulation result (time, u, v, r, x, y, psi).
+
+        Args:
+            time (list[float]):
+                Time list of simulation result.
+            u (list[float]):
+                List of axial velocity [m/s] in simulation result.
+            v (list[float]):
+                List of lateral velocity [m/s] in simulation result.
+            r (list[float]):
+                List of rate of turn [rad/s] in simulation result.
+            x (list[float]):
+                List of position of X axis [m].
+            y (list[float]):
+                List of position of Y axis [m/s].
+            psi (list[float]):
+                List of inital azimuth [rad].
+        """
+        self.time = time
+        self.u = u
+        self.v = v
+        self.r = r
+        self.x = x
+        self.y = y
+        self.psi = psi
+
     def load_simulation_result(
         self,
         time: List[float],
@@ -94,10 +130,10 @@ class ShipObj3dof:
             x0 (float, optional):
                 Inital position of X axis [m].
                 Defaults to 0.0.
-            y (list[float]):
+            y0 (float, optional):
                 Inital position of Y axis [m/s].
                 Defaults to 0.0.
-            psi (list[float]):
+            psi0 (float, optional):
                 Inital azimuth [rad].
                 Defaults to 0.0.
 

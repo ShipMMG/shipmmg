@@ -64,9 +64,9 @@ def ship_KVLCC2_L7_model():
         I_zG=ρ * nabla * ((0.25 * L_pp) ** 2),  # 慣性モーメント[-]
         A_R=A_R,  # 船の断面に対する舵面積比[-]
         η=D_p / H_R,  # プロペラ直径に対する舵高さ(Dp/H)
-        m_x=(0.5 * ρ * (L_pp ** 2) * d) * m_x_dash,  # 付加質量x(無次元)
-        m_y=(0.5 * ρ * (L_pp ** 2) * d) * m_y_dash,  # 付加質量y(無次元)
-        J_z=(0.5 * ρ * (L_pp ** 4) * d) * J_z_dash,  # 付加質量Izz(無次元)
+        m_x=(0.5 * ρ * (L_pp**2) * d) * m_x_dash,  # 付加質量x(無次元)
+        m_y=(0.5 * ρ * (L_pp**2) * d) * m_y_dash,  # 付加質量y(無次元)
+        J_z=(0.5 * ρ * (L_pp**4) * d) * J_z_dash,  # 付加質量Izz(無次元)
         f_α=f_α,
         ϵ=ϵ,  # プロペラ・舵位置伴流係数比
         t_R=t_R,  # 操縦抵抗減少率
@@ -273,7 +273,7 @@ def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model, tmpdir):
     n_const = 17.95  # [rpm]
     npm_list = np.array([n_const for i in range(num_of_sampling)])
 
-    δ_list, u_list, v_list, r_list = zigzag_test_mmg_3dof(
+    δ_list, u_list, v_list, r_list, x_list, y_list, ψ_list = zigzag_test_mmg_3dof(
         basic_params,
         maneuvering_params,
         target_δ_rad,
@@ -332,7 +332,7 @@ def test_zigzag_test_mmg(ship_KVLCC2_L7_model, tmpdir):
     n_const = 17.95  # [rpm]
     npm_list = np.array([n_const for i in range(num_of_sampling)])
 
-    δ_list, u_list, v_list, r_list = zigzag_test_mmg_3dof(
+    δ_list, u_list, v_list, r_list, x_list, y_list, ψ_list = zigzag_test_mmg_3dof(
         basic_params,
         maneuvering_params,
         target_δ_rad,

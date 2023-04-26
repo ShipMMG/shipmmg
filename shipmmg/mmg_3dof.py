@@ -23,8 +23,6 @@ from scipy.integrate import solve_ivp
 from scipy.interpolate import interp1d
 from scipy.misc import derivative
 
-from .ship_obj_3dof import ShipObj3dof
-
 
 @dataclasses.dataclass
 class Mmg3DofBasicParams:
@@ -74,7 +72,7 @@ class Mmg3DofBasicParams:
         l_R (float):
             Effective longitudinal coordinate of rudder position in formula of βR
         κ (float):
-            An experimental constant for　expressing uR
+            An experimental constant for expressing uR
         t_P (float):
             Thrust deduction factor
         w_P0 (float):
@@ -86,7 +84,7 @@ class Mmg3DofBasicParams:
         For more information, please see the following articles.
 
         - Yasukawa, H., Yoshimura, Y. (2015) Introduction of MMG standard method for ship maneuvering predictions.
-          J Mar Sci Technol 20, 37–52 https://doi.org/10.1007/s00773-014-0293-y
+          J Mar Sci Technol 20, 37-52 https://doi.org/10.1007/s00773-014-0293-y
     """
 
     L_pp: float
@@ -146,7 +144,7 @@ class Mmg3DofManeuveringParams:
         For more information, please see the following articles.
 
         - Yasukawa, H., Yoshimura, Y. (2015) Introduction of MMG standard method for ship maneuvering predictions.
-          J Mar Sci Technol 20, 37–52 https://doi.org/10.1007/s00773-014-0293-y
+          J Mar Sci Technol 20, 37-52 https://doi.org/10.1007/s00773-014-0293-y
     """
 
     k_0: float
@@ -180,6 +178,9 @@ def simulate_mmg_3dof(
     u0: float = 0.0,
     v0: float = 0.0,
     r0: float = 0.0,
+    x0: float = 0.0,
+    y0: float = 0.0,
+    ψ0: float = 0.0,
     ρ: float = 1025.0,
     method: str = "RK45",
     t_eval=None,
@@ -218,6 +219,15 @@ def simulate_mmg_3dof(
             Defaults to 0.0.
         r0 (float, optional):
             rate of turn [rad/s] in initial condition (`time_list[0]`).
+            Defaults to 0.0.
+        x0 (float, optional):
+            x (surge) position [m] in initial condition (`time_list[0]`).
+            Defaults to 0.0.
+        y0 (float, optional):
+            y (sway) position [m] in initial condition (`time_list[0]`).
+            Defaults to 0.0.
+        ψ0 (float, optional):
+            ψ (yaw) azimuth [rad] in initial condition (`time_list[0]`).
             Defaults to 0.0.
         ρ (float, optional):
             seawater density [kg/m^3]
@@ -384,7 +394,7 @@ def simulate_mmg_3dof(
         For more information, please see the following articles.
 
         - Yasukawa, H., Yoshimura, Y. (2015) Introduction of MMG standard method for ship maneuvering predictions.
-          J Mar Sci Technol 20, 37–52 https://doi.org/10.1007/s00773-014-0293-y
+          J Mar Sci Technol 20, 37-52 https://doi.org/10.1007/s00773-014-0293-y
 
     """
     return simulate(
@@ -439,6 +449,9 @@ def simulate_mmg_3dof(
         u0=u0,
         v0=v0,
         r0=r0,
+        x0=x0,
+        y0=y0,
+        ψ0=ψ0,
         ρ=ρ,
         method=method,
         t_eval=t_eval,
@@ -500,6 +513,9 @@ def simulate(
     u0: float = 0.0,
     v0: float = 0.0,
     r0: float = 0.0,
+    x0: float = 0.0,
+    y0: float = 0.0,
+    ψ0: float = 0.0,
     ρ: float = 1025.0,
     method: str = "RK45",
     t_eval=None,
@@ -563,7 +579,7 @@ def simulate(
         l_R (float):
             Effective longitudinal coordinate of rudder position in formula of βR
         κ (float):
-            An experimental constant for　expressing uR
+            An experimental constant for expressing uR
         t_P (float):
             Thrust deduction factor
         w_P0 (float):
@@ -624,6 +640,15 @@ def simulate(
             Defaults to 0.0.
         r0 (float, optional):
             rate of turn [rad/s] in initial condition (`time_list[0]`).
+            Defaults to 0.0.
+        x0 (float, optional):
+            x (surge) position [m] in initial condition (`time_list[0]`).
+            Defaults to 0.0.
+        y0 (float, optional):
+            y (sway) position [m] in initial condition (`time_list[0]`).
+            Defaults to 0.0.
+        ψ0 (float, optional):
+            ψ (yaw) azimuth [rad] in initial condition (`time_list[0]`).
             Defaults to 0.0.
         ρ (float, optional):
             seawater density [kg/m^3]
@@ -826,7 +851,7 @@ def simulate(
         For more information, please see the following articles.
 
         - Yasukawa, H., Yoshimura, Y. (2015) Introduction of MMG standard method for ship maneuvering predictions.
-          J Mar Sci Technol 20, 37–52 https://doi.org/10.1007/s00773-014-0293-y
+          J Mar Sci Technol 20, 37-52 https://doi.org/10.1007/s00773-014-0293-y
 
     """
     spl_δ = interp1d(time_list, δ_list, "cubic", fill_value="extrapolate")
@@ -834,9 +859,9 @@ def simulate(
 
     def mmg_3dof_eom_solve_ivp(t, X):
 
-        u, v, r, δ, npm = X
+        u, v, r, x, y, ψ, δ, npm = X
 
-        U = np.sqrt(u ** 2 + (v - r * x_G) ** 2)
+        U = np.sqrt(u**2 + (v - r * x_G) ** 2)
 
         β = 0.0 if U == 0.0 else np.arcsin(-(v - r * x_G) / U)
         v_dash = 0.0 if U == 0.0 else v / U
@@ -846,88 +871,91 @@ def simulate(
         w_P = w_P0 * np.exp(-4.0 * (β - x_P * r_dash) ** 2)
 
         J = 0.0 if npm == 0.0 else (1 - w_P) * u / (npm * D_p)
-        K_T = k_0 + k_1 * J + k_2 * J ** 2
+        K_T = k_0 + k_1 * J + k_2 * J**2
         β_R = β - l_R * r_dash
         γ_R = γ_R_minus if β_R < 0.0 else γ_R_plus
         v_R = U * γ_R * β_R
         u_R = (
-            np.sqrt(η * (κ * ϵ * 8.0 * k_0 * npm ** 2 * D_p ** 4 / np.pi) ** 2)
+            np.sqrt(η * (κ * ϵ * 8.0 * k_0 * npm**2 * D_p**4 / np.pi) ** 2)
             if J == 0.0
             else u
             * (1 - w_P)
             * ϵ
             * np.sqrt(
-                η * (1.0 + κ * (np.sqrt(1.0 + 8.0 * K_T / (np.pi * J ** 2)) - 1)) ** 2
+                η * (1.0 + κ * (np.sqrt(1.0 + 8.0 * K_T / (np.pi * J**2)) - 1)) ** 2
                 + (1 - η)
             )
         )
-        U_R = np.sqrt(u_R ** 2 + v_R ** 2)
+        U_R = np.sqrt(u_R**2 + v_R**2)
         α_R = δ - np.arctan2(v_R, u_R)
-        F_N = 0.5 * A_R * ρ * f_α * (U_R ** 2) * np.sin(α_R)
+        F_N = 0.5 * A_R * ρ * f_α * (U_R**2) * np.sin(α_R)
 
         X_H = (
             0.5
             * ρ
             * L_pp
             * d
-            * (U ** 2)
+            * (U**2)
             * (
                 -R_0_dash
-                + X_vv_dash * (v_dash ** 2)
+                + X_vv_dash * (v_dash**2)
                 + X_vr_dash * v_dash * r_dash
-                + X_rr_dash * (r_dash ** 2)
-                + X_vvvv_dash * (v_dash ** 4)
+                + X_rr_dash * (r_dash**2)
+                + X_vvvv_dash * (v_dash**4)
             )
         )
         X_R = -(1 - t_R) * F_N * np.sin(δ)
-        X_P = (1 - t_P) * ρ * K_T * npm ** 2 * D_p ** 4
+        X_P = (1 - t_P) * ρ * K_T * npm**2 * D_p**4
         Y_H = (
             0.5
             * ρ
             * L_pp
             * d
-            * (U ** 2)
+            * (U**2)
             * (
                 Y_v_dash * v_dash
                 + Y_r_dash * r_dash
-                + Y_vvv_dash * (v_dash ** 3)
-                + Y_vvr_dash * (v_dash ** 2) * r_dash
-                + Y_vrr_dash * v_dash * (r_dash ** 2)
-                + Y_rrr_dash * (r_dash ** 3)
+                + Y_vvv_dash * (v_dash**3)
+                + Y_vvr_dash * (v_dash**2) * r_dash
+                + Y_vrr_dash * v_dash * (r_dash**2)
+                + Y_rrr_dash * (r_dash**3)
             )
         )
         Y_R = -(1 + a_H) * F_N * np.cos(δ)
         N_H = (
             0.5
             * ρ
-            * (L_pp ** 2)
+            * (L_pp**2)
             * d
-            * (U ** 2)
+            * (U**2)
             * (
                 N_v_dash * v_dash
                 + N_r_dash * r_dash
-                + N_vvv_dash * (v_dash ** 3)
-                + N_vvr_dash * (v_dash ** 2) * r_dash
-                + N_vrr_dash * v_dash * (r_dash ** 2)
-                + N_rrr_dash * (r_dash ** 3)
+                + N_vvv_dash * (v_dash**3)
+                + N_vvr_dash * (v_dash**2) * r_dash
+                + N_vrr_dash * v_dash * (r_dash**2)
+                + N_rrr_dash * (r_dash**3)
             )
         )
         N_R = -(x_R + a_H * x_H) * F_N * np.cos(δ)
-        d_u = ((X_H + X_R + X_P) + (m + m_y) * v * r + x_G * m * (r ** 2)) / (m + m_x)
+        d_u = ((X_H + X_R + X_P) + (m + m_y) * v * r + x_G * m * (r**2)) / (m + m_x)
         d_v = (
-            (x_G ** 2) * (m ** 2) * u * r
+            (x_G**2) * (m**2) * u * r
             - (N_H + N_R) * x_G * m
-            + ((Y_H + Y_R) - (m + m_x) * u * r) * (I_zG + J_z + (x_G ** 2) * m)
-        ) / ((I_zG + J_z + (x_G ** 2) * m) * (m + m_y) - (x_G ** 2) * (m ** 2))
-        d_r = (N_H + N_R - x_G * m * (d_v + u * r)) / (I_zG + J_z + (x_G ** 2) * m)
+            + ((Y_H + Y_R) - (m + m_x) * u * r) * (I_zG + J_z + (x_G**2) * m)
+        ) / ((I_zG + J_z + (x_G**2) * m) * (m + m_y) - (x_G**2) * (m**2))
+        d_r = (N_H + N_R - x_G * m * (d_v + u * r)) / (I_zG + J_z + (x_G**2) * m)
+        d_x = u * np.cos(ψ) - v * np.sin(ψ)
+        d_y = u * np.sin(ψ) + v * np.cos(ψ)
+        d_ψ = r
         d_δ = derivative(spl_δ, t)
         d_npm = derivative(spl_npm, t)
-        return [d_u, d_v, d_r, d_δ, d_npm]
+        return [d_u, d_v, d_r, d_x, d_y, d_ψ, d_δ, d_npm]
 
     sol = solve_ivp(
         mmg_3dof_eom_solve_ivp,
         [time_list[0], time_list[-1]],
-        [u0, v0, r0, δ_list[0], npm_list[0]],
+        [u0, v0, r0, x0, y0, ψ0, δ_list[0], npm_list[0]],
         dense_output=True,
         method=method,
         t_eval=t_eval,
@@ -995,7 +1023,7 @@ def get_sub_values_from_simulation_result(
     """
     U_list = list(
         map(
-            lambda u, v, r: np.sqrt(u ** 2 + (v - r * basic_params.x_G) ** 2),
+            lambda u, v, r: np.sqrt(u**2 + (v - r * basic_params.x_G) ** 2),
             u_list,
             v_list,
             r_list,
@@ -1024,7 +1052,7 @@ def get_sub_values_from_simulation_result(
     )
     # w_P_list = [basic_params.w_P0 for i in range(len(r_dash_list))]
     w_P_list = list(
-        map(lambda β_P: basic_params.w_P0 * np.exp(-4.0 * β_P ** 2), β_P_list)
+        map(lambda β_P: basic_params.w_P0 * np.exp(-4.0 * β_P**2), β_P_list)
     )
     J_list = list(
         map(
@@ -1040,7 +1068,7 @@ def get_sub_values_from_simulation_result(
         map(
             lambda J: maneuvering_params.k_0
             + maneuvering_params.k_1 * J
-            + maneuvering_params.k_2 * J ** 2,
+            + maneuvering_params.k_2 * J**2,
             J_list,
         )
     )
@@ -1074,8 +1102,8 @@ def get_sub_values_from_simulation_result(
                     * basic_params.ϵ
                     * 8.0
                     * maneuvering_params.k_0
-                    * npm ** 2
-                    * basic_params.D_p ** 4
+                    * npm**2
+                    * basic_params.D_p**4
                     / np.pi
                 )
                 ** 2
@@ -1088,7 +1116,7 @@ def get_sub_values_from_simulation_result(
                 basic_params.η
                 * (
                     1.0
-                    + basic_params.κ * (np.sqrt(1.0 + 8.0 * K_T / (np.pi * J ** 2)) - 1)
+                    + basic_params.κ * (np.sqrt(1.0 + 8.0 * K_T / (np.pi * J**2)) - 1)
                 )
                 ** 2
                 + (1 - basic_params.η)
@@ -1101,7 +1129,7 @@ def get_sub_values_from_simulation_result(
         )
     )
     U_R_list = list(
-        map(lambda u_R, v_R: np.sqrt(u_R ** 2 + v_R ** 2), u_R_list, v_R_list)
+        map(lambda u_R, v_R: np.sqrt(u_R**2 + v_R**2), u_R_list, v_R_list)
     )
     α_R_list = list(
         map(lambda δ, u_R, v_R: δ - np.arctan2(v_R, u_R), δ_list, u_R_list, v_R_list)
@@ -1112,7 +1140,7 @@ def get_sub_values_from_simulation_result(
             * basic_params.A_R
             * ρ
             * basic_params.f_α
-            * (U_R ** 2)
+            * (U_R**2)
             * np.sin(α_R),
             U_R_list,
             α_R_list,
@@ -1124,13 +1152,13 @@ def get_sub_values_from_simulation_result(
             * ρ
             * basic_params.L_pp
             * basic_params.d
-            * (U ** 2)
+            * (U**2)
             * (
                 -maneuvering_params.R_0_dash
-                + maneuvering_params.X_vv_dash * (v_dash ** 2)
+                + maneuvering_params.X_vv_dash * (v_dash**2)
                 + maneuvering_params.X_vr_dash * v_dash * r_dash
-                + maneuvering_params.X_rr_dash * (r_dash ** 2)
-                + maneuvering_params.X_vvvv_dash * (v_dash ** 4)
+                + maneuvering_params.X_rr_dash * (r_dash**2)
+                + maneuvering_params.X_vvvv_dash * (v_dash**4)
             ),
             U_list,
             v_dash_list,
@@ -1145,8 +1173,8 @@ def get_sub_values_from_simulation_result(
             lambda K_T, npm: (1 - basic_params.t_P)
             * ρ
             * K_T
-            * npm ** 2
-            * basic_params.D_p ** 4,
+            * npm**2
+            * basic_params.D_p**4,
             K_T_list,
             npm_list,
         )
@@ -1157,14 +1185,14 @@ def get_sub_values_from_simulation_result(
             * ρ
             * basic_params.L_pp
             * basic_params.d
-            * (U ** 2)
+            * (U**2)
             * (
                 maneuvering_params.Y_v_dash * v_dash
                 + maneuvering_params.Y_r_dash * r_dash
-                + maneuvering_params.Y_vvv_dash * (v_dash ** 3)
-                + maneuvering_params.Y_vvr_dash * (v_dash ** 2) * r_dash
-                + maneuvering_params.Y_vrr_dash * v_dash * (r_dash ** 2)
-                + maneuvering_params.Y_rrr_dash * (r_dash ** 3)
+                + maneuvering_params.Y_vvv_dash * (v_dash**3)
+                + maneuvering_params.Y_vvr_dash * (v_dash**2) * r_dash
+                + maneuvering_params.Y_vrr_dash * v_dash * (r_dash**2)
+                + maneuvering_params.Y_rrr_dash * (r_dash**3)
             ),
             U_list,
             v_dash_list,
@@ -1178,16 +1206,16 @@ def get_sub_values_from_simulation_result(
         map(
             lambda U, v_dash, r_dash: 0.5
             * ρ
-            * (basic_params.L_pp ** 2)
+            * (basic_params.L_pp**2)
             * basic_params.d
-            * (U ** 2)
+            * (U**2)
             * (
                 maneuvering_params.N_v_dash * v_dash
                 + maneuvering_params.N_r_dash * r_dash
-                + maneuvering_params.N_vvv_dash * (v_dash ** 3)
-                + maneuvering_params.N_vvr_dash * (v_dash ** 2) * r_dash
-                + maneuvering_params.N_vrr_dash * v_dash * (r_dash ** 2)
-                + maneuvering_params.N_rrr_dash * (r_dash ** 3)
+                + maneuvering_params.N_vvv_dash * (v_dash**3)
+                + maneuvering_params.N_vvr_dash * (v_dash**2) * r_dash
+                + maneuvering_params.N_vrr_dash * v_dash * (r_dash**2)
+                + maneuvering_params.N_rrr_dash * (r_dash**3)
             ),
             U_list,
             v_dash_list,
@@ -1252,6 +1280,8 @@ def zigzag_test_mmg_3dof(
     u0: float = 0.0,
     v0: float = 0.0,
     r0: float = 0.0,
+    x0: float = 0.0,
+    y0: float = 0.0,
     ψ0: float = 0.0,
     ρ: float = 1025.0,
     method: str = "RK45",
@@ -1289,6 +1319,12 @@ def zigzag_test_mmg_3dof(
             Defaults to 0.0.
         r0 (float, optional):
             rate of turn [rad/s] in initial condition (`time_list[0]`).
+            Defaults to 0.0.
+        x0 (float, optional):
+            x (surge) position [m] in initial condition (`time_list[0]`).
+            Defaults to 0.0.
+        y0 (float, optional):
+            y (sway) position [m] in initial condition (`time_list[0]`).
             Defaults to 0.0.
         ψ0 (float, optional):
             Inital azimuth [rad] in initial condition (`time_list[0]`)..
@@ -1370,6 +1406,9 @@ def zigzag_test_mmg_3dof(
     final_u_list = [0.0] * len(time_list)
     final_v_list = [0.0] * len(time_list)
     final_r_list = [0.0] * len(time_list)
+    final_x_list = [0.0] * len(time_list)
+    final_y_list = [0.0] * len(time_list)
+    final_ψ_list = [0.0] * len(time_list)
 
     next_stage_index = 0
     target_δ_rad = -target_δ_rad  # for changing in while loop
@@ -1386,11 +1425,15 @@ def zigzag_test_mmg_3dof(
             u0 = u0
             v0 = v0
             r0 = r0
+            x0 = x0
+            y0 = y0
         else:
             δ_list[0] = final_δ_list[start_index - 1]
             u0 = final_u_list[start_index - 1]
             v0 = final_v_list[start_index - 1]
             r0 = final_r_list[start_index - 1]
+            x0 = final_x_list[start_index - 1]
+            y0 = final_y_list[start_index - 1]
 
         for i in range(start_index + 1, len(time_list)):
             Δt = time_list[i] - time_list[i - 1]
@@ -1414,20 +1457,27 @@ def zigzag_test_mmg_3dof(
             u0=u0,
             v0=v0,
             r0=r0,
+            x0=x0,
+            y0=y0,
+            ψ0=ψ,
             ρ=ρ,
+            # TODO
         )
         sim_result = sol.sol(time_list[start_index:])
         u_list = sim_result[0]
         v_list = sim_result[1]
         r_list = sim_result[2]
-        ship = ShipObj3dof(L=basic_params.L_pp, B=basic_params.B)
-        ship.load_simulation_result(time_list, u_list, v_list, r_list, psi0=ψ)
+        x_list = sim_result[3]
+        y_list = sim_result[4]
+        ψ_list = sim_result[5]
+        # ship = ShipObj3dof(L=basic_params.L_pp, B=basic_params.B)
+        # ship.load_simulation_result(time_list, u_list, v_list, r_list, psi0=ψ)
 
         # get finish index
         target_ψ_rad = ψ0 + target_ψ_rad_deviation
         if target_δ_rad < 0:
             target_ψ_rad = ψ0 - target_ψ_rad_deviation
-        ψ_list = ship.psi
+        # ψ_list = ship.psi
         bool_ψ_list = [True if ψ < target_ψ_rad else False for ψ in ψ_list]
         if target_δ_rad < 0:
             bool_ψ_list = [True if ψ > target_ψ_rad else False for ψ in ψ_list]
@@ -1440,10 +1490,24 @@ def zigzag_test_mmg_3dof(
             final_u_list[start_index:next_stage_index] = u_list[: over_index_list[0]]
             final_v_list[start_index:next_stage_index] = v_list[: over_index_list[0]]
             final_r_list[start_index:next_stage_index] = r_list[: over_index_list[0]]
+            final_x_list[start_index:next_stage_index] = x_list[: over_index_list[0]]
+            final_y_list[start_index:next_stage_index] = y_list[: over_index_list[0]]
+            final_ψ_list[start_index:next_stage_index] = ψ_list[: over_index_list[0]]
         else:
             final_δ_list[start_index:next_stage_index] = δ_list
             final_u_list[start_index:next_stage_index] = u_list
             final_v_list[start_index:next_stage_index] = v_list
             final_r_list[start_index:next_stage_index] = r_list
+            final_x_list[start_index:next_stage_index] = x_list
+            final_y_list[start_index:next_stage_index] = y_list
+            final_ψ_list[start_index:next_stage_index] = ψ_list
 
-    return final_δ_list, final_u_list, final_v_list, final_r_list
+    return (
+        final_δ_list,
+        final_u_list,
+        final_v_list,
+        final_r_list,
+        final_x_list,
+        final_y_list,
+        final_ψ_list,
+    )
