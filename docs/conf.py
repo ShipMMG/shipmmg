@@ -19,13 +19,13 @@ sys.path.insert(0, os.path.abspath("../"))
 # -- Project information -----------------------------------------------------
 
 project = "shipmmg"
-copyright = "2021, Taiga MITSUYUKI"
+copyright = "2022, Taiga MITSUYUKI"
 author = "Taiga MITSUYUKI"
 
 # The short X.Y version.
 version = "0.0"
 # The full version, including alpha/beta/rc tags
-release = "0.0.9"
+release = "0.0.10"
 
 
 # -- General configuration ---------------------------------------------------
