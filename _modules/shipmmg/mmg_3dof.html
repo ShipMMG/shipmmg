@@ -1,74 +1,34 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>shipmmg.mmg_3dof &mdash; shipmmg 0.0.8 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>shipmmg.mmg_3dof &mdash; shipmmg 0.0.10 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> shipmmg
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 0.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -76,83 +36,33 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <!-- Local TOC -->
               <div class="local-toc"></div>
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">shipmmg</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-        
       <li>shipmmg.mmg_3dof</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <h1>Source code for shipmmg.mmg_3dof</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
@@ -178,8 +88,6 @@
 <span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">solve_ivp</span>
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
 <span class="kn">from</span> <span class="nn">scipy.misc</span> <span class="kn">import</span> <span class="n">derivative</span>
-
-<span class="kn">from</span> <span class="nn">.ship_obj_3dof</span> <span class="kn">import</span> <span class="n">ShipObj3dof</span>
 
 
 <div class="viewcode-block" id="Mmg3DofBasicParams"><a class="viewcode-back" href="../../shipmmg.html#shipmmg.mmg_3dof.Mmg3DofBasicParams">[docs]</a><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
@@ -217,6 +125,8 @@
 <span class="sd">            Ratio of wake fraction at propeller and rudder positions</span>
 <span class="sd">        t_R (float):</span>
 <span class="sd">            Steering resistance deduction factor</span>
+<span class="sd">        x_R (float):</span>
+<span class="sd">            Longitudinal coordinate of rudder position.</span>
 <span class="sd">        a_H (float):</span>
 <span class="sd">            Rudder force increase factor</span>
 <span class="sd">        x_H (float):</span>
@@ -228,7 +138,7 @@
 <span class="sd">        l_R (float):</span>
 <span class="sd">            Effective longitudinal coordinate of rudder position in formula of βR</span>
 <span class="sd">        κ (float):</span>
-<span class="sd">            An experimental constant for　expressing uR</span>
+<span class="sd">            An experimental constant for expressing uR</span>
 <span class="sd">        t_P (float):</span>
 <span class="sd">            Thrust deduction factor</span>
 <span class="sd">        w_P0 (float):</span>
@@ -240,7 +150,7 @@
 <span class="sd">        For more information, please see the following articles.</span>
 
 <span class="sd">        - Yasukawa, H., Yoshimura, Y. (2015) Introduction of MMG standard method for ship maneuvering predictions.</span>
-<span class="sd">          J Mar Sci Technol 20, 37–52 https://doi.org/10.1007/s00773-014-0293-y</span>
+<span class="sd">          J Mar Sci Technol 20, 37-52 https://doi.org/10.1007/s00773-014-0293-y</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">L_pp</span><span class="p">:</span> <span class="nb">float</span>
@@ -258,6 +168,7 @@
     <span class="n">f_α</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">ϵ</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">t_R</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">x_R</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">a_H</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">x_H</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">γ_R_minus</span><span class="p">:</span> <span class="nb">float</span>
@@ -299,7 +210,7 @@
 <span class="sd">        For more information, please see the following articles.</span>
 
 <span class="sd">        - Yasukawa, H., Yoshimura, Y. (2015) Introduction of MMG standard method for ship maneuvering predictions.</span>
-<span class="sd">          J Mar Sci Technol 20, 37–52 https://doi.org/10.1007/s00773-014-0293-y</span>
+<span class="sd">          J Mar Sci Technol 20, 37-52 https://doi.org/10.1007/s00773-014-0293-y</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">k_0</span><span class="p">:</span> <span class="nb">float</span>
@@ -333,6 +244,9 @@
     <span class="n">u0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">v0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">r0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">x0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">y0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ψ0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">ρ</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1025.0</span><span class="p">,</span>
     <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;RK45&quot;</span><span class="p">,</span>
     <span class="n">t_eval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -371,6 +285,15 @@
 <span class="sd">            Defaults to 0.0.</span>
 <span class="sd">        r0 (float, optional):</span>
 <span class="sd">            rate of turn [rad/s] in initial condition (`time_list[0]`).</span>
+<span class="sd">            Defaults to 0.0.</span>
+<span class="sd">        x0 (float, optional):</span>
+<span class="sd">            x (surge) position [m] in initial condition (`time_list[0]`).</span>
+<span class="sd">            Defaults to 0.0.</span>
+<span class="sd">        y0 (float, optional):</span>
+<span class="sd">            y (sway) position [m] in initial condition (`time_list[0]`).</span>
+<span class="sd">            Defaults to 0.0.</span>
+<span class="sd">        ψ0 (float, optional):</span>
+<span class="sd">            ψ (yaw) azimuth [rad] in initial condition (`time_list[0]`).</span>
 <span class="sd">            Defaults to 0.0.</span>
 <span class="sd">        ρ (float, optional):</span>
 <span class="sd">            seawater density [kg/m^3]</span>
@@ -489,6 +412,7 @@
 <span class="sd">        &gt;&gt;&gt;                     f_α=2.747,</span>
 <span class="sd">        &gt;&gt;&gt;                     ϵ=1.09,</span>
 <span class="sd">        &gt;&gt;&gt;                     t_R=0.387,</span>
+<span class="sd">        &gt;&gt;&gt;                     x_R=-0.500*L_pp,</span>
 <span class="sd">        &gt;&gt;&gt;                     a_H=0.312,</span>
 <span class="sd">        &gt;&gt;&gt;                     x_H=-0.464*L_pp,</span>
 <span class="sd">        &gt;&gt;&gt;                     γ_R_minus=0.395,</span>
@@ -536,7 +460,7 @@
 <span class="sd">        For more information, please see the following articles.</span>
 
 <span class="sd">        - Yasukawa, H., Yoshimura, Y. (2015) Introduction of MMG standard method for ship maneuvering predictions.</span>
-<span class="sd">          J Mar Sci Technol 20, 37–52 https://doi.org/10.1007/s00773-014-0293-y</span>
+<span class="sd">          J Mar Sci Technol 20, 37-52 https://doi.org/10.1007/s00773-014-0293-y</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">simulate</span><span class="p">(</span>
@@ -555,6 +479,7 @@
         <span class="n">f_α</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">f_α</span><span class="p">,</span>
         <span class="n">ϵ</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">ϵ</span><span class="p">,</span>
         <span class="n">t_R</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">t_R</span><span class="p">,</span>
+        <span class="n">x_R</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">x_R</span><span class="p">,</span>
         <span class="n">a_H</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">a_H</span><span class="p">,</span>
         <span class="n">x_H</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">x_H</span><span class="p">,</span>
         <span class="n">γ_R_minus</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">γ_R_minus</span><span class="p">,</span>
@@ -590,6 +515,9 @@
         <span class="n">u0</span><span class="o">=</span><span class="n">u0</span><span class="p">,</span>
         <span class="n">v0</span><span class="o">=</span><span class="n">v0</span><span class="p">,</span>
         <span class="n">r0</span><span class="o">=</span><span class="n">r0</span><span class="p">,</span>
+        <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span>
+        <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span>
+        <span class="n">ψ0</span><span class="o">=</span><span class="n">ψ0</span><span class="p">,</span>
         <span class="n">ρ</span><span class="o">=</span><span class="n">ρ</span><span class="p">,</span>
         <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
         <span class="n">t_eval</span><span class="o">=</span><span class="n">t_eval</span><span class="p">,</span>
@@ -615,6 +543,7 @@
     <span class="n">f_α</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">ϵ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">t_R</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">x_R</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">a_H</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">x_H</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">γ_R_minus</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -650,6 +579,9 @@
     <span class="n">u0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">v0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">r0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">x0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">y0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ψ0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">ρ</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1025.0</span><span class="p">,</span>
     <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;RK45&quot;</span><span class="p">,</span>
     <span class="n">t_eval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -700,6 +632,8 @@
 <span class="sd">            Ratio of wake fraction at propeller and rudder positions</span>
 <span class="sd">        t_R (float):</span>
 <span class="sd">            Steering resistance deduction factor</span>
+<span class="sd">        x_R (float):</span>
+<span class="sd">            Longitudinal coordinate of rudder position</span>
 <span class="sd">        a_H (float):</span>
 <span class="sd">            Rudder force increase factor</span>
 <span class="sd">        x_H (float):</span>
@@ -711,7 +645,7 @@
 <span class="sd">        l_R (float):</span>
 <span class="sd">            Effective longitudinal coordinate of rudder position in formula of βR</span>
 <span class="sd">        κ (float):</span>
-<span class="sd">            An experimental constant for　expressing uR</span>
+<span class="sd">            An experimental constant for expressing uR</span>
 <span class="sd">        t_P (float):</span>
 <span class="sd">            Thrust deduction factor</span>
 <span class="sd">        w_P0 (float):</span>
@@ -772,6 +706,15 @@
 <span class="sd">            Defaults to 0.0.</span>
 <span class="sd">        r0 (float, optional):</span>
 <span class="sd">            rate of turn [rad/s] in initial condition (`time_list[0]`).</span>
+<span class="sd">            Defaults to 0.0.</span>
+<span class="sd">        x0 (float, optional):</span>
+<span class="sd">            x (surge) position [m] in initial condition (`time_list[0]`).</span>
+<span class="sd">            Defaults to 0.0.</span>
+<span class="sd">        y0 (float, optional):</span>
+<span class="sd">            y (sway) position [m] in initial condition (`time_list[0]`).</span>
+<span class="sd">            Defaults to 0.0.</span>
+<span class="sd">        ψ0 (float, optional):</span>
+<span class="sd">            ψ (yaw) azimuth [rad] in initial condition (`time_list[0]`).</span>
 <span class="sd">            Defaults to 0.0.</span>
 <span class="sd">        ρ (float, optional):</span>
 <span class="sd">            seawater density [kg/m^3]</span>
@@ -889,6 +832,7 @@
 <span class="sd">        &gt;&gt;&gt; f_α=2.747</span>
 <span class="sd">        &gt;&gt;&gt; ϵ=1.09</span>
 <span class="sd">        &gt;&gt;&gt; t_R=0.387</span>
+<span class="sd">        &gt;&gt;&gt; x_R=-0.500*L_pp</span>
 <span class="sd">        &gt;&gt;&gt; a_H=0.312</span>
 <span class="sd">        &gt;&gt;&gt; x_H=-0.464*L_pp</span>
 <span class="sd">        &gt;&gt;&gt; γ_R=0.395</span>
@@ -933,6 +877,7 @@
 <span class="sd">        &gt;&gt;&gt;                    f_α=f_α,</span>
 <span class="sd">        &gt;&gt;&gt;                    ϵ=ϵ,</span>
 <span class="sd">        &gt;&gt;&gt;                    t_R=t_R,</span>
+<span class="sd">        &gt;&gt;&gt;                    x_R=x_R,</span>
 <span class="sd">        &gt;&gt;&gt;                    a_H=a_H,</span>
 <span class="sd">        &gt;&gt;&gt;                    x_H=x_H,</span>
 <span class="sd">        &gt;&gt;&gt;                    γ_R=γ_R,</span>
@@ -972,7 +917,7 @@
 <span class="sd">        For more information, please see the following articles.</span>
 
 <span class="sd">        - Yasukawa, H., Yoshimura, Y. (2015) Introduction of MMG standard method for ship maneuvering predictions.</span>
-<span class="sd">          J Mar Sci Technol 20, 37–52 https://doi.org/10.1007/s00773-014-0293-y</span>
+<span class="sd">          J Mar Sci Technol 20, 37-52 https://doi.org/10.1007/s00773-014-0293-y</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">spl_δ</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">δ_list</span><span class="p">,</span> <span class="s2">&quot;cubic&quot;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s2">&quot;extrapolate&quot;</span><span class="p">)</span>
@@ -980,9 +925,9 @@
 
     <span class="k">def</span> <span class="nf">mmg_3dof_eom_solve_ivp</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
 
-        <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">δ</span><span class="p">,</span> <span class="n">npm</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ψ</span><span class="p">,</span> <span class="n">δ</span><span class="p">,</span> <span class="n">npm</span> <span class="o">=</span> <span class="n">X</span>
 
-        <span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">u</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">r</span> <span class="o">*</span> <span class="n">x_G</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">u</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">r</span> <span class="o">*</span> <span class="n">x_G</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
 
         <span class="n">β</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="n">U</span> <span class="o">==</span> <span class="mf">0.0</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">r</span> <span class="o">*</span> <span class="n">x_G</span><span class="p">)</span> <span class="o">/</span> <span class="n">U</span><span class="p">)</span>
         <span class="n">v_dash</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="n">U</span> <span class="o">==</span> <span class="mf">0.0</span> <span class="k">else</span> <span class="n">v</span> <span class="o">/</span> <span class="n">U</span>
@@ -992,88 +937,91 @@
         <span class="n">w_P</span> <span class="o">=</span> <span class="n">w_P0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">4.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">β</span> <span class="o">-</span> <span class="n">x_P</span> <span class="o">*</span> <span class="n">r_dash</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
 
         <span class="n">J</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="n">npm</span> <span class="o">==</span> <span class="mf">0.0</span> <span class="k">else</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">w_P</span><span class="p">)</span> <span class="o">*</span> <span class="n">u</span> <span class="o">/</span> <span class="p">(</span><span class="n">npm</span> <span class="o">*</span> <span class="n">D_p</span><span class="p">)</span>
-        <span class="n">K_T</span> <span class="o">=</span> <span class="n">k_0</span> <span class="o">+</span> <span class="n">k_1</span> <span class="o">*</span> <span class="n">J</span> <span class="o">+</span> <span class="n">k_2</span> <span class="o">*</span> <span class="n">J</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">K_T</span> <span class="o">=</span> <span class="n">k_0</span> <span class="o">+</span> <span class="n">k_1</span> <span class="o">*</span> <span class="n">J</span> <span class="o">+</span> <span class="n">k_2</span> <span class="o">*</span> <span class="n">J</span><span class="o">**</span><span class="mi">2</span>
         <span class="n">β_R</span> <span class="o">=</span> <span class="n">β</span> <span class="o">-</span> <span class="n">l_R</span> <span class="o">*</span> <span class="n">r_dash</span>
         <span class="n">γ_R</span> <span class="o">=</span> <span class="n">γ_R_minus</span> <span class="k">if</span> <span class="n">β_R</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="k">else</span> <span class="n">γ_R_plus</span>
         <span class="n">v_R</span> <span class="o">=</span> <span class="n">U</span> <span class="o">*</span> <span class="n">γ_R</span> <span class="o">*</span> <span class="n">β_R</span>
         <span class="n">u_R</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">η</span> <span class="o">*</span> <span class="p">(</span><span class="n">κ</span> <span class="o">*</span> <span class="n">ϵ</span> <span class="o">*</span> <span class="mf">8.0</span> <span class="o">*</span> <span class="n">k_0</span> <span class="o">*</span> <span class="n">npm</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">D_p</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">η</span> <span class="o">*</span> <span class="p">(</span><span class="n">κ</span> <span class="o">*</span> <span class="n">ϵ</span> <span class="o">*</span> <span class="mf">8.0</span> <span class="o">*</span> <span class="n">k_0</span> <span class="o">*</span> <span class="n">npm</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">D_p</span><span class="o">**</span><span class="mi">4</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">J</span> <span class="o">==</span> <span class="mf">0.0</span>
             <span class="k">else</span> <span class="n">u</span>
             <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">w_P</span><span class="p">)</span>
             <span class="o">*</span> <span class="n">ϵ</span>
             <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
-                <span class="n">η</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">κ</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">8.0</span> <span class="o">*</span> <span class="n">K_T</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">J</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span>
+                <span class="n">η</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">κ</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">8.0</span> <span class="o">*</span> <span class="n">K_T</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">J</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span>
                 <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">η</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="p">)</span>
-        <span class="n">U_R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">u_R</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">v_R</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">U_R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">u_R</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">v_R</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">α_R</span> <span class="o">=</span> <span class="n">δ</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">v_R</span><span class="p">,</span> <span class="n">u_R</span><span class="p">)</span>
-        <span class="n">F_N</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">A_R</span> <span class="o">*</span> <span class="n">ρ</span> <span class="o">*</span> <span class="n">f_α</span> <span class="o">*</span> <span class="p">(</span><span class="n">U_R</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">α_R</span><span class="p">)</span>
+        <span class="n">F_N</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">A_R</span> <span class="o">*</span> <span class="n">ρ</span> <span class="o">*</span> <span class="n">f_α</span> <span class="o">*</span> <span class="p">(</span><span class="n">U_R</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">α_R</span><span class="p">)</span>
 
         <span class="n">X_H</span> <span class="o">=</span> <span class="p">(</span>
             <span class="mf">0.5</span>
             <span class="o">*</span> <span class="n">ρ</span>
             <span class="o">*</span> <span class="n">L_pp</span>
             <span class="o">*</span> <span class="n">d</span>
-            <span class="o">*</span> <span class="p">(</span><span class="n">U</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">U</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
             <span class="o">*</span> <span class="p">(</span>
                 <span class="o">-</span><span class="n">R_0_dash</span>
-                <span class="o">+</span> <span class="n">X_vv_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">X_vv_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
                 <span class="o">+</span> <span class="n">X_vr_dash</span> <span class="o">*</span> <span class="n">v_dash</span> <span class="o">*</span> <span class="n">r_dash</span>
-                <span class="o">+</span> <span class="n">X_rr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-                <span class="o">+</span> <span class="n">X_vvvv_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span> <span class="o">**</span> <span class="mi">4</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">X_rr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">X_vvvv_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="p">)</span>
         <span class="n">X_R</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">t_R</span><span class="p">)</span> <span class="o">*</span> <span class="n">F_N</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">δ</span><span class="p">)</span>
-        <span class="n">X_P</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">t_P</span><span class="p">)</span> <span class="o">*</span> <span class="n">ρ</span> <span class="o">*</span> <span class="n">K_T</span> <span class="o">*</span> <span class="n">npm</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">D_p</span> <span class="o">**</span> <span class="mi">4</span>
+        <span class="n">X_P</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">t_P</span><span class="p">)</span> <span class="o">*</span> <span class="n">ρ</span> <span class="o">*</span> <span class="n">K_T</span> <span class="o">*</span> <span class="n">npm</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">D_p</span><span class="o">**</span><span class="mi">4</span>
         <span class="n">Y_H</span> <span class="o">=</span> <span class="p">(</span>
             <span class="mf">0.5</span>
             <span class="o">*</span> <span class="n">ρ</span>
             <span class="o">*</span> <span class="n">L_pp</span>
             <span class="o">*</span> <span class="n">d</span>
-            <span class="o">*</span> <span class="p">(</span><span class="n">U</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">U</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
             <span class="o">*</span> <span class="p">(</span>
                 <span class="n">Y_v_dash</span> <span class="o">*</span> <span class="n">v_dash</span>
                 <span class="o">+</span> <span class="n">Y_r_dash</span> <span class="o">*</span> <span class="n">r_dash</span>
-                <span class="o">+</span> <span class="n">Y_vvv_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
-                <span class="o">+</span> <span class="n">Y_vvr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_dash</span>
-                <span class="o">+</span> <span class="n">Y_vrr_dash</span> <span class="o">*</span> <span class="n">v_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-                <span class="o">+</span> <span class="n">Y_rrr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">Y_vvv_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">Y_vvr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_dash</span>
+                <span class="o">+</span> <span class="n">Y_vrr_dash</span> <span class="o">*</span> <span class="n">v_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">Y_rrr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="p">)</span>
         <span class="n">Y_R</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">a_H</span><span class="p">)</span> <span class="o">*</span> <span class="n">F_N</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">δ</span><span class="p">)</span>
         <span class="n">N_H</span> <span class="o">=</span> <span class="p">(</span>
             <span class="mf">0.5</span>
             <span class="o">*</span> <span class="n">ρ</span>
-            <span class="o">*</span> <span class="p">(</span><span class="n">L_pp</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">L_pp</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
             <span class="o">*</span> <span class="n">d</span>
-            <span class="o">*</span> <span class="p">(</span><span class="n">U</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">U</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
             <span class="o">*</span> <span class="p">(</span>
                 <span class="n">N_v_dash</span> <span class="o">*</span> <span class="n">v_dash</span>
                 <span class="o">+</span> <span class="n">N_r_dash</span> <span class="o">*</span> <span class="n">r_dash</span>
-                <span class="o">+</span> <span class="n">N_vvv_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
-                <span class="o">+</span> <span class="n">N_vvr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_dash</span>
-                <span class="o">+</span> <span class="n">N_vrr_dash</span> <span class="o">*</span> <span class="n">v_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-                <span class="o">+</span> <span class="n">N_rrr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">N_vvv_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">N_vvr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_dash</span>
+                <span class="o">+</span> <span class="n">N_vrr_dash</span> <span class="o">*</span> <span class="n">v_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">N_rrr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="p">)</span>
-        <span class="n">N_R</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">+</span> <span class="n">a_H</span> <span class="o">*</span> <span class="n">x_H</span><span class="p">)</span> <span class="o">*</span> <span class="n">F_N</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">δ</span><span class="p">)</span>
-        <span class="n">d_u</span> <span class="o">=</span> <span class="p">((</span><span class="n">X_H</span> <span class="o">+</span> <span class="n">X_R</span> <span class="o">+</span> <span class="n">X_P</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">m</span> <span class="o">+</span> <span class="n">m_y</span><span class="p">)</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">r</span> <span class="o">+</span> <span class="n">x_G</span> <span class="o">*</span> <span class="n">m</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">m</span> <span class="o">+</span> <span class="n">m_x</span><span class="p">)</span>
+        <span class="n">N_R</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">x_R</span> <span class="o">+</span> <span class="n">a_H</span> <span class="o">*</span> <span class="n">x_H</span><span class="p">)</span> <span class="o">*</span> <span class="n">F_N</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">δ</span><span class="p">)</span>
+        <span class="n">d_u</span> <span class="o">=</span> <span class="p">((</span><span class="n">X_H</span> <span class="o">+</span> <span class="n">X_R</span> <span class="o">+</span> <span class="n">X_P</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">m</span> <span class="o">+</span> <span class="n">m_y</span><span class="p">)</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">r</span> <span class="o">+</span> <span class="n">x_G</span> <span class="o">*</span> <span class="n">m</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">m</span> <span class="o">+</span> <span class="n">m_x</span><span class="p">)</span>
         <span class="n">d_v</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="p">(</span><span class="n">x_G</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">m</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">u</span> <span class="o">*</span> <span class="n">r</span>
+            <span class="p">(</span><span class="n">x_G</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">u</span> <span class="o">*</span> <span class="n">r</span>
             <span class="o">-</span> <span class="p">(</span><span class="n">N_H</span> <span class="o">+</span> <span class="n">N_R</span><span class="p">)</span> <span class="o">*</span> <span class="n">x_G</span> <span class="o">*</span> <span class="n">m</span>
-            <span class="o">+</span> <span class="p">((</span><span class="n">Y_H</span> <span class="o">+</span> <span class="n">Y_R</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">m</span> <span class="o">+</span> <span class="n">m_x</span><span class="p">)</span> <span class="o">*</span> <span class="n">u</span> <span class="o">*</span> <span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">I_zG</span> <span class="o">+</span> <span class="n">J_z</span> <span class="o">+</span> <span class="p">(</span><span class="n">x_G</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">m</span><span class="p">)</span>
-        <span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="n">I_zG</span> <span class="o">+</span> <span class="n">J_z</span> <span class="o">+</span> <span class="p">(</span><span class="n">x_G</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">m</span> <span class="o">+</span> <span class="n">m_y</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">x_G</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">m</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
-        <span class="n">d_r</span> <span class="o">=</span> <span class="p">(</span><span class="n">N_H</span> <span class="o">+</span> <span class="n">N_R</span> <span class="o">-</span> <span class="n">x_G</span> <span class="o">*</span> <span class="n">m</span> <span class="o">*</span> <span class="p">(</span><span class="n">d_v</span> <span class="o">+</span> <span class="n">u</span> <span class="o">*</span> <span class="n">r</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">I_zG</span> <span class="o">+</span> <span class="n">J_z</span> <span class="o">+</span> <span class="p">(</span><span class="n">x_G</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">m</span><span class="p">)</span>
+            <span class="o">+</span> <span class="p">((</span><span class="n">Y_H</span> <span class="o">+</span> <span class="n">Y_R</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">m</span> <span class="o">+</span> <span class="n">m_x</span><span class="p">)</span> <span class="o">*</span> <span class="n">u</span> <span class="o">*</span> <span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">I_zG</span> <span class="o">+</span> <span class="n">J_z</span> <span class="o">+</span> <span class="p">(</span><span class="n">x_G</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">m</span><span class="p">)</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="n">I_zG</span> <span class="o">+</span> <span class="n">J_z</span> <span class="o">+</span> <span class="p">(</span><span class="n">x_G</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">m</span> <span class="o">+</span> <span class="n">m_y</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">x_G</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+        <span class="n">d_r</span> <span class="o">=</span> <span class="p">(</span><span class="n">N_H</span> <span class="o">+</span> <span class="n">N_R</span> <span class="o">-</span> <span class="n">x_G</span> <span class="o">*</span> <span class="n">m</span> <span class="o">*</span> <span class="p">(</span><span class="n">d_v</span> <span class="o">+</span> <span class="n">u</span> <span class="o">*</span> <span class="n">r</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">I_zG</span> <span class="o">+</span> <span class="n">J_z</span> <span class="o">+</span> <span class="p">(</span><span class="n">x_G</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">m</span><span class="p">)</span>
+        <span class="n">d_x</span> <span class="o">=</span> <span class="n">u</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ψ</span><span class="p">)</span> <span class="o">-</span> <span class="n">v</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ψ</span><span class="p">)</span>
+        <span class="n">d_y</span> <span class="o">=</span> <span class="n">u</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ψ</span><span class="p">)</span> <span class="o">+</span> <span class="n">v</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ψ</span><span class="p">)</span>
+        <span class="n">d_ψ</span> <span class="o">=</span> <span class="n">r</span>
         <span class="n">d_δ</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">spl_δ</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
         <span class="n">d_npm</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">spl_npm</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">d_u</span><span class="p">,</span> <span class="n">d_v</span><span class="p">,</span> <span class="n">d_r</span><span class="p">,</span> <span class="n">d_δ</span><span class="p">,</span> <span class="n">d_npm</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">d_u</span><span class="p">,</span> <span class="n">d_v</span><span class="p">,</span> <span class="n">d_r</span><span class="p">,</span> <span class="n">d_x</span><span class="p">,</span> <span class="n">d_y</span><span class="p">,</span> <span class="n">d_ψ</span><span class="p">,</span> <span class="n">d_δ</span><span class="p">,</span> <span class="n">d_npm</span><span class="p">]</span>
 
     <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span>
         <span class="n">mmg_3dof_eom_solve_ivp</span><span class="p">,</span>
         <span class="p">[</span><span class="n">time_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span>
-        <span class="p">[</span><span class="n">u0</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span> <span class="n">r0</span><span class="p">,</span> <span class="n">δ_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">npm_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+        <span class="p">[</span><span class="n">u0</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span> <span class="n">r0</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">ψ0</span><span class="p">,</span> <span class="n">δ_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">npm_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
         <span class="n">dense_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
         <span class="n">t_eval</span><span class="o">=</span><span class="n">t_eval</span><span class="p">,</span>
@@ -1141,7 +1089,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">U_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
         <span class="nb">map</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">u</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">r</span> <span class="o">*</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">x_G</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="k">lambda</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">u</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">r</span> <span class="o">*</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">x_G</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span>
             <span class="n">u_list</span><span class="p">,</span>
             <span class="n">v_list</span><span class="p">,</span>
             <span class="n">r_list</span><span class="p">,</span>
@@ -1170,7 +1118,7 @@
     <span class="p">)</span>
     <span class="c1"># w_P_list = [basic_params.w_P0 for i in range(len(r_dash_list))]</span>
     <span class="n">w_P_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-        <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">β_P</span><span class="p">:</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">w_P0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">β_P</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span> <span class="n">β_P_list</span><span class="p">)</span>
+        <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">β_P</span><span class="p">:</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">w_P0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">β_P</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span> <span class="n">β_P_list</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="n">J_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
         <span class="nb">map</span><span class="p">(</span>
@@ -1186,7 +1134,7 @@
         <span class="nb">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">J</span><span class="p">:</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">k_0</span>
             <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">k_1</span> <span class="o">*</span> <span class="n">J</span>
-            <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">k_2</span> <span class="o">*</span> <span class="n">J</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">k_2</span> <span class="o">*</span> <span class="n">J</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>
             <span class="n">J_list</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="p">)</span>
@@ -1220,8 +1168,8 @@
                     <span class="o">*</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">ϵ</span>
                     <span class="o">*</span> <span class="mf">8.0</span>
                     <span class="o">*</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">k_0</span>
-                    <span class="o">*</span> <span class="n">npm</span> <span class="o">**</span> <span class="mi">2</span>
-                    <span class="o">*</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">D_p</span> <span class="o">**</span> <span class="mi">4</span>
+                    <span class="o">*</span> <span class="n">npm</span><span class="o">**</span><span class="mi">2</span>
+                    <span class="o">*</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">D_p</span><span class="o">**</span><span class="mi">4</span>
                     <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
                 <span class="p">)</span>
                 <span class="o">**</span> <span class="mi">2</span>
@@ -1234,7 +1182,7 @@
                 <span class="n">basic_params</span><span class="o">.</span><span class="n">η</span>
                 <span class="o">*</span> <span class="p">(</span>
                     <span class="mf">1.0</span>
-                    <span class="o">+</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">κ</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">8.0</span> <span class="o">*</span> <span class="n">K_T</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">J</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="o">+</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">κ</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">8.0</span> <span class="o">*</span> <span class="n">K_T</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">J</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
                 <span class="p">)</span>
                 <span class="o">**</span> <span class="mi">2</span>
                 <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">η</span><span class="p">)</span>
@@ -1247,7 +1195,7 @@
         <span class="p">)</span>
     <span class="p">)</span>
     <span class="n">U_R_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-        <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">u_R</span><span class="p">,</span> <span class="n">v_R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">u_R</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">v_R</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span> <span class="n">u_R_list</span><span class="p">,</span> <span class="n">v_R_list</span><span class="p">)</span>
+        <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">u_R</span><span class="p">,</span> <span class="n">v_R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">u_R</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">v_R</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span> <span class="n">u_R_list</span><span class="p">,</span> <span class="n">v_R_list</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="n">α_R_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
         <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">δ</span><span class="p">,</span> <span class="n">u_R</span><span class="p">,</span> <span class="n">v_R</span><span class="p">:</span> <span class="n">δ</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">v_R</span><span class="p">,</span> <span class="n">u_R</span><span class="p">),</span> <span class="n">δ_list</span><span class="p">,</span> <span class="n">u_R_list</span><span class="p">,</span> <span class="n">v_R_list</span><span class="p">)</span>
@@ -1258,7 +1206,7 @@
             <span class="o">*</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">A_R</span>
             <span class="o">*</span> <span class="n">ρ</span>
             <span class="o">*</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">f_α</span>
-            <span class="o">*</span> <span class="p">(</span><span class="n">U_R</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">U_R</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
             <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">α_R</span><span class="p">),</span>
             <span class="n">U_R_list</span><span class="p">,</span>
             <span class="n">α_R_list</span><span class="p">,</span>
@@ -1270,13 +1218,13 @@
             <span class="o">*</span> <span class="n">ρ</span>
             <span class="o">*</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">L_pp</span>
             <span class="o">*</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">d</span>
-            <span class="o">*</span> <span class="p">(</span><span class="n">U</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">U</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
             <span class="o">*</span> <span class="p">(</span>
                 <span class="o">-</span><span class="n">maneuvering_params</span><span class="o">.</span><span class="n">R_0_dash</span>
-                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">X_vv_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">X_vv_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
                 <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">X_vr_dash</span> <span class="o">*</span> <span class="n">v_dash</span> <span class="o">*</span> <span class="n">r_dash</span>
-                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">X_rr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">X_vvvv_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span> <span class="o">**</span> <span class="mi">4</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">X_rr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">X_vvvv_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span>
             <span class="p">),</span>
             <span class="n">U_list</span><span class="p">,</span>
             <span class="n">v_dash_list</span><span class="p">,</span>
@@ -1291,8 +1239,8 @@
             <span class="k">lambda</span> <span class="n">K_T</span><span class="p">,</span> <span class="n">npm</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">t_P</span><span class="p">)</span>
             <span class="o">*</span> <span class="n">ρ</span>
             <span class="o">*</span> <span class="n">K_T</span>
-            <span class="o">*</span> <span class="n">npm</span> <span class="o">**</span> <span class="mi">2</span>
-            <span class="o">*</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">D_p</span> <span class="o">**</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="o">*</span> <span class="n">npm</span><span class="o">**</span><span class="mi">2</span>
+            <span class="o">*</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">D_p</span><span class="o">**</span><span class="mi">4</span><span class="p">,</span>
             <span class="n">K_T_list</span><span class="p">,</span>
             <span class="n">npm_list</span><span class="p">,</span>
         <span class="p">)</span>
@@ -1303,14 +1251,14 @@
             <span class="o">*</span> <span class="n">ρ</span>
             <span class="o">*</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">L_pp</span>
             <span class="o">*</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">d</span>
-            <span class="o">*</span> <span class="p">(</span><span class="n">U</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">U</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
             <span class="o">*</span> <span class="p">(</span>
                 <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">Y_v_dash</span> <span class="o">*</span> <span class="n">v_dash</span>
                 <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">Y_r_dash</span> <span class="o">*</span> <span class="n">r_dash</span>
-                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">Y_vvv_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
-                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">Y_vvr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_dash</span>
-                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">Y_vrr_dash</span> <span class="o">*</span> <span class="n">v_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">Y_rrr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">Y_vvv_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">Y_vvr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_dash</span>
+                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">Y_vrr_dash</span> <span class="o">*</span> <span class="n">v_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">Y_rrr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
             <span class="p">),</span>
             <span class="n">U_list</span><span class="p">,</span>
             <span class="n">v_dash_list</span><span class="p">,</span>
@@ -1324,16 +1272,16 @@
         <span class="nb">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">U</span><span class="p">,</span> <span class="n">v_dash</span><span class="p">,</span> <span class="n">r_dash</span><span class="p">:</span> <span class="mf">0.5</span>
             <span class="o">*</span> <span class="n">ρ</span>
-            <span class="o">*</span> <span class="p">(</span><span class="n">basic_params</span><span class="o">.</span><span class="n">L_pp</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">basic_params</span><span class="o">.</span><span class="n">L_pp</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
             <span class="o">*</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">d</span>
-            <span class="o">*</span> <span class="p">(</span><span class="n">U</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">U</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
             <span class="o">*</span> <span class="p">(</span>
                 <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">N_v_dash</span> <span class="o">*</span> <span class="n">v_dash</span>
                 <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">N_r_dash</span> <span class="o">*</span> <span class="n">r_dash</span>
-                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">N_vvv_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
-                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">N_vvr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_dash</span>
-                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">N_vrr_dash</span> <span class="o">*</span> <span class="n">v_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">N_rrr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">N_vvv_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">N_vvr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_dash</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_dash</span>
+                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">N_vrr_dash</span> <span class="o">*</span> <span class="n">v_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">maneuvering_params</span><span class="o">.</span><span class="n">N_rrr_dash</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_dash</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
             <span class="p">),</span>
             <span class="n">U_list</span><span class="p">,</span>
             <span class="n">v_dash_list</span><span class="p">,</span>
@@ -1342,7 +1290,7 @@
     <span class="p">)</span>
     <span class="n">N_R_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
         <span class="nb">map</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">F_N</span><span class="p">,</span> <span class="n">δ</span><span class="p">:</span> <span class="o">-</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">+</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">a_H</span> <span class="o">*</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">x_H</span><span class="p">)</span>
+            <span class="k">lambda</span> <span class="n">F_N</span><span class="p">,</span> <span class="n">δ</span><span class="p">:</span> <span class="o">-</span><span class="p">(</span><span class="n">basic_params</span><span class="o">.</span><span class="n">x_R</span> <span class="o">+</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">a_H</span> <span class="o">*</span> <span class="n">basic_params</span><span class="o">.</span><span class="n">x_H</span><span class="p">)</span>
             <span class="o">*</span> <span class="n">F_N</span>
             <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">δ</span><span class="p">),</span>
             <span class="n">F_N_list</span><span class="p">,</span>
@@ -1398,6 +1346,8 @@
     <span class="n">u0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">v0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">r0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">x0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">y0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">ψ0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">ρ</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1025.0</span><span class="p">,</span>
     <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;RK45&quot;</span><span class="p">,</span>
@@ -1435,6 +1385,12 @@
 <span class="sd">            Defaults to 0.0.</span>
 <span class="sd">        r0 (float, optional):</span>
 <span class="sd">            rate of turn [rad/s] in initial condition (`time_list[0]`).</span>
+<span class="sd">            Defaults to 0.0.</span>
+<span class="sd">        x0 (float, optional):</span>
+<span class="sd">            x (surge) position [m] in initial condition (`time_list[0]`).</span>
+<span class="sd">            Defaults to 0.0.</span>
+<span class="sd">        y0 (float, optional):</span>
+<span class="sd">            y (sway) position [m] in initial condition (`time_list[0]`).</span>
 <span class="sd">            Defaults to 0.0.</span>
 <span class="sd">        ψ0 (float, optional):</span>
 <span class="sd">            Inital azimuth [rad] in initial condition (`time_list[0]`)..</span>
@@ -1516,6 +1472,9 @@
     <span class="n">final_u_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
     <span class="n">final_v_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
     <span class="n">final_r_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
+    <span class="n">final_x_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
+    <span class="n">final_y_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
+    <span class="n">final_ψ_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
 
     <span class="n">next_stage_index</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">target_δ_rad</span> <span class="o">=</span> <span class="o">-</span><span class="n">target_δ_rad</span>  <span class="c1"># for changing in while loop</span>
@@ -1532,11 +1491,15 @@
             <span class="n">u0</span> <span class="o">=</span> <span class="n">u0</span>
             <span class="n">v0</span> <span class="o">=</span> <span class="n">v0</span>
             <span class="n">r0</span> <span class="o">=</span> <span class="n">r0</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="n">x0</span>
+            <span class="n">y0</span> <span class="o">=</span> <span class="n">y0</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">δ_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">final_δ_list</span><span class="p">[</span><span class="n">start_index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
             <span class="n">u0</span> <span class="o">=</span> <span class="n">final_u_list</span><span class="p">[</span><span class="n">start_index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
             <span class="n">v0</span> <span class="o">=</span> <span class="n">final_v_list</span><span class="p">[</span><span class="n">start_index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
             <span class="n">r0</span> <span class="o">=</span> <span class="n">final_r_list</span><span class="p">[</span><span class="n">start_index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="n">final_x_list</span><span class="p">[</span><span class="n">start_index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">y0</span> <span class="o">=</span> <span class="n">final_y_list</span><span class="p">[</span><span class="n">start_index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_list</span><span class="p">)):</span>
             <span class="n">Δt</span> <span class="o">=</span> <span class="n">time_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">time_list</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
@@ -1560,20 +1523,27 @@
             <span class="n">u0</span><span class="o">=</span><span class="n">u0</span><span class="p">,</span>
             <span class="n">v0</span><span class="o">=</span><span class="n">v0</span><span class="p">,</span>
             <span class="n">r0</span><span class="o">=</span><span class="n">r0</span><span class="p">,</span>
+            <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span>
+            <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span>
+            <span class="n">ψ0</span><span class="o">=</span><span class="n">ψ</span><span class="p">,</span>
             <span class="n">ρ</span><span class="o">=</span><span class="n">ρ</span><span class="p">,</span>
+            <span class="c1"># TODO</span>
         <span class="p">)</span>
         <span class="n">sim_result</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">sol</span><span class="p">(</span><span class="n">time_list</span><span class="p">[</span><span class="n">start_index</span><span class="p">:])</span>
         <span class="n">u_list</span> <span class="o">=</span> <span class="n">sim_result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">v_list</span> <span class="o">=</span> <span class="n">sim_result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">r_list</span> <span class="o">=</span> <span class="n">sim_result</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-        <span class="n">ship</span> <span class="o">=</span> <span class="n">ShipObj3dof</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">L_pp</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="n">basic_params</span><span class="o">.</span><span class="n">B</span><span class="p">)</span>
-        <span class="n">ship</span><span class="o">.</span><span class="n">load_simulation_result</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">u_list</span><span class="p">,</span> <span class="n">v_list</span><span class="p">,</span> <span class="n">r_list</span><span class="p">,</span> <span class="n">psi0</span><span class="o">=</span><span class="n">ψ</span><span class="p">)</span>
+        <span class="n">x_list</span> <span class="o">=</span> <span class="n">sim_result</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">y_list</span> <span class="o">=</span> <span class="n">sim_result</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">ψ_list</span> <span class="o">=</span> <span class="n">sim_result</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="c1"># ship = ShipObj3dof(L=basic_params.L_pp, B=basic_params.B)</span>
+        <span class="c1"># ship.load_simulation_result(time_list, u_list, v_list, r_list, psi0=ψ)</span>
 
         <span class="c1"># get finish index</span>
         <span class="n">target_ψ_rad</span> <span class="o">=</span> <span class="n">ψ0</span> <span class="o">+</span> <span class="n">target_ψ_rad_deviation</span>
         <span class="k">if</span> <span class="n">target_δ_rad</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">target_ψ_rad</span> <span class="o">=</span> <span class="n">ψ0</span> <span class="o">-</span> <span class="n">target_ψ_rad_deviation</span>
-        <span class="n">ψ_list</span> <span class="o">=</span> <span class="n">ship</span><span class="o">.</span><span class="n">psi</span>
+        <span class="c1"># ψ_list = ship.psi</span>
         <span class="n">bool_ψ_list</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span> <span class="k">if</span> <span class="n">ψ</span> <span class="o">&lt;</span> <span class="n">target_ψ_rad</span> <span class="k">else</span> <span class="kc">False</span> <span class="k">for</span> <span class="n">ψ</span> <span class="ow">in</span> <span class="n">ψ_list</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">target_δ_rad</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">bool_ψ_list</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span> <span class="k">if</span> <span class="n">ψ</span> <span class="o">&gt;</span> <span class="n">target_ψ_rad</span> <span class="k">else</span> <span class="kc">False</span> <span class="k">for</span> <span class="n">ψ</span> <span class="ow">in</span> <span class="n">ψ_list</span><span class="p">]</span>
@@ -1586,56 +1556,54 @@
             <span class="n">final_u_list</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">next_stage_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">u_list</span><span class="p">[:</span> <span class="n">over_index_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
             <span class="n">final_v_list</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">next_stage_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">v_list</span><span class="p">[:</span> <span class="n">over_index_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
             <span class="n">final_r_list</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">next_stage_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">r_list</span><span class="p">[:</span> <span class="n">over_index_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="n">final_x_list</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">next_stage_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_list</span><span class="p">[:</span> <span class="n">over_index_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="n">final_y_list</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">next_stage_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_list</span><span class="p">[:</span> <span class="n">over_index_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="n">final_ψ_list</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">next_stage_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">ψ_list</span><span class="p">[:</span> <span class="n">over_index_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">final_δ_list</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">next_stage_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">δ_list</span>
             <span class="n">final_u_list</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">next_stage_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">u_list</span>
             <span class="n">final_v_list</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">next_stage_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">v_list</span>
             <span class="n">final_r_list</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">next_stage_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">r_list</span>
+            <span class="n">final_x_list</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">next_stage_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_list</span>
+            <span class="n">final_y_list</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">next_stage_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_list</span>
+            <span class="n">final_ψ_list</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">next_stage_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">ψ_list</span>
 
-    <span class="k">return</span> <span class="n">final_δ_list</span><span class="p">,</span> <span class="n">final_u_list</span><span class="p">,</span> <span class="n">final_v_list</span><span class="p">,</span> <span class="n">final_r_list</span></div>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">final_δ_list</span><span class="p">,</span>
+        <span class="n">final_u_list</span><span class="p">,</span>
+        <span class="n">final_v_list</span><span class="p">,</span>
+        <span class="n">final_r_list</span><span class="p">,</span>
+        <span class="n">final_x_list</span><span class="p">,</span>
+        <span class="n">final_y_list</span><span class="p">,</span>
+        <span class="n">final_ψ_list</span><span class="p">,</span>
+    <span class="p">)</span></div>
 </pre></div>
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Taiga MITSUYUKI.
-
-    </p>
+    <p>&#169; Copyright 2022, Taiga MITSUYUKI.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
