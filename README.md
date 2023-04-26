@@ -1,6 +1,6 @@
 # ShipMMG: Ship Maneuvering Simulation Model
 
-[![PyPi version](https://pypip.in/v/shipmmg/badge.png)](https://pypi.org/project/shipmmg/)
+[![PyPI version](https://badge.fury.io/py/shipmmg.svg)](https://badge.fury.io/py/shipmmg)
 [![Anaconda-Server Badge](https://anaconda.org/taiga4112/shipmmg/badges/version.svg)](https://anaconda.org/taiga4112/shipmmg)
 ![codecov](https://github.com/ShipMMG/shipmmg/workflows/codecov/badge.svg)
 [![codecov](https://codecov.io/gh/ShipMMG/shipmmg/branch/main/graph/badge.svg?token=VQ1J2RTC7X)](https://codecov.io/gh/ShipMMG/shipmmg)
