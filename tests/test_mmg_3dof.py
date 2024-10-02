@@ -134,7 +134,7 @@ def kvlcc2_L7_35_turning(ship_KVLCC2_L7_model):
     duration = 200  # [s]
     # steering_rate = 1.76 * 4  # [°/s]
     max_δ_rad = 35 * np.pi / 180.0  # [rad]
-    n_const = 17.95  # [rpm]
+    n_const = 17.95  # [nps]
 
     sampling = duration * 10
     time_list = np.linspace(0.00, duration, sampling)
@@ -142,14 +142,14 @@ def kvlcc2_L7_35_turning(ship_KVLCC2_L7_model):
     for i in range(sampling):
         δ_rad_list[i] = max_δ_rad
 
-    npm_list = np.array([n_const for i in range(sampling)])
+    nps_list = np.array([n_const for i in range(sampling)])
 
     sol = simulate_mmg_3dof(
         basic_params,
         maneuvering_params,
         time_list,
         δ_rad_list,
-        npm_list,
+        nps_list,
         u0=2.29 * 0.512,
         v0=0.0,
         r0=0.0,
@@ -157,7 +157,7 @@ def kvlcc2_L7_35_turning(ship_KVLCC2_L7_model):
     sim_result = sol.sol(time_list)
     ship = ShipObj3dof(L=basic_params.L_pp, B=basic_params.B)
     ship.load_simulation_result(time_list, sim_result[0], sim_result[1], sim_result[2])
-    ship.npm = npm_list
+    ship.nps = nps_list
     ship.δ = δ_rad_list
     return ship
 
@@ -180,7 +180,7 @@ def test_get_sub_values_from_simulation_result(
         kvlcc2_L7_35_turning.v,
         kvlcc2_L7_35_turning.r,
         kvlcc2_L7_35_turning.δ,
-        kvlcc2_L7_35_turning.npm,
+        kvlcc2_L7_35_turning.nps,
         basic_params,
         maneuvering_params,
     )
@@ -212,7 +212,7 @@ def test_get_sub_values_from_simulation_result(
         kvlcc2_L7_35_turning.v,
         kvlcc2_L7_35_turning.r,
         kvlcc2_L7_35_turning.δ,
-        kvlcc2_L7_35_turning.npm,
+        kvlcc2_L7_35_turning.nps,
         basic_params,
         maneuvering_params,
         return_all_vals=True,
@@ -270,8 +270,8 @@ def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model, tmpdir):
     duration = 100
     num_of_sampling = 10000
     time_list = np.linspace(0.00, duration, num_of_sampling)
-    n_const = 17.95  # [rpm]
-    npm_list = np.array([n_const for i in range(num_of_sampling)])
+    n_const = 17.95  # [nps]
+    nps_list = np.array([n_const for i in range(num_of_sampling)])
 
     δ_list, u_list, v_list, r_list, x_list, y_list, ψ_list = zigzag_test_mmg_3dof(
         basic_params,
@@ -279,7 +279,7 @@ def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model, tmpdir):
         target_δ_rad,
         target_ψ_rad_deviation,
         time_list,
-        npm_list,
+        nps_list,
         δ_rad_rate=10.0 * np.pi / 180,
     )
 
@@ -329,8 +329,8 @@ def test_zigzag_test_mmg(ship_KVLCC2_L7_model, tmpdir):
     duration = 80
     num_of_sampling = 10000
     time_list = np.linspace(0.00, duration, num_of_sampling)
-    n_const = 17.95  # [rpm]
-    npm_list = np.array([n_const for i in range(num_of_sampling)])
+    n_const = 17.95  # [nps]
+    nps_list = np.array([n_const for i in range(num_of_sampling)])
 
     δ_list, u_list, v_list, r_list, x_list, y_list, ψ_list = zigzag_test_mmg_3dof(
         basic_params,
@@ -338,14 +338,14 @@ def test_zigzag_test_mmg(ship_KVLCC2_L7_model, tmpdir):
         target_δ_rad,
         target_ψ_rad_deviation,
         time_list,
-        npm_list,
+        nps_list,
         δ_rad_rate=15.0 * np.pi / 180,
     )
 
     ship = ShipObj3dof(L=100, B=10)
     ship.load_simulation_result(time_list, u_list, v_list, r_list)
     ship.δ = δ_list
-    ship.npm = npm_list
+    ship.nps = nps_list
 
     save_fig_path = os.path.join(str(tmpdir), "delta_psi.png")
 
@@ -383,7 +383,7 @@ def test_zigzag_test_mmg(ship_KVLCC2_L7_model, tmpdir):
         ship.v,
         ship.r,
         ship.δ,
-        ship.npm,
+        ship.nps,
         basic_params,
         maneuvering_params,
         return_all_vals=True,
