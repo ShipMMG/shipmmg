@@ -50,8 +50,8 @@ class ShipObj3dof:
             List of azimuth [rad] in simulation result.
         δ (list[float]):
             rudder angle list of simulation.
-        npm (List[float]):
-            npm list of simulation.
+        nps (List[float]):
+            nps list of simulation.
     """
 
     # Ship overview
@@ -66,7 +66,7 @@ class ShipObj3dof:
     y: List[float] = dataclasses.field(default_factory=list)
     psi: List[float] = dataclasses.field(default_factory=list)
     δ: List[float] = dataclasses.field(default_factory=list)
-    npm: List[float] = dataclasses.field(default_factory=list)
+    nps: List[float] = dataclasses.field(default_factory=list)
 
     def register_simulation_result(
         self,
@@ -422,8 +422,8 @@ class ShipObj3dof:
             target_x = self.δ
         elif x_index == "δ":
             target_x = self.δ
-        elif x_index == "npm":
-            target_x = self.npm
+        elif x_index == "nps":
+            target_x = self.nps
         if target_x is None:
             raise Exception(
                 "`x_index` is not good. Please set `x_index` from ["
@@ -445,7 +445,7 @@ class ShipObj3dof:
                 ", "
                 " δ"
                 ", "
-                " npm"
+                " nps"
                 "]"
             )
 
@@ -468,8 +468,8 @@ class ShipObj3dof:
             target_y = self.δ
         elif y_index == "δ":
             target_y = self.δ
-        elif y_index == "npm":
-            target_y = self.npm
+        elif y_index == "nps":
+            target_y = self.nps
         if target_y is None:
             raise Exception(
                 "`y_index` is not good. Please set `y_index` from ["
@@ -491,7 +491,7 @@ class ShipObj3dof:
                 ", "
                 " δ"
                 ", "
-                " npm"
+                " nps"
                 "]"
                 "]"
             )
@@ -636,8 +636,8 @@ class ShipObj3dof:
             target_y = self.δ
         elif y_index == "δ":
             target_y = self.δ
-        elif y_index == "npm":
-            target_y = self.npm
+        elif y_index == "nps":
+            target_y = self.nps
         if target_y is None:
             raise Exception(
                 "`x_index` is not good. Please set `x_index` from ["
@@ -659,7 +659,7 @@ class ShipObj3dof:
                 ", "
                 " δ"
                 ", "
-                " npm"
+                " nps"
                 "]"
             )
 
@@ -683,8 +683,8 @@ class ShipObj3dof:
                 target_x_list.append(self.δ)
             elif x_index == "δ":
                 target_x_list.append(self.δ)
-            elif x_index == "npm":
-                target_x_list.append(self.npm)
+            elif x_index == "nps":
+                target_x_list.append(self.nps)
         if len(target_x_list) == 0:
             raise Exception(
                 "`y_index` is not good. Please set `y_index` from ["
@@ -706,7 +706,7 @@ class ShipObj3dof:
                 ", "
                 " δ"
                 ", "
-                " npm"
+                " nps"
                 "]"
                 "]"
             )
@@ -853,8 +853,8 @@ class ShipObj3dof:
             target_x = self.δ
         elif x_index == "δ":
             target_x = self.δ
-        elif x_index == "npm":
-            target_x = self.npm
+        elif x_index == "nps":
+            target_x = self.nps
         if target_x is None:
             raise Exception(
                 "`x_index` is not good. Please set `x_index` from ["
@@ -876,7 +876,7 @@ class ShipObj3dof:
                 ", "
                 " δ"
                 ", "
-                " npm"
+                " nps"
                 "]"
             )
 
@@ -900,8 +900,8 @@ class ShipObj3dof:
                 target_y_list.append(self.δ)
             elif y_index == "δ":
                 target_y_list.append(self.δ)
-            elif y_index == "npm":
-                target_y_list.append(self.npm)
+            elif y_index == "nps":
+                target_y_list.append(self.nps)
         if len(target_y_list) == 0:
             raise Exception(
                 "`y_index` is not good. Please set `y_index` from ["
@@ -923,7 +923,7 @@ class ShipObj3dof:
                 ", "
                 " δ"
                 ", "
-                " npm"
+                " nps"
                 "]"
                 "]"
             )
