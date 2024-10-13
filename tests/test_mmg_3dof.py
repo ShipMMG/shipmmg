@@ -270,7 +270,7 @@ def test_zigzag_test_mmg_before(ship_KVLCC2_L7_model, tmpdir):
     num_of_sampling = 10000
     time_list = np.linspace(0.00, duration, num_of_sampling)
     n_const = 17.95  # [rps]
-    npm_list = np.array([n_const for i in range(num_of_sampling)])
+    nps_list = np.array([n_const for i in range(num_of_sampling)])
     
     δ_list, u_list, v_list, r_list, x_list, y_list, ψ_list = zigzag_test_mmg_3dof(
         basic_params,
@@ -329,7 +329,7 @@ def test_zigzag_test_mmg(ship_KVLCC2_L7_model, tmpdir):
     num_of_sampling = 10000
     time_list = np.linspace(0.00, duration, num_of_sampling)
     n_const = 17.95  # [rps]
-    npm_list = np.array([n_const for i in range(num_of_sampling)])
+    nps_list = np.array([n_const for i in range(num_of_sampling)])
 
     δ_list, u_list, v_list, r_list, x_list, y_list, ψ_list = zigzag_test_mmg_3dof(
         basic_params,
