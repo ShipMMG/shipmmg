@@ -174,7 +174,7 @@ def simulate_mmg_3dof(
     maneuvering_params: Mmg3DofManeuveringParams,
     time_list: List[float],
     δ_list: List[float],
-    npm_list: List[float],
+    nps_list: List[float],
     u0: float = 0.0,
     v0: float = 0.0,
     r0: float = 0.0,
@@ -209,8 +209,8 @@ def simulate_mmg_3dof(
             time list of simulation.
         δ_list (list[float]):
             rudder angle list of simulation.
-        npm_list (List[float]):
-            npm list of simulation.
+        nps_list (List[float]):
+            nps list of simulation.
         u0 (float, optional):
             axial velocity [m/s] in initial condition (`time_list[0]`).
             Defaults to 0.0.
@@ -329,7 +329,7 @@ def simulate_mmg_3dof(
         >>> sampling = 2000
         >>> time_list = np.linspace(0.00, duration, sampling)
         >>> δ_list = np.full(len(time_list), 35.0 * np.pi / 180.0)
-        >>> npm_list = np.full(len(time_list), 20.338)
+        >>> nps_list = np.full(len(time_list), 20.338)
         >>> basic_params = Mmg3DofBasicParams(
         >>>                     L_pp=7.00,
         >>>                     B=1.27,
@@ -384,7 +384,7 @@ def simulate_mmg_3dof(
         >>>                    maneuvering_params,
         >>>                    time_list,
         >>>                    δ_rad_list,
-        >>>                    npm_list,
+        >>>                    nps_list,
         >>>                    u0=2.29 * 0.512,
         >>>                )
         >>> result = sol.sol(time_list)
@@ -445,7 +445,7 @@ def simulate_mmg_3dof(
         N_rrr_dash=maneuvering_params.N_rrr_dash,
         time_list=time_list,
         δ_list=δ_list,
-        npm_list=npm_list,
+        nps_list=nps_list,
         u0=u0,
         v0=v0,
         r0=r0,
@@ -509,7 +509,7 @@ def simulate(
     N_rrr_dash: float,
     time_list: List[float],
     δ_list: List[float],
-    npm_list: List[float],
+    nps_list: List[float],
     u0: float = 0.0,
     v0: float = 0.0,
     r0: float = 0.0,
@@ -630,8 +630,8 @@ def simulate(
             time list of simulation.
         δ_list (list[float]):
             rudder angle list of simulation.
-        npm_list (List[float]):
-            npm list of simulation.
+        nps_list (List[float]):
+            nps list of simulation.
         u0 (float, optional):
             axial velocity [m/s] in initial condition (`time_list[0]`).
             Defaults to 0.0.
@@ -750,7 +750,7 @@ def simulate(
         >>> sampling = 2000
         >>> time_list = np.linspace(0.00, duration, sampling)
         >>> δ_list = np.full(len(time_list), 35.0 * np.pi / 180.0)
-        >>> npm_list = np.full(len(time_list), 17.95)
+        >>> nps_list = np.full(len(time_list), 17.95)
         >>> L_pp=7.00
         >>> B=1.27
         >>> d=0.46
@@ -842,7 +842,7 @@ def simulate(
         >>>                    N_rrr_dash=N_rrr_dash,
         >>>                    time_list,
         >>>                    δ_rad_list,
-        >>>                    npm_list,
+        >>>                    nps_list,
         >>>                    u0=2.29 * 0.512,
         >>>                )
         >>> result = sol.sol(time_list)
@@ -855,11 +855,11 @@ def simulate(
 
     """
     spl_δ = interp1d(time_list, δ_list, "cubic", fill_value="extrapolate")
-    spl_npm = interp1d(time_list, npm_list, "cubic", fill_value="extrapolate")
+    spl_nps = interp1d(time_list, nps_list, "cubic", fill_value="extrapolate")
 
     def mmg_3dof_eom_solve_ivp(t, X):
 
-        u, v, r, x, y, ψ, δ, npm = X
+        u, v, r, x, y, ψ, δ, nps = X
 
         U = np.sqrt(u**2 + (v - r * x_G) ** 2)
 
@@ -870,13 +870,13 @@ def simulate(
         # w_P = w_P0
         w_P = w_P0 * np.exp(-4.0 * (β - x_P * r_dash) ** 2)
 
-        J = 0.0 if npm == 0.0 else (1 - w_P) * u / (npm * D_p)
+        J = 0.0 if nps == 0.0 else (1 - w_P) * u / (nps * D_p)
         K_T = k_0 + k_1 * J + k_2 * J**2
         β_R = β - l_R * r_dash
         γ_R = γ_R_minus if β_R < 0.0 else γ_R_plus
         v_R = U * γ_R * β_R
         u_R = (
-            np.sqrt(η * (κ * ϵ * 8.0 * k_0 * npm**2 * D_p**4 / np.pi) ** 2)
+            np.sqrt(η * (κ * ϵ * 8.0 * k_0 * nps**2 * D_p**4 / np.pi) ** 2)
             if J == 0.0
             else u
             * (1 - w_P)
@@ -905,7 +905,7 @@ def simulate(
             )
         )
         X_R = -(1 - t_R) * F_N * np.sin(δ)
-        X_P = (1 - t_P) * ρ * K_T * npm**2 * D_p**4
+        X_P = (1 - t_P) * ρ * K_T * nps**2 * D_p**4
         Y_H = (
             0.5
             * ρ
@@ -949,13 +949,13 @@ def simulate(
         d_y = u * np.sin(ψ) + v * np.cos(ψ)
         d_ψ = r
         d_δ = derivative(spl_δ, t)
-        d_npm = derivative(spl_npm, t)
-        return [d_u, d_v, d_r, d_x, d_y, d_ψ, d_δ, d_npm]
+        d_nps = derivative(spl_nps, t)
+        return [d_u, d_v, d_r, d_x, d_y, d_ψ, d_δ, d_nps]
 
     sol = solve_ivp(
         mmg_3dof_eom_solve_ivp,
         [time_list[0], time_list[-1]],
-        [u0, v0, r0, x0, y0, ψ0, δ_list[0], npm_list[0]],
+        [u0, v0, r0, x0, y0, ψ0, δ_list[0], nps_list[0]],
         dense_output=True,
         method=method,
         t_eval=t_eval,
@@ -971,7 +971,7 @@ def get_sub_values_from_simulation_result(
     v_list: List[float],
     r_list: List[float],
     δ_list: List[float],
-    npm_list: List[float],
+    nps_list: List[float],
     basic_params: Mmg3DofBasicParams,
     maneuvering_params: Mmg3DofManeuveringParams,
     ρ: float = 1025.0,
@@ -988,8 +988,8 @@ def get_sub_values_from_simulation_result(
             r list of MMG simulation result.
         δ_list (List[float]):
             δ list of MMG simulation result.
-        npm_list (List[float]):
-            npm list of MMG simulation result.
+        nps_list (List[float]):
+            nps list of MMG simulation result.
         basic_params (Mmg3DofBasicParams):
             u of MMG simulation result.
         maneuvering_params (Mmg3DofManeuveringParams):
@@ -1056,12 +1056,12 @@ def get_sub_values_from_simulation_result(
     )
     J_list = list(
         map(
-            lambda w_P, u, npm: 0.0
-            if npm == 0.0
-            else (1 - w_P) * u / (npm * basic_params.D_p),
+            lambda w_P, u, nps: 0.0
+            if nps == 0.0
+            else (1 - w_P) * u / (nps * basic_params.D_p),
             w_P_list,
             u_list,
-            npm_list,
+            nps_list,
         )
     )
     K_T_list = list(
@@ -1095,14 +1095,14 @@ def get_sub_values_from_simulation_result(
     )
     u_R_list = list(
         map(
-            lambda u, J, npm, K_T, w_P: np.sqrt(
+            lambda u, J, nps, K_T, w_P: np.sqrt(
                 basic_params.η
                 * (
                     basic_params.κ
                     * basic_params.ϵ
                     * 8.0
                     * maneuvering_params.k_0
-                    * npm**2
+                    * nps**2
                     * basic_params.D_p**4
                     / np.pi
                 )
@@ -1123,7 +1123,7 @@ def get_sub_values_from_simulation_result(
             ),
             u_list,
             J_list,
-            npm_list,
+            nps_list,
             K_T_list,
             w_P_list,
         )
@@ -1170,13 +1170,13 @@ def get_sub_values_from_simulation_result(
     )
     X_P_list = list(
         map(
-            lambda K_T, npm: (1 - basic_params.t_P)
+            lambda K_T, nps: (1 - basic_params.t_P)
             * ρ
             * K_T
-            * npm**2
+            * nps**2
             * basic_params.D_p**4,
             K_T_list,
-            npm_list,
+            nps_list,
         )
     )
     Y_H_list = list(
@@ -1274,7 +1274,7 @@ def zigzag_test_mmg_3dof(
     target_δ_rad: float,
     target_ψ_rad_deviation: float,
     time_list: List[float],
-    npm_list: List[float],
+    nps_list: List[float],
     δ0: float = 0.0,
     δ_rad_rate: float = 1.0 * np.pi / 180,
     u0: float = 0.0,
@@ -1303,8 +1303,8 @@ def zigzag_test_mmg_3dof(
             target absolute value of psi deviation from ψ0[rad].
         time_list (list[float]):
             time list of simulation.
-        npm_list (List[float]):
-            npm list of simulation.
+        nps_list (List[float]):
+            nps list of simulation.
         δ0 (float):
             Initial rudder angle [rad].
             Defaults to 0.0.
@@ -1453,7 +1453,7 @@ def zigzag_test_mmg_3dof(
             maneuvering_params,
             time_list[start_index:],
             δ_list,
-            npm_list[start_index:],
+            nps_list[start_index:],
             u0=u0,
             v0=v0,
             r0=r0,
