@@ -19,8 +19,7 @@ from matplotlib.animation import FuncAnimation
 
 import numpy as np
 
-import scipy.interpolate
-from scipy.misc import derivative
+from scipy.interpolate import CubicSpline
 
 from .draw_obj import DrawObj
 
@@ -171,8 +170,8 @@ class ShipObj3dof:
     def estimate_KT_LSM(self):
         """Estimate KT by least square method."""
         A = np.c_[self.δ, self.r]
-        spl_r = scipy.interpolate.interp1d(self.time, self.r, fill_value="extrapolate")
-        B = np.array([derivative(spl_r, t) for t in self.time])
+        spl_r = CubicSpline(self.time, self.r, bc_type="natural", extrapolate=True)
+        B = spl_r.derivative()(self.time)
         THETA = np.linalg.pinv(A).dot(B.T)
         T = -1.0 / THETA[1]
         K = THETA[0] * T
