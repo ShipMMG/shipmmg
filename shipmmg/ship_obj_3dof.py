@@ -19,8 +19,7 @@ from matplotlib.animation import FuncAnimation
 
 import numpy as np
 
-import scipy.interpolate
-from scipy.misc import derivative
+from scipy.interpolate import CubicSpline
 
 from .draw_obj import DrawObj
 
@@ -171,8 +170,8 @@ class ShipObj3dof:
     def estimate_KT_LSM(self):
         """Estimate KT by least square method."""
         A = np.c_[self.δ, self.r]
-        spl_r = scipy.interpolate.interp1d(self.time, self.r, fill_value="extrapolate")
-        B = np.array([derivative(spl_r, t) for t in self.time])
+        spl_r = CubicSpline(self.time, self.r, bc_type="natural", extrapolate=True)
+        B = spl_r.derivative()(self.time)
         THETA = np.linalg.pinv(A).dot(B.T)
         T = -1.0 / THETA[1]
         K = THETA[0] * T
@@ -191,8 +190,7 @@ class ShipObj3dof:
         frameon: bool = True,
         FigureClass: matplotlib.figure.Figure = matplotlib.figure.Figure,
         clear: bool = False,
-        tight_layout: bool = False,
-        constrained_layout: bool = False,
+        layout: str = None,
         save_fig_path: str = None,
         **kwargs
     ) -> plt.Figure:
@@ -240,18 +238,10 @@ class ShipObj3dof:
             clear (bool, optional):
                 If True and the figure already exists, then it is cleared.
                 Defaults to False.
-            tight_layout (bool, optional):
-                If False use subplotpars.
-                If True adjust subplot parameters using tight_layout with default padding.
-                When providing a dict containing the keys pad, w_pad, h_pad, and rect,
-                the default tight_layout paddings will be overridden.
-                Defaults to False.
-            constrained_layout (bool, optional):
-                If True use constrained layout to adjust positioning of plot elements.
-                Like tight_layout, but designed to be more flexible.
-                See Constrained Layout Guide for examples.
-                (Note: does not work with add_subplot or subplot2grid.)
-                Defaults to False.
+            layout (str, optional):
+                If 'tight', adjust subplot parameters using tight_layout with default padding.
+                If 'constrained', use constrained layout to adjust positioning of plot elements.
+                Defaults to None.
             fmt (str, optional):
                 A format string, e.g. 'ro' for red circles.
                 See the Notes section for a full description of the format strings.
@@ -283,8 +273,7 @@ class ShipObj3dof:
             frameon=frameon,
             FigureClass=FigureClass,
             clear=clear,
-            tight_layout=tight_layout,
-            constrained_layout=constrained_layout,
+            layout=layout,
         )
 
         if dimensionless:
@@ -321,8 +310,7 @@ class ShipObj3dof:
         frameon: bool = True,
         FigureClass: matplotlib.figure.Figure = matplotlib.figure.Figure,
         clear: bool = False,
-        tight_layout: bool = False,
-        constrained_layout: bool = False,
+        layout: str = None,
         fmt: str = None,
         save_fig_path: str = None,
         **kwargs
@@ -369,18 +357,10 @@ class ShipObj3dof:
             clear (bool, optional):
                 If True and the figure already exists, then it is cleared.
                 Defaults to False.
-            tight_layout (bool, optional):
-                If False use subplotpars.
-                If True adjust subplot parameters using tight_layout with default padding.
-                When providing a dict containing the keys pad, w_pad, h_pad, and rect,
-                the default tight_layout paddings will be overridden.
-                Defaults to False.
-            constrained_layout (bool, optional):
-                If True use constrained layout to adjust positioning of plot elements.
-                Like tight_layout, but designed to be more flexible.
-                See Constrained Layout Guide for examples.
-                (Note: does not work with add_subplot or subplot2grid.)
-                Defaults to False.
+            layout (str, optional):
+                If 'tight', adjust subplot parameters using tight_layout with default padding.
+                If 'constrained', use constrained layout to adjust positioning of plot elements.
+                Defaults to None.
             fmt (str, optional):
                 A format string, e.g. 'ro' for red circles.
                 See the Notes section for a full description of the format strings.
@@ -504,8 +484,7 @@ class ShipObj3dof:
             frameon=frameon,
             FigureClass=FigureClass,
             clear=clear,
-            tight_layout=tight_layout,
-            constrained_layout=constrained_layout,
+            layout=layout,
         )
         if xlabel is not None:
             plt.xlabel(xlabel)
@@ -535,8 +514,7 @@ class ShipObj3dof:
         frameon: bool = True,
         FigureClass: matplotlib.figure.Figure = matplotlib.figure.Figure,
         clear: bool = False,
-        tight_layout: bool = False,
-        constrained_layout: bool = False,
+        layout: str = None,
         fmt: str = None,
         save_fig_path: str = None,
         **kwargs
@@ -583,18 +561,10 @@ class ShipObj3dof:
             clear (bool, optional):
                 If True and the figure already exists, then it is cleared.
                 Defaults to False.
-            tight_layout (bool, optional):
-                If False use subplotpars.
-                If True adjust subplot parameters using tight_layout with default padding.
-                When providing a dict containing the keys pad, w_pad, h_pad, and rect,
-                the default tight_layout paddings will be overridden.
-                Defaults to False.
-            constrained_layout (bool, optional):
-                If True use constrained layout to adjust positioning of plot elements.
-                Like tight_layout, but designed to be more flexible.
-                See Constrained Layout Guide for examples.
-                (Note: does not work with add_subplot or subplot2grid.)
-                Defaults to False.
+            layout (str, optional):
+                If 'tight', adjust subplot parameters using tight_layout with default padding.
+                If 'constrained', use constrained layout to adjust positioning of plot elements.
+                Defaults to None.
             fmt (str, optional):
                 A format string, e.g. 'ro' for red circles.
                 See the Notes section for a full description of the format strings.
@@ -719,8 +689,7 @@ class ShipObj3dof:
             frameon=frameon,
             FigureClass=FigureClass,
             clear=clear,
-            tight_layout=tight_layout,
-            constrained_layout=constrained_layout,
+            layout=layout,
         )
         if xlabel is not None:
             plt.xlabel(xlabel)
@@ -752,8 +721,7 @@ class ShipObj3dof:
         frameon: bool = True,
         FigureClass: matplotlib.figure.Figure = matplotlib.figure.Figure,
         clear: bool = False,
-        tight_layout: bool = False,
-        constrained_layout: bool = False,
+        layout: str = None,
         fmt: str = None,
         save_fig_path: str = None,
         **kwargs
@@ -800,18 +768,10 @@ class ShipObj3dof:
             clear (bool, optional):
                 If True and the figure already exists, then it is cleared.
                 Defaults to False.
-            tight_layout (bool, optional):
-                If False use subplotpars.
-                If True adjust subplot parameters using tight_layout with default padding.
-                When providing a dict containing the keys pad, w_pad, h_pad, and rect,
-                the default tight_layout paddings will be overridden.
-                Defaults to False.
-            constrained_layout (bool, optional):
-                If True use constrained layout to adjust positioning of plot elements.
-                Like tight_layout, but designed to be more flexible.
-                See Constrained Layout Guide for examples.
-                (Note: does not work with add_subplot or subplot2grid.)
-                Defaults to False.
+            layout (str, optional):
+                If 'tight', adjust subplot parameters using tight_layout with default padding.
+                If 'constrained', use constrained layout to adjust positioning of plot elements.
+                Defaults to None.
             fmt (str, optional):
                 A format string, e.g. 'ro' for red circles.
                 See the Notes section for a full description of the format strings.
@@ -936,8 +896,7 @@ class ShipObj3dof:
             frameon=frameon,
             FigureClass=FigureClass,
             clear=clear,
-            tight_layout=tight_layout,
-            constrained_layout=constrained_layout,
+            layout=layout,
         )
         if xlabel is not None:
             plt.xlabel(xlabel)
@@ -969,8 +928,7 @@ class ShipObj3dof:
         frameon: bool = True,
         FigureClass: matplotlib.figure.Figure = matplotlib.figure.Figure,
         clear: bool = False,
-        tight_layout: bool = False,
-        constrained_layout: bool = False,
+        layout: str = None,
         fmt: str = "--k",
         save_fig_path: str = None,
         **kwargs
@@ -1021,18 +979,10 @@ class ShipObj3dof:
             clear (bool, optional):
                 If True and the figure already exists, then it is cleared.
                 Defaults to False.
-            tight_layout (bool, optional):
-                If False use subplotpars.
-                If True adjust subplot parameters using tight_layout with default padding.
-                When providing a dict containing the keys pad, w_pad, h_pad, and rect,
-                the default tight_layout paddings will be overridden.
-                Defaults to False.
-            constrained_layout (bool, optional):
-                If True use constrained layout to adjust positioning of plot elements.
-                Like tight_layout, but designed to be more flexible.
-                See Constrained Layout Guide for examples.
-                (Note: does not work with add_subplot or subplot2grid.)
-                Defaults to False.
+            layout (str, optional):
+                If 'tight', adjust subplot parameters using tight_layout with default padding.
+                If 'constrained', use constrained layout to adjust positioning of plot elements.
+                Defaults to None.
             fmt (str, optional):
                 A format string, e.g. 'ro' for red circles.
                 See the Notes section for a full description of the format strings.
@@ -1061,8 +1011,7 @@ class ShipObj3dof:
             frameon=frameon,
             FigureClass=FigureClass,
             clear=clear,
-            tight_layout=tight_layout,
-            constrained_layout=constrained_layout,
+            layout=layout,
         )
         ax = fig.add_subplot(111)
         if dimensionless:

@@ -14,9 +14,7 @@ from typing import List
 import numpy as np
 
 from scipy.integrate import solve_ivp
-from scipy.interpolate import interp1d
-from scipy.misc import derivative
-
+from scipy.interpolate import CubicSpline
 from .ship_obj_3dof import ShipObj3dof
 
 
@@ -310,12 +308,13 @@ def simulate(
         >>> sol = simulate_kt(K, T, time_list, δ_list, r0)
         >>> result = sol.sol(time_list)
     """
-    spl_δ = interp1d(time_list, δ_list, "cubic", fill_value="extrapolate")
+    spl_δ = CubicSpline(time_list, δ_list, bc_type="natural", extrapolate=True)
+    spl_δ_dot = spl_δ.derivative()
 
     def kt_eom_solve_ivp(t, X, K, T):
         r, δ = X
         d_r = 1.0 / T * (-r + K * δ)
-        d_δ = derivative(spl_δ, t)
+        d_δ = spl_δ_dot(t)
         return [d_r, d_δ]
 
     sol = solve_ivp(

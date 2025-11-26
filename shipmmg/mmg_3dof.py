@@ -20,8 +20,7 @@ from typing import List
 import numpy as np
 
 from scipy.integrate import solve_ivp
-from scipy.interpolate import interp1d
-from scipy.misc import derivative
+from scipy.interpolate import CubicSpline
 
 
 @dataclasses.dataclass
@@ -202,7 +201,7 @@ def simulate_mmg_3dof(
 
     Args:
         basic_params (Mmg3DofBasicParams):
-            Basic paramters for MMG 3DOF simulation.
+            Basic parameters for MMG 3DOF simulation.
         maneuvering_params (Mmg3DofManeuveringParams):
             Maneuvering parameters for MMG 3DOF simulation.
         time_list (list[float]):
@@ -854,8 +853,11 @@ def simulate(
           J Mar Sci Technol 20, 37-52 https://doi.org/10.1007/s00773-014-0293-y
 
     """
-    spl_δ = interp1d(time_list, δ_list, "cubic", fill_value="extrapolate")
-    spl_nps = interp1d(time_list, nps_list, "cubic", fill_value="extrapolate")
+    spl_δ = CubicSpline(time_list, δ_list, bc_type="natural", extrapolate=True)
+    spl_nps = CubicSpline(time_list, nps_list, bc_type="natural", extrapolate=True)
+
+    spl_δ_dot = spl_δ.derivative()
+    spl_nps_dot = spl_nps.derivative()
 
     def mmg_3dof_eom_solve_ivp(t, X):
 
@@ -948,8 +950,8 @@ def simulate(
         d_x = u * np.cos(ψ) - v * np.sin(ψ)
         d_y = u * np.sin(ψ) + v * np.cos(ψ)
         d_ψ = r
-        d_δ = derivative(spl_δ, t)
-        d_nps = derivative(spl_nps, t)
+        d_δ = spl_δ_dot(t)
+        d_nps = spl_nps_dot(t)
         return [d_u, d_v, d_r, d_x, d_y, d_ψ, d_δ, d_nps]
 
     sol = solve_ivp(
